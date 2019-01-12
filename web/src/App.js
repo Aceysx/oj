@@ -4,7 +4,7 @@ import OjLayout from './component/layout'
 import ClassCourseBody from './component/student/class-course-body'
 
 import {
-    HashRouter as Router,
+    BrowserRouter as Router,
     Route
 } from 'react-router-dom'
 
