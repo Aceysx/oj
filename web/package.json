@@ -1,5 +1,5 @@
 {
-  "name": "tws-notification-web",
+  "name": "euarsia-oj",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -39,7 +39,7 @@
     }
   },
   "scripts": {
-    "start": "PORT=3000  react-app-rewired start",
+    "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "deploy": "npm i && npm run build && mkdir -p ../backend/src/main/resources/static/ && rm -rf ../backend/src/main/resources/static/ && cp -R ./build/ ../backend/src/main/resources/static/",
@@ -50,7 +50,6 @@
     "less": "^2.7.2",
     "react-app-rewire-less": "^2.1.2",
     "react-app-rewired": "^1.5.2",
-    "sonarqube-scanner": "^2.1.1",
     "standard": "^10.0.3"
   }
 }
