@@ -2,10 +2,32 @@ import React, {Component} from 'react'
 import {Col, Layout, Menu, Row} from 'antd'
 import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
+import routers from '../../constant/routers'
 
 const {Header, Content, Footer, Sider} = Layout
 
+
 class OjLayout extends Component {
+  state = {
+    menu: this.props.user.role || 'students'
+  }
+
+  to = (menu) => {
+    this.setState({menu})
+    this.props.history.push(routers[menu][0].url)
+  }
+
+  getSider = () => {
+    const {menu} = this.state
+    return routers[menu].map((item, index) =>
+      <Menu.Item key={index + 1}>
+        <Link to={item.url}>
+          {item.title}
+        </Link>
+      </Menu.Item>
+    )
+
+  }
 
   render() {
     return (
@@ -13,9 +35,7 @@ class OjLayout extends Component {
         <Header>
           <Row>
             <Col span={4}>
-              <a href=''>
-                Oj在线系统
-              </a>
+              <a href=''>Oj在线系统</a>
             </Col>
             <Col span={16}>
               <Menu
@@ -24,9 +44,15 @@ class OjLayout extends Component {
                 defaultSelectedKeys={['1']}
                 style={{lineHeight: '64px'}}
               >
-                <Menu.Item key="1">学生端</Menu.Item>
-                <Menu.Item key="2">教师端</Menu.Item>
-                <Menu.Item key="3">角色管理</Menu.Item>
+                <Menu.Item key="1" onClick={() => this.to('students')}>
+                  学生端
+                </Menu.Item>
+                <Menu.Item key="2" onClick={() => this.to('teachers')}>
+                  教师端
+                </Menu.Item>
+                <Menu.Item key="3" onClick={() => this.to('roles')}>
+                  角色管理
+                </Menu.Item>
               </Menu>
             </Col>
             <Col span={4}>
@@ -42,17 +68,7 @@ class OjLayout extends Component {
                 defaultSelectedKeys={['1']}
                 style={{height: '100%'}}
               >
-                <Menu.Item key="1">
-                  <Link to='/'>
-                    首页
-                  </Link>
-                </Menu.Item>
-
-                <Menu.Item key="2">
-                  <Link to='/students/class-courses'>
-                    我的班课
-                  </Link>
-                </Menu.Item>
+                {this.getSider()}
               </Menu>
             </Sider>
             <Content style={{padding: '0 24px', minHeight: 280}}>

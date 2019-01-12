@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import Index from './component/index'
 import OjLayout from './component/layout'
-import ClassCourseBody from './component/student/class-course-body'
+import MyClassCourseBody from './component/student/my-class-course-body'
+import ClassCourseManagementBody from './component/teacher/class-course-management-Body'
+import UserBody from './component/roles/user-body'
 
 import {
     BrowserRouter as Router,
@@ -10,18 +11,18 @@ import {
 
 class App extends Component {
   render () {
-
     return (
-          <Router>
-            <OjLayout>
-              <Route exact path='/' component={Index} />
-              <Route exact path='/students/class-courses' component={ClassCourseBody} />
+      <Router>
+        <OjLayout>
+          <Route exact path='/' component={MyClassCourseBody} />
+          <Route exact path='/teachers/class-courses' component={ClassCourseManagementBody} />
+          <Route exact path='/roles/users' component={UserBody} />
+          <Route exact path='/students/class-courses' component={MyClassCourseBody} />
 
-            </OjLayout>
-          </Router>
+        </OjLayout>
+      </Router>
     )
   }
 }
-
 
 export default (App)
