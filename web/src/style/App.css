@@ -1,0 +1,19 @@
+.App-intro {
+    font-size: large;
+}
+
+.hidden {
+    display: none;
+}
+
+.center{
+    text-align: center;
+}
+
+#app-practise-diary {
+    background: #ECECEC;
+}
+
+.title-text-position {
+    text-align: left;
+}

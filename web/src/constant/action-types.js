@@ -1,0 +1,5 @@
+export const INIT_USER = 'INIT_USER'
+export const REFRESH_NOTIFICATIONS = 'REFRESH_NOTIFICATIONS'
+export const GET_SETTINGS = 'GET_SETTINGS'
+
+

@@ -1,0 +1,89 @@
+buildscript {
+    project.ext {
+        bootVersion = '2.0.4.RELEASE'
+    }
+
+
+    repositories {
+        maven {
+            url 'http://ec2-54-222-235-15.cn-north-1.compute.amazonaws.com.cn:8081/repository/maven-public/'
+        }
+        maven {
+            url 'http://ec2-54-222-235-15.cn-north-1.compute.amazonaws.com.cn:8081/repository/gradle-m2/'
+        }
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${project.bootVersion}"
+        classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:2.0.1.RELEASE"
+        classpath "org.flywaydb:flyway-gradle-plugin:5.0.7"
+    }
+}
+
+plugins{
+    id "org.flywaydb.flyway" version "4.2.0"
+}
+
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "groovy"
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
+
+group 'cn.eurasia.oj'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    maven {
+        url 'http://ec2-54-222-235-15.cn-north-1.compute.amazonaws.com.cn:8081/repository/maven-public/'
+    }
+}
+
+sourceCompatibility = 1.8
+
+
+ext {
+    springCloudVersion = 'Finchley.SR1'
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile('org.springframework.boot:spring-boot-devtools')
+    compile('org.springframework.cloud:spring-cloud-starter-config')
+    compile('mysql:mysql-connector-java')
+    compile('org.apache.httpcomponents:httpclient:4.4')
+    compile('org.apache.httpcomponents:httpmime:4.4')
+    compile('org.json:json:20140107')
+    compile('io.jsonwebtoken:jjwt:0.9.0')
+    compile('com.fasterxml.jackson.jaxrs:jackson-jaxrs-xml-provider:2.5.0')
+    compile('com.alibaba:fastjson:1.2.44')
+    compile('org.flywaydb:flyway-core')
+    compileOnly 'org.projectlombok:lombok:1.18.0'
+
+    compile 'commons-io:commons-io:2.5'
+    compile 'org.apache.commons:commons-lang3:3.7'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework:spring-test')
+    testCompile('org.codehaus.groovy:groovy-all:2.4.6')
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4')
+    testCompile('org.spockframework:spock-spring:1.0-groovy-2.4')
+
+    compile 'com.hankcs:hanlp:portable-1.6.8'
+}
+ext {
+    springCloudVersion = 'Finchley.SR1'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
