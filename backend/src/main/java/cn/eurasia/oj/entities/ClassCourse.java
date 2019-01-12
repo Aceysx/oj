@@ -4,26 +4,22 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Setter
 @Getter
-@Table(name = "user")
-public class User {
+@Entity
+@Table(name = "classCourse")
+public class ClassCourse {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String username;
-  private String password;
-  private Boolean available;
-  private String name;
-  private String phone;
-  private String email;
+  private String title;
+  private String code;
 
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date createTime;
+  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+  private Date endTime;
 }

@@ -1,27 +1,27 @@
-package cn.eurasia.oj.controllers;
+package cn.eurasia.oj.controllers.teacher;
 
-import cn.eurasia.oj.services.UserCenterService;
+import cn.eurasia.oj.services.ClassCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
-@RequestMapping(value = "/api")
-public class UserController {
+@RequestMapping(value = "/api/classCourses")
+public class ClassCourseController {
 
-    @Autowired
-    private UserCenterService userCenterService;
+  @Autowired
+  private ClassCourseService classCourseService;
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity getUserById(@PathVariable Long userId) {
-        Map user = userCenterService.getUserInfo(userId);
-
-        return ResponseEntity.ok(user);
-    }
+  @GetMapping("")
+  public ResponseEntity getUserById(
+    @PageableDefault(sort = {"id"},
+      direction = Sort.Direction.DESC) Pageable pageable) {
+    return ResponseEntity.ok(classCourseService.getClassCourses(pageable));
+  }
 
 }
