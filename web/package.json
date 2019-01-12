@@ -42,7 +42,7 @@
     "start": "PORT=3000  react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
-    "deploy": "npm i && npm run build && mkdir -p ../backend/src/main/resources/static/ && rm -rf ../backend/src/main/resources/static/ && cp -R ./build/ ../backend/src/main/resources/static/"
+    "deploy": "npm i && npm run build && mkdir -p ../backend/src/main/resources/static/ && rm -rf ../backend/src/main/resources/static/ && cp -R ./build/ ../backend/src/main/resources/static/",
     "eject": "react-app-rewired eject"
   },
   "devDependencies": {
