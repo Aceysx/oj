@@ -9,6 +9,9 @@ const routers = {
     {
       title: '班课管理',
       url: '/teachers/class-courses'
+    }, {
+      title: '专业管理',
+      url: '/roles/users'
     }
   ],
   roles: [
@@ -19,4 +22,4 @@ const routers = {
   ]
 }
 
-export  default routers
+export default routers
