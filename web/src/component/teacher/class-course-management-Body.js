@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Divider, Table} from 'antd'
-import {getClassCourses} from '../../action/class-course-action'
+import {Button, Divider, Table} from 'antd'
+import {addClassCourse, getClassCourses} from '../../action/class-course-action'
+import NewClassCourseModal from "./new-class-course-modal";
 
 class ClassCourseManagementBody extends Component {
   state ={
-    currentPage: 1
+    currentPage: 1,
+    isNewModalOpen: false
   }
 
   componentDidMount = () =>{
@@ -16,6 +18,7 @@ class ClassCourseManagementBody extends Component {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
       this.props.getClassCourses(current)
+
     })
   }
   render () {
@@ -47,17 +50,33 @@ class ClassCourseManagementBody extends Component {
     ]
     const {classCoursesPageable} = this.props
     const {totalElements, content} = classCoursesPageable
-    const {currentPage} = this.state
+    const {currentPage, isNewModalOpen} = this.state
 
     return <div >
+      <p><Button
+        type="primary"
+        onClick={()=>this.setState({isNewModalOpen:true})}>
+        添加班课
+      </Button></p>
+
+      <NewClassCourseModal
+        isNewModalOpen={isNewModalOpen}
+        closeModal={() => this.setState({isNewModalOpen:false})}
+        addClassCourse={this.props.addClassCourse}
+      />
+
       <Table
+        bordered
         columns={columns}
         dataSource={content}
+        rowKey='id'
         onChange={(pagination) => this.getClassCourse(pagination)}
         pagination={{
           defaultCurrent : currentPage,
           total: totalElements
         }}/>
+
+
     </div>
   }
 }
@@ -68,7 +87,8 @@ const mapStateToProps = ({user, classCoursesPageable}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getClassCourses: (current) => dispatch(getClassCourses(current))
+  getClassCourses: (current) => dispatch(getClassCourses(current)),
+  addClassCourse: (classCourse, callback) => dispatch(addClassCourse(classCourse, callback))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassCourseManagementBody)

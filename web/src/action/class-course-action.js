@@ -14,3 +14,14 @@ export const getClassCourses = (current) => {
     })()
   }
 }
+export const addClassCourse = (classCourse, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.post(`../api/classCourses`, classCourse)
+      if (res.status === HTTP_CODE.CREATED) {
+        dispatch(getClassCourses())
+        callback()
+      }
+    })()
+  }
+}

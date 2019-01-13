@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+
 @Service
 public class ClassCourseService {
   @Autowired
@@ -16,5 +18,9 @@ public class ClassCourseService {
   public Page<ClassCourse> getClassCourses(Pageable pageable) {
 
     return classCourseRepository.findAll(pageable);
+  }
+
+  public ClassCourse addClassCourse(ClassCourse classCourse) {
+    return classCourseRepository.save(classCourse);
   }
 }

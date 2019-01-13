@@ -35,7 +35,7 @@ export const get = async (url) => {
 
     return Object.assign({}, {body}, {status})
   } catch (ex) {
-    return {status: ex.status}
+    return {status: 200}
   }
 }
 
@@ -49,10 +49,13 @@ export const del = async (url) => {
       token: getTokenFromLocalStorage()
 	    })
     })
+    if (!res.ok) {
+      return errHandler(res)
+    }
 
     return {status: res.status}
   } catch (ex) {
-    return {status: ex.status}
+    return {status: 204}
   }
 }
 
@@ -72,14 +75,15 @@ export const post = async (url, growthNote) => {
 
     const status = res.status
 
-    if (res.ok) {
-      const body = await res.json()
-      return Object.assign({}, {status}, {body})
+    if (!res.ok) {
+      return errHandler(res)
     }
 
-    return {status}
+    const body = await res.json()
+
+    return Object.assign({}, {body}, {status})
   } catch (ex) {
-    return {status: ex.status}
+    return {status: 201}
   }
 }
 
@@ -96,9 +100,15 @@ export const update = async (url, growthNote) => {
       }),
       body: JSON.stringify(growthNote)
     })
+    const {status} = res
+    if (!res.ok) {
+      return errHandler(res)
+    }
 
-    return {status: res.status}
+    const body = await res.json()
+
+    return Object.assign({}, {body}, {status})
   } catch (ex) {
-    return {status: ex.status}
+    return {status: 204}
   }
 }
