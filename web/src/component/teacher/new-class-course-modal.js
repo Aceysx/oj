@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, DatePicker, Col, Form, Input, Modal} from 'antd'
+import {Row, Button, DatePicker, Col, Form, Input, Modal} from 'antd'
 import {message} from "antd/lib/index";
 
 const formItemLayout = {
@@ -87,10 +87,12 @@ class NewClassCourseModal extends React.Component {
               <DatePicker/>
             )}
           </Form.Item>
-          <Col offset={11}>
-            <Button type="primary"
-                  htmlType="submit">确定</Button>
-          </Col>
+          <Row type='flex' align='center'>
+            <Col>
+              <Button type="primary"
+                      htmlType="submit">确定</Button>
+            </Col>
+          </Row>
         </Form>
       </Modal>
     </div>

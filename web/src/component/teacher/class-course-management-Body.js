@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
 import {addClassCourse, getClassCourses} from '../../action/class-course-action'
-import NewClassCourseModal from "./new-class-course-modal";
+import NewClassCourseModal from "./new-class-course-modal"
 
 class ClassCourseManagementBody extends Component {
-  state ={
+  state = {
     currentPage: 1,
     isNewModalOpen: false
   }
