@@ -11,12 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-/**
- * @program: oj
- * @author: MaoLW
- * @create: 2019-01-14 16:26
- **/
-
 @RestController
 @RequestMapping(value = "/api/major")
 public class MajorController {

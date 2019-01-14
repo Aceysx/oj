@@ -11,7 +11,7 @@ const routers = {
       url: '/teachers/class-courses'
     }, {
       title: '专业管理',
-      url: '/roles/users'
+      url: '/teachers/major'
     }
   ],
   roles: [
