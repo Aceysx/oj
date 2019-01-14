@@ -14,6 +14,7 @@ export const getClassCourses = (current) => {
     })()
   }
 }
+
 export const addClassCourse = (classCourse, callback) => {
   return (dispatch) => {
     (async () => {
