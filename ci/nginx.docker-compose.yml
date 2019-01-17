@@ -1,0 +1,15 @@
+version: '2'
+services:
+  nginx:
+      image: nginx:1.13-alpine
+      container_name: nginx
+      ports:
+        - 80:80
+      volumes:
+        - ./:/etc/nginx/conf.d/
+      networks:
+        main:
+          aliases:
+            - nginx
+networks:
+  main:

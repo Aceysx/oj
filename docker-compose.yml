@@ -1,0 +1,31 @@
+version: '2'
+services:
+  homeBackend:
+      image: java:8
+      container_name: xin_homeBackend
+      ports:
+        - 8088:8080
+      volumes:
+        - ./backend:/home/app/backend
+      command: sh -c "cd /home/app/backend && ./gradlew build && java -jar build/libs/backend.jar"
+      networks:
+        main:
+          aliases:
+            - homeBackend
+
+  homeWeb:
+      image: node:8-alpine
+      container_name: xin_homeWeb
+      ports:
+        - 3000:3000
+      volumes:
+        - ./frontend:/home/app
+      command: sh -c "cd /home/app && npm i && npm start"
+      links:
+        - homeBackend
+      networks:
+        main:
+          aliases:
+            - homeWeb
+networks:
+  main:
