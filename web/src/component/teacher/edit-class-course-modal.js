@@ -1,5 +1,7 @@
 import React from 'react'
-import {Button, Col, DatePicker, Form, Input, message, Modal, Row} from 'antd'
+import {Row, Button, DatePicker, Col, Form, Input, Modal} from 'antd'
+import {message} from "antd/lib/index";
+import moment from 'moment'
 
 const formItemLayout = {
   labelCol: {
@@ -12,22 +14,30 @@ const formItemLayout = {
   },
 }
 
-class NewClassCourseModal extends React.Component {
-
+class EditClassCourseModal extends React.Component {
+  state = {
+    id: -1
+  }
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.addClassCourse(values, () => {
-          message.success('添加成功')
+        this.props.editClassCourse(Object.assign(values,{id:this.state.id}), () => {
+          message.success('编辑成功')
           this.props.closeModal()
         })
       }
     })
   }
 
-  componentDidMount = () => {
-    this.resetCode()
+  componentWillReceiveProps(nextProps) {
+    const {classCourse, form} = nextProps
+    if (classCourse === this.props.classCourse ) {
+      return false
+    }
+    const {id, title, code, endTime} = classCourse
+    form.setFieldsValue({title,code,endTime: moment(endTime)})
+    this.setState({id})
   }
 
   resetCode = () => {
@@ -98,6 +108,6 @@ class NewClassCourseModal extends React.Component {
   }
 }
 
-const NewClassCourseModalForm = Form.create()(NewClassCourseModal)
+const NewClassCourseModalForm = Form.create()(EditClassCourseModal)
 
 export default NewClassCourseModalForm

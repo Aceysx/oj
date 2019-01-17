@@ -1,13 +1,16 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
-import {addClassCourse, getClassCourses} from '../../action/class-course-action'
+import {addClassCourse, editClassCourse, getClassCourses} from '../../action/class-course-action'
 import NewClassCourseModal from "./new-class-course-modal"
+import EditClassCourseModal from './edit-class-course-modal'
 
 class ClassCourseManagementBody extends Component {
   state = {
     currentPage: 1,
-    isNewModalOpen: false
+    isNewModalOpen: false,
+    isEditModalOpen: false,
+    classCourse: {}
   }
 
   componentDidMount = () =>{
@@ -41,7 +44,7 @@ class ClassCourseManagementBody extends Component {
         key: 'actions',
         render: (text, record) => {
           return <div>
-            <a>编辑</a>
+            <a onClick={() => this.setState({isEditModalOpen: true, classCourse: record})}>编辑</a>
             <Divider type='vertical' />
             <a>绑定试卷</a>
           </div>
@@ -50,7 +53,7 @@ class ClassCourseManagementBody extends Component {
     ]
     const {classCoursesPageable} = this.props
     const {totalElements, content} = classCoursesPageable
-    const {currentPage, isNewModalOpen} = this.state
+    const {currentPage, isNewModalOpen, isEditModalOpen, classCourse} = this.state
 
     return <div >
       <p><Button
@@ -63,6 +66,12 @@ class ClassCourseManagementBody extends Component {
         isNewModalOpen={isNewModalOpen}
         closeModal={() => this.setState({isNewModalOpen:false})}
         addClassCourse={this.props.addClassCourse}
+      />
+      <EditClassCourseModal
+        isNewModalOpen={isEditModalOpen}
+        closeModal={() => this.setState({isEditModalOpen:false})}
+        editClassCourse={this.props.editClassCourse}
+        classCourse={classCourse}
       />
 
       <Table
@@ -88,7 +97,8 @@ const mapStateToProps = ({user, classCoursesPageable}) => ({
 
 const mapDispatchToProps = dispatch => ({
   getClassCourses: (current) => dispatch(getClassCourses(current)),
-  addClassCourse: (classCourse, callback) => dispatch(addClassCourse(classCourse, callback))
+  addClassCourse: (classCourse, callback) => dispatch(addClassCourse(classCourse, callback)),
+  editClassCourse: (classCourse, callback) => dispatch(editClassCourse(classCourse, callback))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassCourseManagementBody)

@@ -26,3 +26,14 @@ export const addClassCourse = (classCourse, callback) => {
     })()
   }
 }
+export const editClassCourse = (classCourse, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.update(`../api/classCourses`, classCourse)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        dispatch(getClassCourses())
+        callback()
+      }
+    })()
+  }
+}
