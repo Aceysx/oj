@@ -11,7 +11,10 @@ const routers = {
       url: '/teachers/class-courses'
     }, {
       title: '专业管理',
-      url: '/teachers/major'
+      url: '/teachers/majors'
+    }, {
+      title: '题目管理',
+      url: '/teachers/quizzes'
     }
   ],
   roles: [

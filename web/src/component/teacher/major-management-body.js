@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
-import {getMajor, addMajor} from '../../action/major-action'
+import {getMajorsByPage, addMajor} from '../../action/major-action'
 import NewMajorModal from "./new-major-modal"
 
 
@@ -12,13 +12,13 @@ class MajorManagementBody extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getMajor(this.state.currentPage)
+    this.props.getMajors(this.state.currentPage)
   }
 
   getMajor = (pagination) => {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
-      this.props.getMajor(current)
+      this.props.getMajors(current)
     })
   }
 
@@ -71,7 +71,7 @@ class MajorManagementBody extends Component {
         columns={columns}
         dataSource={content}
         rowKey='id'
-        onChange={(pagination) => this.getMajor(pagination)}
+        onChange={(pagination) => this.getMajors(pagination)}
         pagination={{
           defaultCurrent: currentPage,
           total: totalElements
@@ -87,7 +87,7 @@ const mapStateToProps = ({user, majorPageable}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getMajor: (current) => dispatch(getMajor(current)),
+  getMajors: (current) => dispatch(getMajorsByPage(current)),
   addMajor: (major, callback) => dispatch(addMajor(major, callback))
 })
 

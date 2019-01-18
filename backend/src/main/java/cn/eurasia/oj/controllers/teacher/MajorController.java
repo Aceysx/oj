@@ -12,19 +12,24 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/api/major")
+@RequestMapping(value = "/api/majors")
 public class MajorController {
     @Autowired
     private MajorService majorService;
 
+    @GetMapping("pageable")
+    public ResponseEntity getMajorsByPage(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(majorService.getMajorsByPage(pageable));
+    }
+
     @GetMapping("")
-    public ResponseEntity getMajor(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(majorService.getMajor(pageable));
+    public ResponseEntity getMajors() {
+        return ResponseEntity.ok(majorService.getMajors());
     }
 
     @PostMapping("")
     public ResponseEntity addMajor(@RequestBody Major major) {
         majorService.addMajor(major);
-        return ResponseEntity.created(URI.create("/api/major/" + major.getId())).build();
+        return ResponseEntity.created(URI.create("/api/majors/" + major.getId())).build();
     }
 }
