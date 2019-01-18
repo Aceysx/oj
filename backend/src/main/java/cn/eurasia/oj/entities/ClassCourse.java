@@ -17,9 +17,17 @@ public class ClassCourse {
   private Long id;
   private String title;
   private String code;
-
+  @ManyToOne
+  @JoinColumn(name = "userId")
+  private User user;
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date createTime;
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date endTime;
+
+  public void update(ClassCourse classCourse) {
+    this.title = classCourse.title;
+    this.code = classCourse.code;
+    this.endTime = classCourse.endTime;
+  }
 }

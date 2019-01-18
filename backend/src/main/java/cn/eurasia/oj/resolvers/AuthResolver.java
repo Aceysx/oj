@@ -10,27 +10,19 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class AuthResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(Auth.class) != null;
+        return Objects.nonNull(parameter.getParameterAnnotation(Auth.class));
     }
 
     @Override
     public User resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String username = webRequest.getHeader("username");
-        String roleStr = webRequest.getHeader("roles");
-        String id = webRequest.getHeader("id");
         User current = new User();
-        if(roleStr == null || "".equals(roleStr)) {
-            roleStr = "0";
-        }
-
-        if (id != null) {
-            current.setId(Long.valueOf(id));
-        }
+        current.setId(1L);
         return current;
     }
 }

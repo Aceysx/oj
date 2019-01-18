@@ -1,6 +1,9 @@
 package cn.eurasia.oj.controllers.teacher;
 
+import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.ClassCourse;
+import cn.eurasia.oj.entities.User;
+import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.services.ClassCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -26,9 +29,16 @@ public class ClassCourseController {
   }
 
   @PostMapping("")
-  public ResponseEntity addClassCourse(@RequestBody ClassCourse classCourse) {
-    classCourse = classCourseService.addClassCourse(classCourse);
+  public ResponseEntity addClassCourse(@RequestBody ClassCourse classCourse,
+                                       @Auth User current) {
+
+    classCourse = classCourseService.addClassCourse(classCourse,current);
     return ResponseEntity.created(URI.create("/api/classCourse/"+classCourse.getId())).build();
+  }
+  @PutMapping("")
+  public ResponseEntity editClassCourse(@RequestBody ClassCourse classCourse) throws BusinessException {
+    classCourseService.editClassCourse(classCourse);
+    return ResponseEntity.noContent().build();
   }
 
 }

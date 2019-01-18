@@ -16,6 +16,7 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String username;
+  @Transient
   private String password;
   private Boolean available;
   private String name;
