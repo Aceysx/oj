@@ -2,30 +2,30 @@ version: '2'
 services:
   homeBackend:
       image: java:8
-      container_name: xin_homeBackend
+      container_name: oj_backend
       ports:
-        - 8088:8080
+        - 8080:8080
       volumes:
-        - ./backend:/home/app/backend
-      command: sh -c "cd /home/app/backend && ./gradlew build && java -jar build/libs/backend.jar"
+        - ./backend:/home/app/oj
+      command: sh -c "cd /home/app/oj && ./gradlew build && java -jar build/libs/backend.jar"
       networks:
         main:
           aliases:
-            - homeBackend
+            - ojBackend
 
   homeWeb:
       image: node:8-alpine
-      container_name: xin_homeWeb
+      container_name: oj_web
       ports:
         - 3000:3000
       volumes:
-        - ./frontend:/home/app
-      command: sh -c "cd /home/app && npm i && npm start"
+        - ./web:/home/app/oj
+      command: sh -c "cd /home/app/oj && npm i && npm start"
       links:
-        - homeBackend
+        - ojBackend
       networks:
         main:
           aliases:
-            - homeWeb
+            - ojWeb
 networks:
   main:
