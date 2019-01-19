@@ -1,6 +1,6 @@
 version: '2'
 services:
-  homeBackend:
+  ojBackend:
       image: java:8
       container_name: oj_backend
       ports:
@@ -13,7 +13,7 @@ services:
           aliases:
             - ojBackend
 
-  homeWeb:
+  ojWeb:
       image: node:8-alpine
       container_name: oj_web
       ports:
@@ -22,7 +22,7 @@ services:
         - ./web:/home/app/oj
       command: sh -c "cd /home/app/oj && npm i && npm start"
       links:
-        - ojBackend
+        - oj_backend
       networks:
         main:
           aliases:

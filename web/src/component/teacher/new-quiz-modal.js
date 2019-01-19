@@ -163,7 +163,6 @@ class NewQuizModal extends React.Component {
                         </Tooltip>
                         : ''}
                     </Radio>
-
                   )
                 })}
               </RadioGroup>
