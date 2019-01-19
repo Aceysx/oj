@@ -58,8 +58,6 @@ class QuizManagementBody extends Component {
         render: (text, record) => {
           return <div>
             <a onClick={() => this.setState({isEditModalOpen: true, classCourse: record})}>编辑</a>
-            <Divider type='vertical'/>
-            <a>绑定试卷</a>
           </div>
         }
       }

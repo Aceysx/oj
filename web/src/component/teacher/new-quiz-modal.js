@@ -71,6 +71,7 @@ class NewQuizModal extends React.Component {
 
   render() {
     const {isNewModalOpen, closeModal, form, options, answer, majorPageable} = this.props
+    const majors = majorPageable[0] ? majorPageable : []
     const {getFieldDecorator} = form
 
     return <div>
@@ -87,12 +88,12 @@ class NewQuizModal extends React.Component {
           >
             {getFieldDecorator('major', {
               rules: [{
-                required: true, message: '章节',
+                required: true, message: '请输入章节',
               }],
             })(
-              <Select defaultValue={majorPageable[0] ? majorPageable[0].id : -1 }>
+              <Select defaultValue={majors[0] ?  majors[0].id : -1}>
                 {
-                  majorPageable.map(major =>
+                  majors.map(major =>
                     <Option value={major.id}>{major.name}</Option>
                   )
                 }
