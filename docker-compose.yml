@@ -22,7 +22,7 @@ services:
         - ./web:/home/app/oj
       command: sh -c "cd /home/app/oj && npm i && npm start"
       links:
-        - oj_backend
+        - ojBackend
       networks:
         main:
           aliases:
