@@ -94,7 +94,7 @@ class NewQuizModal extends React.Component {
               <Select defaultValue={majors[0] ?  majors[0].id : -1}>
                 {
                   majors.map(major =>
-                    <Option value={major.id}>{major.name}</Option>
+                    <Option key={major.id} value={major.id}>{major.name}</Option>
                   )
                 }
               </Select>
@@ -171,7 +171,7 @@ class NewQuizModal extends React.Component {
               <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
             </Tooltip>
           </Form.Item>
-          <Row type='flex' align='center'>
+          <Row type='flex' align='middle'>
             <Col>
               <Button type="primary"
                       htmlType="submit">确定</Button>

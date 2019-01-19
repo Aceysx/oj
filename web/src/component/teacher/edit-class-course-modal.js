@@ -96,7 +96,7 @@ class EditClassCourseModal extends React.Component {
               <DatePicker/>
             )}
           </Form.Item>
-          <Row type='flex' align='center'>
+          <Row type='flex' align='middle'>
             <Col>
               <Button type="primary"
                       htmlType="submit">确定</Button>
