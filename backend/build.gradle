@@ -34,7 +34,6 @@ apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 
 group 'cn.eurasia.oj'
-version = '0.0.1-SNAPSHOT'
 
 repositories {
     maven {
