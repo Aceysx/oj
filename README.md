@@ -12,3 +12,10 @@
 
 1. 安装 node
 2. 进入 web 目录下，执行 `npm install` 安装依赖，执行 `npm start` 运行
+
+##### 部署
+
+```
+cd projects/oj
+docker-compose up -d
+```
