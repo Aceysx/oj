@@ -16,6 +16,7 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String username;
+  @Transient
   private String password;
   private Boolean available;
   private String name;
@@ -25,7 +26,4 @@ public class User {
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date createTime;
 
-  public void removePassword() {
-    this.password = "";
-  }
 }

@@ -19,10 +19,8 @@ public class UserController {
   private UserCenterService userCenterService;
 
   @GetMapping("{userId}")
-  public ResponseEntity getUserById(@PathVariable Long userId) {
-    Map user = userCenterService.getUserInfo(userId);
-
-    return ResponseEntity.ok(user);
+  public ResponseEntity getUserById(@PathVariable Long userId) throws BusinessException {
+    return ResponseEntity.ok(userCenterService.getUser(userId));
   }
 
   @PostMapping("login")

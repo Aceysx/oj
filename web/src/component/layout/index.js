@@ -13,7 +13,7 @@ class OjLayout extends Component {
   }
 
   isLogin = () => {
-    return this.props.user.id
+    return this.props.user.id > 0
   }
 
   to = (menu) => {

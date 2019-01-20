@@ -4,7 +4,7 @@ import HTTP_CODE from '../constant/httpCode'
 export const initUser = () => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`./api/users/21`)
+      const res = await request.get(`../api/users/1`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'INIT_USER',
@@ -18,7 +18,7 @@ export const initUser = () => {
 export const login = (user, callback) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.post(`./api/users/login`, user)
+      const res = await request.post(`../api/users/login`, user)
       if (res.status === HTTP_CODE.CREATED) {
         callback()
         dispatch({

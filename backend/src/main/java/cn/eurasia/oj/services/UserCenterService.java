@@ -14,16 +14,15 @@ public class UserCenterService {
   @Autowired
   private UserRepository userRepository;
 
-  public Map getUserInfo(Long userId) {
-    return null;
+  public User getUser(Long userId) throws BusinessException {
+    return userRepository.findById(userId).orElseThrow(()-> new BusinessException("找不到"));
   }
 
   public User login(User userParam) throws BusinessException {
-    User user = userRepository.findByUsernameAndPassword(userParam.getUsername(), userParam.getPassword());
-    if (Objects.isNull(user)) {
+    User user = userRepository.findByUsername(userParam.getUsername());
+    if (Objects.isNull(user) && !user.getPassword().equals(userParam.getPassword())) {
       throw new BusinessException("账号或密码错误");
     }
-    user.removePassword();
     return user;
   }
 }
