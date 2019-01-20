@@ -81,7 +81,7 @@ class EditQuizModal extends React.Component {
 
     return <div>
       <Modal
-        title='添加题目'
+        title='修改题目'
         visible={isNewModalOpen}
         footer={null}
         onCancel={() => closeModal()}
