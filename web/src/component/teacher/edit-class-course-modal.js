@@ -15,14 +15,11 @@ const formItemLayout = {
 }
 
 class EditClassCourseModal extends React.Component {
-  state = {
-    id: -1
-  }
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.editClassCourse(Object.assign(values,{id:this.state.id}), () => {
+        this.props.editClassCourse(Object.assign(values,{id:this.props.classCourse.id}), () => {
           message.success('编辑成功')
           this.props.closeModal()
         })
@@ -37,7 +34,6 @@ class EditClassCourseModal extends React.Component {
     }
     const {id, title, code, endTime} = classCourse
     form.setFieldsValue({title,code,endTime: moment(endTime)})
-    this.setState({id})
   }
 
   resetCode = () => {

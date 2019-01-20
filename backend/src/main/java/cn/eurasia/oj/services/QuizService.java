@@ -1,9 +1,11 @@
 package cn.eurasia.oj.services;
 
+import cn.eurasia.oj.entities.Major;
 import cn.eurasia.oj.entities.Quiz;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.ClassCourseRepository;
+import cn.eurasia.oj.repositories.MajorRepository;
 import cn.eurasia.oj.repositories.QuizRepository;
 import cn.eurasia.oj.requestParams.CreateQuizParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,8 @@ import org.springframework.stereotype.Service;
 public class QuizService {
   @Autowired
   private QuizRepository quizRepository;
-
+  @Autowired
+  private MajorRepository majorRepository;
 
   public Page<Quiz> getQuizzes(Pageable pageable) {
 
@@ -27,7 +30,14 @@ public class QuizService {
     return quizRepository.save(quiz);
   }
 
-  public Quiz editQuiz(Quiz classCourse) throws BusinessException {
-    return null;
+  public Quiz editQuiz(CreateQuizParam quizParam) throws BusinessException {
+    Quiz quiz = quizRepository.findById(quizParam.getId()).orElseThrow(
+      () -> new BusinessException("找不到该quiz")
+    );
+    Major major = majorRepository.findById(quizParam.getMajor()).orElseThrow(
+      () -> new BusinessException("找不到该专业")
+    );
+    quiz.update(quizParam, major);
+    return quizRepository.save(quiz);
   }
 }

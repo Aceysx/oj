@@ -38,8 +38,8 @@ public class QuizController {
   }
 
   @PutMapping("")
-  public ResponseEntity editQuiz(@RequestBody Quiz quiz) throws BusinessException {
-    quizService.editQuiz(quiz);
+  public ResponseEntity editQuiz(@RequestBody CreateQuizParam quizParam) throws BusinessException {
+    quizService.editQuiz(quizParam);
     return ResponseEntity.noContent().build();
   }
 

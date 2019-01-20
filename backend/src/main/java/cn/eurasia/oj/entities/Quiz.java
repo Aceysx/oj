@@ -47,4 +47,13 @@ public class Quiz {
       quizParam.getAnswer(), quizParam.getChapter(),
       new Major(quizParam.getMajor()), current, quizParam.getLevel());
   }
+
+  public void update(CreateQuizParam quizParam, Major major) {
+    this.description = quizParam.getDescription();
+    this.options = quizParam.getOptions();
+    this.answer = quizParam.getAnswer();
+    this.chapter = quizParam.getChapter();
+    this.major = major;
+    this.level = quizParam.getLevel();
+  }
 }

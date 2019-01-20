@@ -12,6 +12,6 @@ public class CreateQuizParam {
   private String options;
   private Integer answer;
   private String chapter;
-  private Integer major;
+  private Long major;
   private String level;
 }

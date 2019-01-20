@@ -1,4 +1,4 @@
-const  init = {
+const init = {
   name: 'admin'
 }
 export default (state = init, action) => {

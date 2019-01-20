@@ -22,7 +22,7 @@ public class Major {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createTime;
 
-  public Major(Integer majorId) {
-    this.id = Long.valueOf(majorId);
+  public Major(Long majorId) {
+    this.id = majorId;
   }
 }

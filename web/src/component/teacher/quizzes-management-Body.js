@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Divider, Table} from 'antd'
+import {Button, Table} from 'antd'
 import NewQuizModal from "./new-quiz-modal"
-import EditClassCourseModal from './edit-class-course-modal'
-import {addQuiz, getQuizzes} from '../../action/quiz-action'
+import EditQuizModal from './edit-quiz-modal'
+import {addQuiz, editQuiz, getQuizzes} from '../../action/quiz-action'
 import {getMajors} from "../../action/major-action";
-import majorPageable from "../../reducer/major";
 
 class QuizManagementBody extends Component {
   state = {
@@ -57,15 +56,19 @@ class QuizManagementBody extends Component {
         key: 'actions',
         render: (text, record) => {
           return <div>
-            <a onClick={() => this.setState({isEditModalOpen: true, classCourse: record})}>编辑</a>
+            <a onClick={() => this.setState({
+              isEditModalOpen: true,
+              quiz: record,
+              options: JSON.parse(record.options),
+              answer: record.answer
+            })}>编辑</a>
           </div>
         }
       }
     ]
-    const {quizPageable, addQuiz, majorPageable} = this.props
+    const {quizPageable, addQuiz, majorPageable, editQuiz} = this.props
     const {totalElements, content} = quizPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer} = this.state
-
     return <div>
       <p><Button
         type="primary"
@@ -87,11 +90,20 @@ class QuizManagementBody extends Component {
         })}
         addQuiz={addQuiz}
       />
-      <EditClassCourseModal
+      <EditQuizModal
+        answer={answer}
+        options={options}
+        majorPageable={majorPageable}
         isNewModalOpen={isEditModalOpen}
-        closeModal={() => this.setState({isEditModalOpen: false})}
-        editClassCourse={this.props.editClassCourse}
-        classCourse={quiz}
+        updateOptions={(options) => this.setState({options})}
+        updateAnswer={(answer) => this.setState({answer})}
+        closeModal={() => this.setState({
+          isEditModalOpen: false,
+          options: ['', '', '', ''],
+          answer: -1
+        })}
+        editQuiz={editQuiz}
+        quiz={quiz}
       />
 
       <Table
@@ -117,7 +129,7 @@ const mapStateToProps = ({user, quizPageable, majorPageable}) => ({
 const mapDispatchToProps = dispatch => ({
   getQuizzes: (current) => dispatch(getQuizzes(current)),
   getMajors: () => dispatch(getMajors()),
-  addQuiz: (quiz, callback) => dispatch(addQuiz(quiz,callback))
+  editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizManagementBody)
