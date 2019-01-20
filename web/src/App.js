@@ -13,24 +13,21 @@ import {
 } from 'react-router-dom'
 
 class App extends Component {
-    render() {
-        return (
-            <Router>
-                <div>
-                    <OjLayout>
-                        <Route exact path='/login' component={Login}/>
-                        <Route exact path='/' component={MyClassCourseBody}/>
-                        <Route exact path='/teachers/class-courses' component={ClassCourseManagementBody}/>
-                        <Route exact path='/teachers/majors' component={MajorManagementBody}/>
-                        <Route exact path='/teachers/quizzes' component={QuizManagementBody}/>
-                        <Route exact path='/roles/users' component={UserBody}/>
-                        <Route exact path='/students/class-courses' component={MyClassCourseBody}/>
-
-                    </OjLayout>
-                </div>
-            </Router>
-        )
-    }
+  render () {
+    return (
+      <Router>
+        <OjLayout>
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/' component={MyClassCourseBody} />
+          <Route exact path='/teachers/class-courses' component={ClassCourseManagementBody} />
+          <Route exact path='/teachers/majors' component={MajorManagementBody} />
+          <Route exact path='/teachers/quizzes' component={QuizManagementBody} />
+          <Route exact path='/roles/users' component={UserBody} />
+          <Route exact path='/students/class-courses' component={MyClassCourseBody} />
+        </OjLayout>
+      </Router>
+    )
+  }
 }
 
 export default (App)

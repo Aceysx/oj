@@ -17,5 +17,8 @@
 
 ```
 cd projects/oj
+git stash
+git pull --reb
+git stash pop
 docker-compose up -d
 ```

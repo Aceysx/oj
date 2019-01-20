@@ -9,8 +9,9 @@ const authenticationFilter = (status) => {
   }
 }
 function errHandler (res) {
-  res.json().then(res =>
-    message.error(res.body.message)
+  res.json().then(res => {
+    message.error(res.message)
+  }
   )
   return {status: res.status}
 }
@@ -59,7 +60,7 @@ export const del = async (url) => {
   }
 }
 
-export const post = async (url, growthNote) => {
+export const post = async (url, data) => {
   try {
     const res = await fetch(url, {
       method: HTTP_METHOD.POST,
@@ -70,7 +71,7 @@ export const post = async (url, growthNote) => {
 	      'id': 21,
         token: getTokenFromLocalStorage()
       }),
-      body: JSON.stringify(growthNote)
+      body: JSON.stringify(data)
     })
 
     const status = res.status
@@ -87,7 +88,7 @@ export const post = async (url, growthNote) => {
   }
 }
 
-export const update = async (url, growthNote) => {
+export const update = async (url, data) => {
   try {
     const res = await fetch(url, {
       method: HTTP_METHOD.PUT,
@@ -98,7 +99,7 @@ export const update = async (url, growthNote) => {
         'id': 21,
         token: getTokenFromLocalStorage()
       }),
-      body: JSON.stringify(growthNote)
+      body: JSON.stringify(data)
     })
     const {status} = res
     if (!res.ok) {

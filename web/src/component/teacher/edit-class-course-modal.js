@@ -32,7 +32,7 @@ class EditClassCourseModal extends React.Component {
     if (classCourse === this.props.classCourse ) {
       return false
     }
-    const {id, title, code, endTime} = classCourse
+    const {title, code, endTime} = classCourse
     form.setFieldsValue({title,code,endTime: moment(endTime)})
   }
 

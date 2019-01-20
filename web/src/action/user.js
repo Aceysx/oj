@@ -14,3 +14,18 @@ export const initUser = () => {
     })()
   }
 }
+
+export const login = (user, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.post(`./api/users/login`, user)
+      if (res.status === HTTP_CODE.CREATED) {
+        callback()
+        dispatch({
+          type: 'INIT_USER',
+          user: res.body
+        })
+      }
+    })()
+  }
+}

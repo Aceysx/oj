@@ -1,4 +1,5 @@
 const init = {
+  id: -1,
   name: 'admin'
 }
 export default (state = init, action) => {
