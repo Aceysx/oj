@@ -1,6 +1,7 @@
 package cn.eurasia.oj.controllers.teacher;
 
 import cn.eurasia.oj.entities.Major;
+import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.services.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -31,5 +32,11 @@ public class MajorController {
     public ResponseEntity addMajor(@RequestBody Major major) {
         majorService.addMajor(major);
         return ResponseEntity.created(URI.create("/api/majors/" + major.getId())).build();
+    }
+
+    @PutMapping("")
+    public ResponseEntity putMajor(@RequestBody Major major) throws BusinessException {
+        majorService.putMajor(major);
+        return ResponseEntity.noContent().build();
     }
 }

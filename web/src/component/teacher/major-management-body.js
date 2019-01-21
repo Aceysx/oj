@@ -1,25 +1,35 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
-import {getMajorsByPage, addMajor} from '../../action/major-action'
+import {getMajorsByPage, addMajor, putMajor} from '../../action/major-action'
 import NewMajorModal from "./new-major-modal"
+import EditMajorModal from './edit-major-modal'
 
 
 class MajorManagementBody extends Component {
   state = {
     currentPage: 1,
-    isNewModalOpen: false
+    isNewModalOpen: false,
+    isEditModalOpen: false,
+    major: {}
   }
 
-  componentDidMount = () => {
+  componentDidMount () {
     this.props.getMajors(this.state.currentPage)
   }
 
-  getMajor = (pagination) => {
+  getMajors = (pagination) => {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
       this.props.getMajors(current)
     })
+  }
+
+  putMajor = (pagination) => {
+    const {current} = pagination
+      this.setState({currentPage: current}, () => {
+        this.props.putMajor(current)
+      })
   }
 
   render () {
@@ -40,7 +50,7 @@ class MajorManagementBody extends Component {
         key: 'actions',
         render: (text, record) => {
           return <div>
-            <a>编辑</a>
+            <a onClick={() => this.setState({isEditModalOpen: true, major: record})}>编辑</a>
           </div>
         }
 
@@ -48,7 +58,7 @@ class MajorManagementBody extends Component {
     ]
     const {majorPageable} = this.props
     const {totalElements, content} = majorPageable
-    const {currentPage, isNewModalOpen} = this.state
+    const {currentPage, isNewModalOpen, isEditModalOpen, major} = this.state
 
     return <div>
       <p>
@@ -64,6 +74,13 @@ class MajorManagementBody extends Component {
         isNewModalOpen={isNewModalOpen}
         closeModal={() => this.setState({isNewModalOpen:false})}
         addMajor={this.props.addMajor}
+      />
+
+      <EditMajorModal
+        isEditModalOpen = {isEditModalOpen}
+        closeModal={() => this.setState({isEditModalOpen: false})}
+        major = {major}
+        putMajor = {this.props.putMajor}
       />
 
       <Table
@@ -87,6 +104,7 @@ const mapStateToProps = ({user, majorPageable}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  putMajor: (major, callback) => dispatch(putMajor(major, callback)),
   getMajors: (current) => dispatch(getMajorsByPage(current)),
   addMajor: (major, callback) => dispatch(addMajor(major, callback))
 })

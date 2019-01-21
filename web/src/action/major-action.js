@@ -40,3 +40,15 @@ export const addMajor = (major, callback) => {
     })()
   }
 }
+
+export const  putMajor = (major, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.update(`../api/majors`, major)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        dispatch(getMajorsByPage())
+        callback()
+      }
+    })()
+  }
+}
