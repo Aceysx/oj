@@ -16,9 +16,13 @@ class NewClassCourseModal extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    const {form} = this.props
+    form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.props.addClassCourse(values, () => {
+          form.setFieldsValue({title: ''})
+          this.resetCode()
+
           message.success('添加成功')
           this.props.closeModal()
         })

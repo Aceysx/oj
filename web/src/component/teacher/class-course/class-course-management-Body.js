@@ -84,8 +84,6 @@ class ClassCourseManagementBody extends Component {
           defaultCurrent : currentPage,
           total: totalElements
         }}/>
-
-
     </div>
   }
 }
