@@ -8,8 +8,6 @@ class PaperManagementBody extends Component {
     isShowNewPaperBox: false
   }
 
-  componentDidMount = () => {
-  }
   render () {
     const columns = [
       {

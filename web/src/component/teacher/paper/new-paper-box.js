@@ -6,44 +6,26 @@ import PaperBindQuizBox from "./paper-bind-quiz-Box";
 import PaperBasicInfoModal from './paper-basic-info-modal'
 import {getMajors} from '../../../action/major-action'
 import {getQuizzes} from "../../../action/quiz-action";
+import Paper from '../../common/paper'
 
 const Step = Steps.Step
 
 class NewPaperBox extends Component {
   state = {
     current: 0,
+    currentMajorId: -1,
+    currentChapter: -1,
+    currentLevel: -1,
     paper : {
       title: '',
-      major: -1,
-      chapter: -1,
-      level: -1,
+      quizzes: []
     },
-    mockData: [],
     targetKeys: []
   }
 
   componentDidMount = () => {
     this.props.getMajors()
     this.props.getQuizzes()
-    this.getMock();
-  }
-
-  getMock = () => {
-    const targetKeys = [];
-    const mockData = [];
-    for (let i = 0; i < 20; i++) {
-      const data = {
-        key: i.toString(),
-        title: `content${i + 1}`,
-        description: `description of content${i + 1}`,
-        chosen: Math.random() * 2 > 1,
-      };
-      if (data.chosen) {
-        targetKeys.push(data.key);
-      }
-      mockData.push(data);
-    }
-    this.setState({mockData, targetKeys});
   }
 
   next = ()=> {
@@ -61,11 +43,25 @@ class NewPaperBox extends Component {
     paper.title = title
     this.setState({paper})
   }
+  reset = () => {
+    this.setState( {
+      currentMajorId: -1,
+      currentChapter: -1,
+      currentLevel: -1
+    })
+  }
+
+  updatePaperQuizzes = (targetKeys) =>{
+    let {quizzes} = this.props
+    let {paper} = this.state
+    paper.quizzes = quizzes.filter( quiz => targetKeys.includes(quiz.id.toString()))
+
+    this.setState({targetKeys,paper})
+  }
 
   render() {
-    const {mockData,current, targetKeys, paper} = this.state
-    const {majorPageable, quizzes} = this.props
-
+    const {current, targetKeys, paper,currentMajorId,currentChapter,currentLevel} = this.state
+    const {majors, quizzes} = this.props
     const steps = [{
       title: '创建试卷',
       content: <PaperBasicInfoModal
@@ -74,14 +70,21 @@ class NewPaperBox extends Component {
     }, {
       title: '绑定试题',
       content: <PaperBindQuizBox
+        currentMajorId={currentMajorId}
+        currentChapter={currentChapter}
+        currentLevel={currentLevel}
+        majorChangeHandle={currentMajorId => this.setState({currentMajorId})}
+        levelChangeHandle={currentLevel => this.setState({currentLevel})}
+        chapterChangeHandle={currentChapter => this.setState({currentChapter})}
+        reset={this.reset}
         quizzes={quizzes}
-        majorPageable={majorPageable}
-        mockData={mockData}
+        majors={majors}
         targetKeys={targetKeys}
+        updatePaperQuizzes={this.updatePaperQuizzes}
       />,
     }, {
       title: '完成',
-      content: 'Last-content',
+      content: <Paper paper={paper}/>,
     }];
 
 
@@ -121,9 +124,9 @@ class NewPaperBox extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizzes, majorPageable}) => ({
+const mapStateToProps = ({user, quizzes, majors}) => ({
   user,
-  majorPageable,
+  majors,
   quizzes
 })
 

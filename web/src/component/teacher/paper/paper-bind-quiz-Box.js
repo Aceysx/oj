@@ -5,10 +5,37 @@ const Option = Select.Option
 
 class PaperBindQuizBox extends Component {
 
+  handleChange = (targetKeys) => {
+    this.props.updatePaperQuizzes(targetKeys)
+  }
 
-  handleChange = (targetKeys, direction, moveKeys) => {
-    console.log(targetKeys, direction, moveKeys);
-    this.setState({targetKeys});
+  filter = quizzes => {
+    let result = quizzes
+    const {currentMajorId,currentChapter,currentLevel} = this.props
+    if (currentChapter !== -1) {
+      result = result.filter(quiz => quiz.chapter === currentChapter)
+    }
+    if (currentMajorId !== -1) {
+      result = result.filter(quiz => quiz.major.id === currentMajorId)
+    }
+    if (currentLevel !== -1) {
+      result = result.filter(quiz => quiz.level === currentLevel)
+    }
+    return result
+  }
+
+  getQuizzesDataSource = (quizzes) => {
+    quizzes = this.filter(quizzes)
+    return quizzes.map(quiz => {
+      return {
+        key: quiz.id.toString(),
+        title: quiz.description,
+        description:  <span>
+          <Tag color="#2db7f5">章节</Tag>{quiz.chapter }<Divider type='vertical'/>
+          <Tag color="#f50">专业</Tag>{quiz.major.name }
+          </span>,
+      };
+    })
   }
 
   renderItem = (item) => {
@@ -24,37 +51,45 @@ class PaperBindQuizBox extends Component {
     };
   }
   getMajorList = () => {
-    const {majorPageable} = this.props
-    return majorPageable.map(major => <Option key={major.id} value={major.id}>{major.name}</Option>)
+    const {majors} = this.props
+    return majors.map(major => <Option key={major.id} value={major.id}>{major.name}</Option>)
   }
+
   getChapterList = (quizzes) => {
     const chapters = new Set()
     quizzes.forEach(quiz => chapters.add(quiz.chapter))
-    return Array.from(chapters).map((chapter,index) =>
+    return Array.from(chapters).map((chapter, index) =>
       <Option key={index} value={chapter}>{chapter}</Option>)
   }
 
   render() {
-    const {mockData, targetKeys, quizzes} = this.props
+    const {quizzes, targetKeys, currentMajorId,currentChapter,currentLevel} = this.props
+    const dataSource = this.getQuizzesDataSource(quizzes)
 
     return <div><p>
       <Tag color="#f50">专业</Tag>
-      <Select value="-1" style={{width: 120}}>
-        <Option value='-1'>全部</Option>
+      <Select value={currentMajorId}
+              style={{width: 120}}
+              onChange={this.props.majorChangeHandle}>
+        <Option value={-1}>全部</Option>
         {this.getMajorList()}
       </Select>
 
       <Divider type='vertical'/>
       <Tag color="#2db7f5">章节</Tag>
-      <Select value="-1" style={{width: 120}}>
-        <Option value="-1">全部</Option>
+      <Select value={currentChapter}
+              style={{width: 120}}
+              onChange={this.props.chapterChangeHandle}>
+        <Option value={-1}>全部</Option>
         {this.getChapterList(quizzes)}
       </Select>
 
       <Divider type='vertical'/>
       <Tag color="#87d068">难度</Tag>
-      <Select value='全部' style={{width: 120}}>
-        <Option value='-1'>全部</Option>
+      <Select value={currentLevel}
+              style={{width: 120}}
+              onChange={this.props.levelChangeHandle}>
+        <Option value={-1}>全部</Option>
         <Option value='简单'>简单</Option>
         <Option value='一般'>一般</Option>
         <Option value='困难'>困难</Option>
@@ -63,20 +98,20 @@ class PaperBindQuizBox extends Component {
       <Button
         type="primary"
         icon="search"
-        onClick={() => {
-        }}>
-        搜索
+        onClick={this.props.reset}>
+        查看所有绑定题目
       </Button>
+
     </p>
 
       <Transfer
-        dataSource={mockData}
+        dataSource={dataSource}
         showSearch
         listStyle={{
           width: '47%',
           height: '400px',
         }}
-        targetKeys={targetKeys}
+        targetKeys={[...targetKeys]}
         onChange={this.handleChange}
         render={this.renderItem}
       />
