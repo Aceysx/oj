@@ -1,10 +1,24 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
 
-export const getQuizzes = (current) => {
+export const getQuizzesByPage = (current) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/quizzes?page=${--current}`)
+      const res = await request.get(`../api/quizzes/pageable?page=${--current}`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'REFRESH_QUIZZES_PAGEABLE',
+          data: res.body
+        })
+      }
+    })()
+  }
+}
+
+export const getQuizzes = () => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`../api/quizzes`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'REFRESH_QUIZZES',
@@ -20,7 +34,7 @@ export const addQuiz = (quiz, callback) => {
     (async () => {
       const res = await request.post(`../api/quizzes`, quiz)
       if (res.status === HTTP_CODE.CREATED) {
-        dispatch(getQuizzes())
+        dispatch(getQuizzesByPage())
         callback()
       }
     })()
@@ -31,7 +45,7 @@ export const editQuiz = (quiz, callback) => {
     (async () => {
       const res = await request.update(`../api/quizzes`, quiz)
       if (res.status === HTTP_CODE.NO_CONTENT) {
-        dispatch(getQuizzes())
+        dispatch(getQuizzesByPage())
         callback()
       }
     })()

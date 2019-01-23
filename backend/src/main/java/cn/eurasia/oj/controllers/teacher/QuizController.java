@@ -22,11 +22,15 @@ public class QuizController {
   @Autowired
   private QuizService quizService;
 
-  @GetMapping("")
-  public ResponseEntity getClassCourse(
+  @GetMapping("pageable")
+  public ResponseEntity getQuizzesByPage(
     @PageableDefault(sort = {"id"},
       direction = Sort.Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(quizService.getQuizzes(pageable));
+    return ResponseEntity.ok(quizService.getQuizzesByPage(pageable));
+  }
+  @GetMapping("")
+  public ResponseEntity getQuizzes() {
+    return ResponseEntity.ok(quizService.getQuizzes());
   }
 
   @PostMapping("")

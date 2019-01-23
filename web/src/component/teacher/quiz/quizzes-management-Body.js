@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
 import NewQuizModal from "./new-quiz-modal"
 import EditQuizModal from './edit-quiz-modal'
-import {editQuiz, getQuizzes} from '../../action/quiz-action'
-import {getMajors} from "../../action/major-action";
+import {editQuiz, getQuizzes, addQuiz} from '../../../action/quiz-action'
+import {getMajorsByPage} from "../../../action/major-action";
 
 class QuizManagementBody extends Component {
   state = {
@@ -128,8 +128,9 @@ const mapStateToProps = ({user, quizPageable, majorPageable}) => ({
 
 const mapDispatchToProps = dispatch => ({
   getQuizzes: (current) => dispatch(getQuizzes(current)),
-  getMajors: () => dispatch(getMajors()),
-  editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback))
+  getMajors: () => dispatch(getMajorsByPage()),
+  editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
+  addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizManagementBody)

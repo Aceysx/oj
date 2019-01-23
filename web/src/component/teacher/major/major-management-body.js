@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
-import {getMajorsByPage, addMajor, putMajor} from '../../action/major-action'
+import {getMajorsByPage, addMajor} from '../../../action/major-action'
 import NewMajorModal from "./new-major-modal"
 import EditMajorModal from './edit-major-modal'
 
@@ -14,7 +14,7 @@ class MajorManagementBody extends Component {
     major: {}
   }
 
-  componentDidMount () {
+  componentDidMount = () => {
     this.props.getMajors(this.state.currentPage)
   }
 

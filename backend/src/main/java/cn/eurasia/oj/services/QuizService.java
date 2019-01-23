@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class QuizService {
   @Autowired
@@ -20,7 +22,7 @@ public class QuizService {
   @Autowired
   private MajorRepository majorRepository;
 
-  public Page<Quiz> getQuizzes(Pageable pageable) {
+  public Page<Quiz> getQuizzesByPage(Pageable pageable) {
 
     return quizRepository.findAll(pageable);
   }
@@ -39,5 +41,9 @@ public class QuizService {
     );
     quiz.update(quizParam, major);
     return quizRepository.save(quiz);
+  }
+
+  public List<Quiz> getQuizzes() {
+    return quizRepository.findAll();
   }
 }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
-import {addClassCourse, editClassCourse, getClassCourses} from '../../action/class-course-action'
+import {addClassCourse, editClassCourse, getClassCourses} from '../../../action/class-course-action'
 import NewClassCourseModal from "./new-class-course-modal"
 import EditClassCourseModal from './edit-class-course-modal'
 

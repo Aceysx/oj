@@ -13,6 +13,9 @@ const routers = {
       title: '专业管理',
       url: '/teachers/majors'
     }, {
+      title: '试卷管理',
+      url: '/teachers/papers'
+    }, {
       title: '题目管理',
       url: '/teachers/quizzes'
     }

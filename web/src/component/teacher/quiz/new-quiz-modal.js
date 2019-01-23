@@ -1,6 +1,5 @@
 import React from 'react'
 import {Button, Col, Radio, Form, Input, message, Modal, Row, Tooltip, Icon, Select} from 'antd'
-import majorPageable from "../../reducer/major";
 
 const RadioGroup = Radio.Group
 const {Option} = Select;
