@@ -7,7 +7,7 @@ export const getMajorsByPage = (current) => {
       const res = await request.get(`../api/majors/pageable?page=${--current}`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
-          type: 'REFRESH_MAJORS',
+          type: 'REFRESH_MAJORS_PAGEABLE',
           data: res.body
         })
       }

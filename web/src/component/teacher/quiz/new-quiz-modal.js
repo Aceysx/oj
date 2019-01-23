@@ -69,8 +69,7 @@ class NewQuizModal extends React.Component {
 
 
   render() {
-    const {isNewModalOpen, closeModal, form, options, answer, majorPageable} = this.props
-    const majors = majorPageable[0] ? majorPageable : []
+    const {isNewModalOpen, closeModal, form, options, answer, majors} = this.props
     const {getFieldDecorator} = form
 
     return <div>

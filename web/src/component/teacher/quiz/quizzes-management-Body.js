@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
 import NewQuizModal from "./new-quiz-modal"
 import EditQuizModal from './edit-quiz-modal'
-import {addQuiz, editQuiz, getQuizzes} from '../../../action/quiz-action'
+import {addQuiz, editQuiz, getQuizzes, getQuizzesByPage} from '../../../action/quiz-action'
 import {getMajors} from "../../../action/major-action";
 
 class QuizManagementBody extends Component {
@@ -66,7 +66,7 @@ class QuizManagementBody extends Component {
         }
       }
     ]
-    const {quizPageable, addQuiz, majorPageable, editQuiz} = this.props
+    const {quizPageable, addQuiz, majors, editQuiz} = this.props
     const {totalElements, content} = quizPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer} = this.state
     return <div>
@@ -81,7 +81,7 @@ class QuizManagementBody extends Component {
         updateAnswer={(answer) => this.setState({answer})}
         answer={answer}
         options={options}
-        majorPageable={majorPageable}
+        majors={majors}
         isNewModalOpen={isNewModalOpen}
         closeModal={() => this.setState({
           isNewModalOpen: false,
@@ -93,7 +93,7 @@ class QuizManagementBody extends Component {
       <EditQuizModal
         answer={answer}
         options={options}
-        majorPageable={majorPageable}
+        majors={majors}
         isNewModalOpen={isEditModalOpen}
         updateOptions={(options) => this.setState({options})}
         updateAnswer={(answer) => this.setState({answer})}
@@ -120,14 +120,14 @@ class QuizManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizPageable, majorPageable}) => ({
+const mapStateToProps = ({user, quizPageable, majors}) => ({
   user,
   quizPageable,
-  majorPageable
+  majors
 })
 
 const mapDispatchToProps = dispatch => ({
-  getQuizzes: (current) => dispatch(getQuizzes(current)),
+  getQuizzes: (current) => dispatch(getQuizzesByPage(current)),
   getMajors: () => dispatch(getMajors()),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
   addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback))

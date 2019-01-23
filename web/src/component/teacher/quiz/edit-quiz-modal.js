@@ -75,8 +75,7 @@ class EditQuizModal extends React.Component {
 
 
   render() {
-    const {isNewModalOpen, closeModal, form, options, majorPageable} = this.props
-    const majors = majorPageable[0] ? majorPageable : []
+    const {isNewModalOpen, closeModal, form, options, majors} = this.props
     const {getFieldDecorator} = form
 
     return <div>
