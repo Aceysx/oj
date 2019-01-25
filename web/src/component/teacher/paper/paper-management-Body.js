@@ -3,18 +3,21 @@ import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
 import NewPaperBox from './new-paper-box'
 import {getPapersByPage} from "../../../action/paper-action";
+import PreviewPaperModal from "./preview-paper-modal";
 
 class PaperManagementBody extends Component {
   state = {
     isShowNewPaperBox: false,
-    currentPage: 1
+    isPreviewModalOpen: false,
+    currentPage: 1,
+    paper: {quizzes: []}
   }
 
   componentDidMount = () => {
     this.props.getPapersByPage(this.state.currentPage)
   }
 
-  render () {
+  render() {
     const columns = [
       {
         title: '名称',
@@ -35,31 +38,39 @@ class PaperManagementBody extends Component {
         title: '操作',
         dataIndex: 'actions',
         key: 'actions',
-        render: (text, record) => {
+        render: (text, paper) => {
           return <div>
-            <a onClick={() => this.setState({isEditModalOpen: true, classCourse: record})}>编辑</a>
-            <Divider type='vertical' />
-            <a>绑定试卷</a>
+            <a onClick={() => this.setState({isPreviewModalOpen: true, paper})}>预览</a>
+            <Divider type='vertical'/>
+            <a onClick={() => this.setState({isEditModalOpen: true, paper})}>编辑</a>
           </div>
         }
       }
     ]
     const {paperPageable} = this.props
     const {totalElements, content} = paperPageable || {}
-    const {currentPage, isShowNewPaperBox} = this.state
+    const {currentPage, isShowNewPaperBox, isPreviewModalOpen, paper} = this.state
 
-    return <div >
+    return <div>
       <p><Button
         type="primary"
-        onClick={()=>this.setState({isShowNewPaperBox:true})}>
+        onClick={() => this.setState({isShowNewPaperBox: true})}>
         添加试卷
       </Button></p>
       {
         isShowNewPaperBox ?
           <NewPaperBox
             visible={isShowNewPaperBox}
-            onCancel={()=>this.setState({isShowNewPaperBox:false})}/>
-          :''
+            onCancel={() => this.setState({isShowNewPaperBox: false})}/>
+          : ''
+      }
+      {
+        isPreviewModalOpen ?
+          <PreviewPaperModal
+            visible={isPreviewModalOpen}
+            paper={paper}
+            onCancel={() => this.setState({isPreviewModalOpen: false})}/>
+          : ''
       }
 
       <Table
@@ -69,7 +80,7 @@ class PaperManagementBody extends Component {
         rowKey='id'
         onChange={(pagination) => this.getClassCourse(pagination)}
         pagination={{
-          defaultCurrent : currentPage,
+          defaultCurrent: currentPage,
           total: totalElements
         }}/>
 
@@ -78,7 +89,7 @@ class PaperManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user,paperPageable}) => ({
+const mapStateToProps = ({user, paperPageable}) => ({
   user,
   paperPageable
 })
