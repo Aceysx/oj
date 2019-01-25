@@ -89,7 +89,7 @@ class NewPaperBox extends Component {
   }
 
   render() {
-    const {current, targetKeys, paper, currentMajorId, currentChapter, currentLevel} = this.state
+    const {current, targetKeys, paper={}, currentMajorId, currentChapter, currentLevel} = this.state
     const {majors, quizzes} = this.props
     const steps = [{
       title: '创建试卷',
