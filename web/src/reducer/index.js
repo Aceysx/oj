@@ -6,11 +6,16 @@ import majorPageable from './majorPageable'
 import majors from './majors'
 import quizPageable from './quizPageable'
 import quizzes from './quizzes'
+import paperPageable from './paperPageable'
+import papers from './papers'
+
 export default combineReducers({
   user,
   majors,
   classCoursesPageable,
   majorPageable,
   quizPageable,
-  quizzes
+  quizzes,
+  papers,
+  paperPageable
 })

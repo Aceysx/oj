@@ -2,10 +2,16 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
 import NewPaperBox from './new-paper-box'
+import {getPapersByPage} from "../../../action/paper-action";
 
 class PaperManagementBody extends Component {
   state = {
-    isShowNewPaperBox: false
+    isShowNewPaperBox: false,
+    currentPage: 1
+  }
+
+  componentDidMount = () => {
+    this.props.getPapersByPage(this.state.currentPage)
   }
 
   render () {
@@ -15,13 +21,16 @@ class PaperManagementBody extends Component {
         dataIndex: 'title',
         key: 'title'
       }, {
-        title: '口令',
-        dataIndex: 'code',
-        key: 'code'
+        title: '创建时间',
+        dataIndex: 'createTime',
+        key: 'createTime'
       }, {
-        title: '截止时间',
-        dataIndex: 'endTime',
-        key: 'endTime'
+        title: '题目个数',
+        dataIndex: 'count',
+        key: 'count',
+        render: (text, record) => {
+          return <span>{record.quizzes.length}</span>
+        }
       }, {
         title: '操作',
         dataIndex: 'actions',
@@ -35,8 +44,8 @@ class PaperManagementBody extends Component {
         }
       }
     ]
-    const {classCoursesPageable} = this.props
-    const {totalElements, content} = classCoursesPageable || {}
+    const {paperPageable} = this.props
+    const {totalElements, content} = paperPageable || {}
     const {currentPage, isShowNewPaperBox} = this.state
 
     return <div >
@@ -69,10 +78,13 @@ class PaperManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user}) => ({
-  user
+const mapStateToProps = ({user,paperPageable}) => ({
+  user,
+  paperPageable
 })
 
-const mapDispatchToProps = dispatch => ({})
+const mapDispatchToProps = dispatch => ({
+  getPapersByPage: (current) => dispatch(getPapersByPage(current))
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaperManagementBody)
