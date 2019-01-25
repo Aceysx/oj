@@ -65,7 +65,7 @@ class PaperBindQuizBox extends Component {
   render() {
     const {quizzes, targetKeys, currentMajorId,currentChapter,currentLevel} = this.props
     const dataSource = this.getQuizzesDataSource(quizzes)
-
+    console.log(targetKeys)
     return <div><p>
       <Tag color="#f50">专业</Tag>
       <Select value={currentMajorId}

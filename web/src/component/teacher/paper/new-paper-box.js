@@ -7,7 +7,7 @@ import PaperBasicInfoModal from './paper-basic-info-modal'
 import {getMajors} from '../../../action/major-action'
 import {getQuizzes} from "../../../action/quiz-action";
 import Paper from '../../common/paper'
-import {addPaper} from "../../../action/paper-action";
+import {addPaper, editPaper} from "../../../action/paper-action";
 
 const Step = Steps.Step
 
@@ -27,6 +27,18 @@ class NewPaperBox extends Component {
   componentDidMount = () => {
     this.props.getMajors()
     this.props.getQuizzes()
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const {paper} = nextProps
+    let targetKeys = []
+    if (paper === this.state.paper) {
+      return false
+    }
+    if (paper) {
+      targetKeys = paper.quizzes.map(quiz => quiz.id.toString())
+    }
+    this.setState({paper,targetKeys});
   }
 
   next = () => {
@@ -60,13 +72,22 @@ class NewPaperBox extends Component {
 
     this.setState({targetKeys, paper})
   }
-  addPaper = () => {
+  operPaper = () => {
     const {paper} = this.state
-    this.props.addPaper(paper, () => {
-      message.success('添加成功')
-      this.props.onCancel()
-    })
+    if (paper.id) {
+      this.props.editPaper(paper, () => {
+        message.success('编辑成功')
+        this.props.onCancel()
+      })
+    }else{
+      this.props.addPaper(paper, () => {
+        message.success('添加成功')
+        this.props.onCancel()
+      })
+    }
+
   }
+
   render() {
     const {current, targetKeys, paper, currentMajorId, currentChapter, currentLevel} = this.state
     const {majors, quizzes} = this.props
@@ -117,7 +138,7 @@ class NewPaperBox extends Component {
         }
         {
           current === steps.length - 1
-          && <Button type="primary" onClick={this.addPaper}>完成</Button>
+          && <Button type="primary" onClick={this.operPaper}>完成</Button>
         }
         {
           current > 0
@@ -140,6 +161,7 @@ const mapStateToProps = ({user, quizzes, majors}) => ({
 
 const mapDispatchToProps = dispatch => ({
   addPaper: (paper, callback) => dispatch(addPaper(paper, callback)),
+  editPaper: (paper, callback) => dispatch(editPaper(paper, callback)),
   getMajors: () => dispatch(getMajors()),
   getQuizzes: () => dispatch(getQuizzes())
 })

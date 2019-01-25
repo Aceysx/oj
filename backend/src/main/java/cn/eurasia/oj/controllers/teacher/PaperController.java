@@ -41,10 +41,9 @@ public class PaperController {
   }
 
   @PutMapping("")
-  public ResponseEntity editPaper(@RequestBody CreateQuizParam quizParam) throws BusinessException {
-//    quizService.editQuiz(quizParam);
-//    return ResponseEntity.noContent().build();
-    return null;
+  public ResponseEntity editPaper(@RequestBody Paper paper) throws BusinessException {
+    paperService.editPaper(paper);
+    return ResponseEntity.noContent().build();
   }
 
 }

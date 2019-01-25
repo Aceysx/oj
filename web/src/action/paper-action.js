@@ -40,7 +40,7 @@ export const addPaper = (paper, callback) => {
     })()
   }
 }
-export const editQuiz = (paper, callback) => {
+export const editPaper = (paper, callback) => {
   return (dispatch) => {
     (async () => {
       const res = await request.update(`../api/papers`, paper)

@@ -9,12 +9,22 @@ class PaperManagementBody extends Component {
   state = {
     isShowNewPaperBox: false,
     isPreviewModalOpen: false,
+    isEditModalOpen: false,
     currentPage: 1,
     paper: {quizzes: []}
   }
 
   componentDidMount = () => {
     this.props.getPapersByPage(this.state.currentPage)
+  }
+
+  cancel = () => {
+    this.setState({
+      isPreviewModalOpen: false,
+      isEditModalOpen: false,
+      isShowNewPaperBox: false,
+      paper: {quizzes: []}
+    })
   }
 
   render() {
@@ -49,7 +59,11 @@ class PaperManagementBody extends Component {
     ]
     const {paperPageable} = this.props
     const {totalElements, content} = paperPageable || {}
-    const {currentPage, isShowNewPaperBox, isPreviewModalOpen, paper} = this.state
+    const {
+      currentPage, isShowNewPaperBox,
+      isPreviewModalOpen, paper,
+      isEditModalOpen
+    } = this.state
 
     return <div>
       <p><Button
@@ -61,7 +75,7 @@ class PaperManagementBody extends Component {
         isShowNewPaperBox ?
           <NewPaperBox
             visible={isShowNewPaperBox}
-            onCancel={() => this.setState({isShowNewPaperBox: false})}/>
+            onCancel={this.cancel}/>
           : ''
       }
       {
@@ -69,7 +83,15 @@ class PaperManagementBody extends Component {
           <PreviewPaperModal
             visible={isPreviewModalOpen}
             paper={paper}
-            onCancel={() => this.setState({isPreviewModalOpen: false})}/>
+            onCancel={this.cancel}/>
+          : ''
+      }
+      {
+        isEditModalOpen ?
+          <NewPaperBox
+            visible={isEditModalOpen}
+            paper={paper}
+            onCancel={this.cancel}/>
           : ''
       }
 

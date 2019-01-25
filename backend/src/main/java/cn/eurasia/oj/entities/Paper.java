@@ -41,4 +41,8 @@ public class Paper {
     return new Paper(createPaperParam.getTitle(), createPaperParam.getQuizzes(), current);
   }
 
+  public void update(Paper paper) {
+    this.title = paper.getTitle();
+    this.quizzes = paper.getQuizzes();
+  }
 }
