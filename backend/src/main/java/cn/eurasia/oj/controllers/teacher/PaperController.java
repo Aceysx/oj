@@ -32,6 +32,10 @@ public class PaperController {
     return ResponseEntity.ok(paperService.getQuizzesByPage(pageable));
   }
 
+  @GetMapping("")
+  public ResponseEntity getPapers() {
+    return ResponseEntity.ok(paperService.findAll());
+  }
   @PostMapping("")
   public ResponseEntity addPaper(@RequestBody CreatePaperParam createPaperParam,
                                        @Auth User current) {

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -24,10 +25,15 @@ public class ClassCourse {
   private Date createTime;
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date endTime;
+  @ManyToMany
+  @JoinTable(name = "classCoursePaper",joinColumns = @JoinColumn(name = "classCourseId"),
+    inverseJoinColumns = @JoinColumn(name = "paperId"))
+  private List<Paper> papers;
 
   public void update(ClassCourse classCourse) {
     this.title = classCourse.title;
     this.code = classCourse.code;
     this.endTime = classCourse.endTime;
+    this.papers = classCourse.getPapers();
   }
 }

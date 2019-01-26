@@ -4,12 +4,13 @@ import cn.eurasia.oj.entities.Paper;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.PaperRepository;
-import cn.eurasia.oj.repositories.QuizRepository;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PaperService {
@@ -31,5 +32,9 @@ public class PaperService {
     );
     currentPaper.update(paper);
     paperRepository.save(paper);
+  }
+
+  public List<Paper> findAll() {
+    return paperRepository.findAll();
   }
 }

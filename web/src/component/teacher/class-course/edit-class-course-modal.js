@@ -16,10 +16,11 @@ const formItemLayout = {
 
 class EditClassCourseModal extends React.Component {
   handleSubmit = (e) => {
+    const { classCourse } = this.props
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.editClassCourse(Object.assign(values,{id:this.props.classCourse.id}), () => {
+        this.props.editClassCourse(Object.assign({}, classCourse, values), () => {
           message.success('编辑成功')
           this.props.closeModal()
         })
