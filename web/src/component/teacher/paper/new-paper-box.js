@@ -30,7 +30,7 @@ class NewPaperBox extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const {paper} = nextProps
+    const {paper ={title:'', quizzes: []}} = nextProps
     let targetKeys = []
     if (paper === this.state.paper) {
       return false
@@ -89,7 +89,7 @@ class NewPaperBox extends Component {
   }
 
   render() {
-    const {current, targetKeys, paper={}, currentMajorId, currentChapter, currentLevel} = this.state
+    const {current, targetKeys, paper, currentMajorId, currentChapter, currentLevel} = this.state
     const {majors, quizzes} = this.props
     const steps = [{
       title: '创建试卷',
