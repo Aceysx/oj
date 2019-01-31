@@ -55,3 +55,15 @@ export const addUser = (user, callback) => {
     })()
   }
 }
+
+export const  putUser = (user, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.update(`../api/users`, user)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        dispatch(getUsersByPage())
+        callback()
+      }
+    })()
+  }
+}

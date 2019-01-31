@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -46,5 +44,11 @@ public class UserController {
     public ResponseEntity addUser(@RequestBody User user) {
         userCenterService.addUser(user);
         return ResponseEntity.created(URI.create("/api/users" + user.getId())).build();
+    }
+
+    @PutMapping("")
+    public ResponseEntity putUser(@RequestBody User user) throws BusinessException {
+        userCenterService.putUser(user);
+        return ResponseEntity.noContent().build();
     }
 }

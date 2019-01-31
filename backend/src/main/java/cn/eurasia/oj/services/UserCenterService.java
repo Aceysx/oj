@@ -36,4 +36,10 @@ public class UserCenterService {
         user.setCreateTime(new Date());
         userRepository.save(user);
     }
+
+    public void putUser(User user) throws BusinessException {
+        userRepository.findById(user.getId()).orElseThrow(
+                () -> new BusinessException("无当前数据"));
+        userRepository.save(user);
+    }
 }

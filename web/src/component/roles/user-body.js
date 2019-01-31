@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
-import {getUsersByPage, addUser} from '../../action/user'
+import {getUsersByPage, addUser, putUser} from '../../action/user'
 import NewUserModal from './new-user-modal'
+import EditUserModal from './edit-user-modal'
 
 class UserBody extends Component {
   state = {
@@ -81,6 +82,12 @@ class UserBody extends Component {
             closeModal={() => this.setState({isNewModalOpen:false})}
             addUser={this.props.addUser}
           />
+          <EditUserModal
+            isEditModalOpen = {isEditModalOpen}
+            closeModal={() => this.setState({isEditModalOpen: false})}
+            user = {user}
+            putUser = {this.props.putUser}
+          />
           <Table
             bordered
             columns={columns}
@@ -103,7 +110,8 @@ const mapStateToProps = ({user, userPageable}) => ({
 
 const mapDispatchToProps = dispatch => ({
   getUsers: (current) => dispatch(getUsersByPage(current)),
-  addUser: (user, callback) => dispatch(addUser(user, callback))
+  addUser: (user, callback) => dispatch(addUser(user, callback)),
+  putUser: (user, callback) => dispatch(putUser(user, callback))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserBody)
