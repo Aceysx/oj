@@ -43,3 +43,15 @@ export const getUsersByPage = (current) => {
     })()
   }
 }
+
+export const addUser = (user, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.post(`../api/users`, user)
+      if (res.status === HTTP_CODE.CREATED) {
+        dispatch(getUsersByPage())
+        callback()
+      }
+    })()
+  }
+}

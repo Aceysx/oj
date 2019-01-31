@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 
@@ -39,5 +40,11 @@ public class UserController {
                     direction = Sort.Direction.DESC) Pageable pageable) {
 
         return ResponseEntity.ok(userCenterService.getUsersByPage(pageable));
+    }
+
+    @PostMapping("")
+    public ResponseEntity addUser(@RequestBody User user) {
+        userCenterService.addUser(user);
+        return ResponseEntity.created(URI.create("/api/users" + user.getId())).build();
     }
 }

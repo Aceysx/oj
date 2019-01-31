@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -29,5 +30,10 @@ public class UserCenterService {
 
     public Page<User> getUsersByPage(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    public void addUser(User user) {
+        user.setCreateTime(new Date());
+        userRepository.save(user);
     }
 }

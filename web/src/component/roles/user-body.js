@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
-import {getUsersByPage} from '../../action/user'
+import {getUsersByPage, addUser} from '../../action/user'
+import NewUserModal from './new-user-modal'
 
 class UserBody extends Component {
   state = {
@@ -75,6 +76,11 @@ class UserBody extends Component {
               添加用户
             </Button>
           </p>
+          <NewUserModal
+            isNewModalOpen={isNewModalOpen}
+            closeModal={() => this.setState({isNewModalOpen:false})}
+            addUser={this.props.addUser}
+          />
           <Table
             bordered
             columns={columns}
@@ -96,7 +102,8 @@ const mapStateToProps = ({user, userPageable}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getUsers: (current) => dispatch(getUsersByPage(current))
+  getUsers: (current) => dispatch(getUsersByPage(current)),
+  addUser: (user, callback) => dispatch(addUser(user, callback))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserBody)
