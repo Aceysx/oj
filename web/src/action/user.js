@@ -29,3 +29,17 @@ export const login = (user, callback) => {
     })()
   }
 }
+
+export const getUsersByPage = (current) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`../api/users/pageable?page=${--current}`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'REFRESH_USERS_PAGEABLE',
+          data: res.body
+        })
+      }
+    })()
+  }
+}

@@ -22,7 +22,7 @@ const routers = {
   ],
   roles: [
     {
-      title: '班课管理',
+      title: '用户管理',
       url: '/roles/users'
     }
   ]
