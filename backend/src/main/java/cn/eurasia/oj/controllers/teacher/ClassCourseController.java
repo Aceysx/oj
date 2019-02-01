@@ -36,6 +36,22 @@ public class ClassCourseController {
     return ResponseEntity.created(URI.create("/api/classCourse/"+classCourse.getId())).build();
   }
 
+  @PostMapping("my")
+  public ResponseEntity addMyClassCourse(@RequestParam String code,
+                                       @Auth User current) throws BusinessException {
+
+    ClassCourse classCourse = classCourseService.addMyClassCourse(code, current);
+    return ResponseEntity.created(URI.create("/api/classCourse/" + classCourse.getId())).build();
+  }
+
+
+  @GetMapping("my")
+  public ResponseEntity getMyClassCourse(
+    @PageableDefault(sort = {"id"},
+      direction = Sort.Direction.DESC) Pageable pageable,
+    @Auth User current) {
+    return ResponseEntity.ok(classCourseService.getMyClassCourses(pageable, current));
+  }
   @PutMapping("")
   public ResponseEntity editClassCourse(@RequestBody ClassCourse classCourse) throws BusinessException {
     classCourseService.editClassCourse(classCourse);

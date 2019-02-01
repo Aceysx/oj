@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import OjLayout from './component/layout'
-import MyClassCourseBody from './component/student/my-class-course-body'
+import MyClassCourseBody from './component/student/myClassCourse/my-class-course-body'
 import ClassCourseManagementBody from './component/teacher/class-course/class-course-management-Body'
 import MajorManagementBody from './component/teacher/major/major-management-body'
 import UserBody from './component/roles/user-body'
