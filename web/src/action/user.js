@@ -4,7 +4,7 @@ import HTTP_CODE from '../constant/httpCode'
 export const initUser = () => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/users/1`)
+      const res = await request.get(`/api/users/1`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'INIT_USER',
@@ -18,7 +18,7 @@ export const initUser = () => {
 export const login = (user, callback) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.post(`../api/users/login`, user)
+      const res = await request.post(`/api/users/login`, user)
       if (res.status === HTTP_CODE.CREATED) {
         callback()
         dispatch({
@@ -33,7 +33,7 @@ export const login = (user, callback) => {
 export const getUsersByPage = (current) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/users/pageable?page=${--current}`)
+      const res = await request.get(`/api/users/pageable?page=${--current}`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'REFRESH_USERS_PAGEABLE',
@@ -47,7 +47,7 @@ export const getUsersByPage = (current) => {
 export const addUser = (user, callback) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.post(`../api/users`, user)
+      const res = await request.post(`/api/users`, user)
       if (res.status === HTTP_CODE.CREATED) {
         dispatch(getUsersByPage())
         callback()
@@ -56,10 +56,10 @@ export const addUser = (user, callback) => {
   }
 }
 
-export const  putUser = (user, callback) => {
+export const putUser = (user, callback) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.update(`../api/users`, user)
+      const res = await request.update(`/api/users`, user)
       if (res.status === HTTP_CODE.NO_CONTENT) {
         dispatch(getUsersByPage())
         callback()

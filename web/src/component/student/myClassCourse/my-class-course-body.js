@@ -3,14 +3,12 @@ import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
 import AddClassCourseModalForm from "./add-class-course-modal";
 import {addMyClassCourse, getMyClassCourses} from "../../../action/class-course-action";
-import AnswerPaperModal from './answer-paper-modal'
+import {Link} from "react-router-dom";
 
 class MyClassCourseBody extends Component {
   state = {
     currentPage: 1,
     isAddModalOpen: false,
-    paper: {quizzes: []},
-    isAnswerPaperModalOpen: false
   }
 
   componentDidMount = () => {
@@ -33,9 +31,9 @@ class MyClassCourseBody extends Component {
           title: '操作',
           dataIndex: 'operation',
           key: 'operation',
-          render: (text,paper) => {
+          render: (text, paper) => {
             return <span className="table-operation">
-            <a onClick={() => this.setState({paper, isAnswerPaperModalOpen: true})}>答题</a>
+            <Link to={`/students/papers/${paper.id}/answer`}>答题</Link>
           </span>
           }
           ,
@@ -78,7 +76,7 @@ class MyClassCourseBody extends Component {
     ]
     const {classCoursesPageable} = this.props
     const {totalElements, content} = classCoursesPageable
-    const {currentPage, isAddModalOpen, paper, isAnswerPaperModalOpen} = this.state
+    const {currentPage, isAddModalOpen} = this.state
     return <div>
       <p><Button
         type='primary'
@@ -91,13 +89,6 @@ class MyClassCourseBody extends Component {
         closeModal={() => this.setState({isAddModalOpen: false})}
         addClassCourse={this.props.addClassCourse}
       />
-        <AnswerPaperModal
-          visible={isAnswerPaperModalOpen}
-          onCancel={() => this.setState({isAnswerPaperModalOpen: false})}
-          onSubmit={() => {
-          }}
-          paper={paper}
-        />
       <Table
         bordered
         columns={columns}

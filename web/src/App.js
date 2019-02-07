@@ -7,6 +7,7 @@ import UserBody from './component/roles/user-body'
 import QuizManagementBody from './component/teacher/quiz/quizzes-management-Body'
 import Login from './component/login-body'
 import PaperManagement from './component/teacher/paper/paper-management-Body'
+import PaperAnswer from './component/student/myClassCourse/answer-paper'
 
 import 'braft-editor/dist/index.css'
 import {
@@ -27,6 +28,7 @@ class App extends Component {
           <Route exact path='/teachers/quizzes' component={QuizManagementBody} />
           <Route exact path='/roles/users' component={UserBody} />
           <Route exact path='/students/class-courses' component={MyClassCourseBody} />
+          <Route exact path='/students/papers/:paperId/answer' component={PaperAnswer} />
         </OjLayout>
       </Router>
     )

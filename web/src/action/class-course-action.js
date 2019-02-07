@@ -52,7 +52,6 @@ export const addMyClassCourse = (code, callback) => {
 }
 
 export const getMyClassCourses = (current) => {
-  console.log(current)
   return (dispatch) => {
     (async () => {
       const res =

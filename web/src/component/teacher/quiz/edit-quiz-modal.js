@@ -98,7 +98,7 @@ class EditQuizModal extends React.Component {
                 required: true, message: '请输入题目描述',
               }],
             })(
-              <BraftEditor/>
+              <BraftEditor />
             )}
           </Form.Item>
           <Form.Item

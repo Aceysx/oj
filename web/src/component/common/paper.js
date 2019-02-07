@@ -25,11 +25,9 @@ const Paper = ({paper, preview}) => {
       </div>
     })
   }
+
   return <div>
     <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
-    <Row>
-      <Col />
-    </Row>
     {getQuizzesList()}
   </div>
 }

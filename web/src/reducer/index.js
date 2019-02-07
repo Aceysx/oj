@@ -9,6 +9,7 @@ import quizPageable from './quizPageable'
 import quizzes from './quizzes'
 import paperPageable from './paperPageable'
 import papers from './papers'
+import paper from './paper'
 
 export default combineReducers({
   user,
@@ -19,5 +20,6 @@ export default combineReducers({
   quizPageable,
   quizzes,
   papers,
+  paper,
   paperPageable
 })

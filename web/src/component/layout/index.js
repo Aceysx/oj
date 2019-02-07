@@ -102,12 +102,12 @@ class OjLayout extends Component {
                 : ''
             }
 
-            <Content style={{padding: '0 24px', minHeight: 280}}>
+            <Content style={{padding: '0 15px', minHeight: 280}}>
               {this.props.children}
             </Content>
           </Layout>
         </Content>
-        <Footer style={{textAlign: 'center'}}>
+        <Footer style={{textAlign: 'center', height:'40px',lineHeight:'5px'}}>
           Platform ©2017
         </Footer>
       </Layout>
