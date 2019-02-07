@@ -8,6 +8,7 @@ import QuizManagementBody from './component/teacher/quiz/quizzes-management-Body
 import Login from './component/login-body'
 import PaperManagement from './component/teacher/paper/paper-management-Body'
 
+import 'braft-editor/dist/index.css'
 import {
     BrowserRouter as Router,
     Route

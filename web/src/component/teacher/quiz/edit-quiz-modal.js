@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button, Col, Form, Icon, Input, message, Modal, Radio, Row, Select, Tooltip} from 'antd'
-
+import BraftEditor from 'braft-editor'
 const RadioGroup = Radio.Group
 const {Option} = Select;
 
@@ -11,7 +11,7 @@ const formItemLayout = {
   },
   wrapperCol: {
     xs: {span: 24},
-    sm: {span: 16},
+    sm: {span: 14},
   },
 }
 
@@ -21,7 +21,8 @@ class EditQuizModal extends React.Component {
     if (quiz === this.props.quiz) {
       return false
     }
-    const {chapter, description, major = {}, level} = quiz
+    let {chapter, description, major = {}, level} = quiz
+    description = BraftEditor.createEditorState(description)
     form.setFieldsValue({chapter, description, major: major.id, level, answer: answer + ''})
   }
 
@@ -64,7 +65,8 @@ class EditQuizModal extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err && this.validateOptions()) {
         let {answer, options, quiz} = this.props
-        quiz = Object.assign({}, values, {id: quiz.id, answer, options: JSON.stringify(options)})
+        const description = values.description.toHTML()
+        quiz = Object.assign({}, values, {id: quiz.id, answer, options: JSON.stringify(options)},{description})
         this.props.editQuiz(quiz, () => {
           message.success('编辑成功')
           this.props.closeModal()
@@ -81,11 +83,24 @@ class EditQuizModal extends React.Component {
     return <div>
       <Modal
         title='修改题目'
+        width='80%'
         visible={isNewModalOpen}
         footer={null}
         onCancel={() => closeModal()}
       >
         <Form onSubmit={this.handleSubmit}>
+          <Form.Item
+            {...formItemLayout}
+            label="题目描述"
+          >
+            {getFieldDecorator('description', {
+              rules: [{
+                required: true, message: '请输入题目描述',
+              }],
+            })(
+              <BraftEditor/>
+            )}
+          </Form.Item>
           <Form.Item
             {...formItemLayout}
             label="专业"
@@ -116,18 +131,7 @@ class EditQuizModal extends React.Component {
               <Input/>
             )}
           </Form.Item>
-          <Form.Item
-            {...formItemLayout}
-            label="题目描述"
-          >
-            {getFieldDecorator('description', {
-              rules: [{
-                required: true, message: '请输入题目描述',
-              }],
-            })(
-              <Input/>
-            )}
-          </Form.Item>
+
           <Form.Item
             {...formItemLayout}
             label="难度"

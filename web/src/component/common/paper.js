@@ -1,24 +1,35 @@
 import React from 'react'
+import {Col, Radio, Row} from 'antd'
 
-const Paper = ({paper}) => {
+const RadioGroup = Radio.Group
+const Paper = ({paper, preview}) => {
   const getOptions = (quiz) => {
-    const options = JSON.parse(quiz.options)
-    return options.map(option => <li>{option}</li>)
+    let {options, answer} = quiz
+    options = JSON.parse(options)
+
+    return options.map((option, index) => {
+      const isChecked = answer === index
+      return <p><Radio key={index} checked={isChecked} value={index}>{option}</Radio></p>
+    }
+    )
   }
 
   const getQuizzesList = () => {
     const {quizzes} = paper
     return quizzes.map(quiz => {
-      return <div><p>{quiz.description}</p>
-        <ol>
+      return <div>
+        <p dangerouslySetInnerHTML={{__html: `${quiz.description}`}} />
+        <RadioGroup value={quiz.answer} disabled={!!preview}>
           {getOptions(quiz)}
-        </ol>
+        </RadioGroup>
       </div>
     })
   }
   return <div>
-    <h1>{paper.title}</h1>
-    <h2>题目</h2>
+    <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
+    <Row>
+      <Col />
+    </Row>
     {getQuizzesList()}
   </div>
 }
