@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Table} from 'antd'
+import {Button, Table, message, Divider} from 'antd'
 import AddClassCourseModalForm from "./add-class-course-modal";
 import {addMyClassCourse, getMyClassCourses} from "../../../action/class-course-action";
 import {Link} from "react-router-dom";
@@ -13,6 +13,13 @@ class MyClassCourseBody extends Component {
 
   componentDidMount = () => {
     this.props.getMyClassCourses(this.state.currentPage)
+  }
+
+  addClassCourse = (code) => {
+    this.props.addClassCourse(code, () => {
+      message.success('添加成功')
+      this.setState({isAddModalOpen: false})
+    })
   }
 
   expandedRowRender = (classCourse) => {
@@ -87,7 +94,7 @@ class MyClassCourseBody extends Component {
       <AddClassCourseModalForm
         isAddModalOpen={isAddModalOpen}
         closeModal={() => this.setState({isAddModalOpen: false})}
-        addClassCourse={this.props.addClassCourse}
+        addClassCourse={this.addClassCourse}
       />
       <Table
         bordered
@@ -110,7 +117,7 @@ const mapStateToProps = ({user, classCoursesPageable}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addClassCourse: code => dispatch(addMyClassCourse(code)),
+  addClassCourse: (code, callback) => dispatch(addMyClassCourse(code, callback)),
   getMyClassCourses: (currentPage) => dispatch(getMyClassCourses(currentPage))
 })
 
