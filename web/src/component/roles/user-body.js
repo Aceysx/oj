@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Table} from 'antd'
-import {getUsersByPage, addUser, putUser} from '../../action/user'
+import {getUsersByPage, addUser, putUser, getRolePageable} from '../../action/user'
 import NewUserModal from './new-user-modal'
 import EditUserModal from './edit-user-modal'
 
@@ -10,17 +10,25 @@ class UserBody extends Component {
     currentPage: 1,
     isNewModalOpen: false,
     isEditModalOpen: false,
-    user: {}
+    user: {},
+    roles: []
   }
 
   componentDidMount = () => {
     this.props.getUsers(this.state.currentPage)
+    this.props.getRoles()
   }
 
   getUsers = (pagination) => {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
       this.props.getUsers(current)
+    })
+  }
+
+  getRoles = () => {
+    this.setState(() => {
+      this.props.getRoles()
     })
   }
 
@@ -64,7 +72,8 @@ class UserBody extends Component {
       }
     ]
 
-    const {userPageable} = this.props
+    const {userPageable, rolePageable} = this.props
+    console.log(this.props)
     const {totalElements, content} = userPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, user} = this.state
 
@@ -80,12 +89,14 @@ class UserBody extends Component {
           <NewUserModal
             isNewModalOpen={isNewModalOpen}
             closeModal={() => this.setState({isNewModalOpen:false})}
+            roles = {rolePageable.content}
             addUser={this.props.addUser}
           />
           <EditUserModal
             isEditModalOpen = {isEditModalOpen}
             closeModal={() => this.setState({isEditModalOpen: false})}
             user = {user}
+            roles = {rolePageable.content}
             putUser = {this.props.putUser}
           />
           <Table
@@ -103,15 +114,17 @@ class UserBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, userPageable}) => ({
+const mapStateToProps = ({user, userPageable, rolePageable}) => ({
   user,
-  userPageable
+  userPageable,
+  rolePageable
 })
 
 const mapDispatchToProps = dispatch => ({
   getUsers: (current) => dispatch(getUsersByPage(current)),
   addUser: (user, callback) => dispatch(addUser(user, callback)),
-  putUser: (user, callback) => dispatch(putUser(user, callback))
+  putUser: (user, callback) => dispatch(putUser(user, callback)),
+  getRoles: () => dispatch(getRolePageable())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserBody)

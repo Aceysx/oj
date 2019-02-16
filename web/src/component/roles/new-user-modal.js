@@ -1,6 +1,8 @@
 import React from 'react'
-import {Row, Button, Col, Form, Input, Modal} from 'antd'
-import {message} from "antd/lib/index";
+import {Row, Button, Col, Form, Input, Modal, Select} from 'antd'
+import {message} from "antd/lib/index"
+
+const Option = Select.Option;
 
 const formItemLayout = {
   labelCol: {
@@ -11,28 +13,35 @@ const formItemLayout = {
     xs: {span: 24},
     sm: {span: 16},
   },
+};
+
+function handleChange(value) {
+  console.log(`selected ${value}`);
 }
 
 class NewUserModal extends React.Component {
 
   handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        values.roles = values.roles.map(role => {
+          return {id:role}
+        });
         this.props.addUser(values, () => {
-          message.success('添加成功')
+          message.success('添加成功');
           this.props.closeModal()
         })
       }
     })
-  }
+  };
 
   componentDidMount = () => {
-  }
+  };
 
   render() {
-    const {isNewModalOpen, closeModal, form} = this.props
-    const {getFieldDecorator} = form
+    const {isNewModalOpen, closeModal, form} = this.props;
+    const {getFieldDecorator} = form;
 
     return <div>
       <Modal
@@ -90,6 +99,28 @@ class NewUserModal extends React.Component {
               <Input/>
             )}
           </Form.Item>
+
+          <Form.Item
+            {...formItemLayout}
+            label="用户角色"
+          >
+            {getFieldDecorator('roles', {
+              rules: [{
+                required: true, message: '请选择用户角色',
+              }],
+            })(
+              <Select
+                mode="multiple"
+                placeholder="请选择用户角色"
+                onChange={handleChange}
+              >
+              <Option key='1'>管理员</Option>
+              <Option key='2'>老师</Option>
+              <Option key='3'>学生</Option>
+              <Option key='4'>超级管理员</Option>
+            </Select>
+            )}
+          </Form.Item>
           
           <Row type='flex' align='middle'>
             <Col>
@@ -103,6 +134,6 @@ class NewUserModal extends React.Component {
   }
 }
 
-const NewUserModalForm = Form.create()(NewUserModal)
+const NewUserModalForm = Form.create()(NewUserModal);
 
 export default NewUserModalForm

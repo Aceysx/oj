@@ -2,6 +2,7 @@ package cn.eurasia.oj.controllers;
 
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
+import cn.eurasia.oj.services.RoleService;
 import cn.eurasia.oj.services.UserCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UserCenterService userCenterService;
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("{userId}")
     public ResponseEntity getUserById(@PathVariable Long userId) throws BusinessException {
@@ -40,10 +43,17 @@ public class UserController {
         return ResponseEntity.ok(userCenterService.getUsersByPage(pageable));
     }
 
+    @GetMapping("roles")
+    public ResponseEntity getAllRole(@PageableDefault(sort = {"id"},
+            direction = Sort.Direction.DESC) Pageable pageable) {
+
+        return ResponseEntity.ok(roleService.getAllRole(pageable));
+    }
+
     @PostMapping("")
-    public ResponseEntity addUser(@RequestBody User user) {
-        userCenterService.addUser(user);
-        return ResponseEntity.created(URI.create("/api/users" + user.getId())).build();
+    public ResponseEntity addUser(@RequestBody User user) throws BusinessException {
+        User data = userCenterService.addUser(user);
+        return ResponseEntity.created(URI.create("/api/users" + user.getId())).body(data);
     }
 
     @PutMapping("")

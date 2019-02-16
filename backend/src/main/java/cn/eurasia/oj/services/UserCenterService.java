@@ -8,8 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserCenterService {
@@ -32,9 +31,23 @@ public class UserCenterService {
         return userRepository.findAll(pageable);
     }
 
-    public void addUser(User user) {
-        user.setCreateTime(new Date());
+    public User addUser(User user) throws BusinessException {
+        if (Objects.nonNull(isExist(user))) {
+            throw new BusinessException(String.valueOf(isExist(user)));
+        }
+        user.setPassword("123456");
         userRepository.save(user);
+        return user;
+    }
+
+    private Object isExist(User user) {
+        User currentUser = userRepository.findByUsernameOrPhoneOrEmail(user.getUsername(), user.getPhone(), user.getEmail());
+        if (Objects.nonNull(currentUser)) {
+            if (currentUser.getUsername().equals(user.getUsername())) return "用户名已存在";
+            if (currentUser.getPhone().equals(user.getPhone())) return "电话号码已存在";
+            if (currentUser.getEmail().equals(user.getEmail())) return "邮箱已存在";
+        }
+        return null;
     }
 
     public void putUser(User user) throws BusinessException {
