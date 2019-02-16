@@ -37,4 +37,12 @@ public class PaperService {
   public List<Paper> findAll() {
     return paperRepository.findAll();
   }
+
+  public Paper findPaper(Long paperId) throws BusinessException {
+    Paper paper = paperRepository.findById(paperId).orElseThrow(
+      () -> new BusinessException("未找到")
+    );
+    paper.removeQuizzesAnswer();
+    return paper;
+  }
 }

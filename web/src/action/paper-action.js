@@ -4,7 +4,7 @@ import HTTP_CODE from '../constant/httpCode'
 export const getPapersByPage = (current) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/papers/pageable?page=${--current}`)
+      const res = await request.get(`/api/papers/pageable?page=${--current}`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'REFRESH_PAPERS_PAGEABLE',
@@ -18,7 +18,7 @@ export const getPapersByPage = (current) => {
 export const getPapers = () => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/papers`)
+      const res = await request.get(`/api/papers`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'REFRESH_PAPERS',
@@ -29,10 +29,24 @@ export const getPapers = () => {
   }
 }
 
+export const getPaper = (paperId) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`/api/papers/${paperId}`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'REFRESH_PAPER',
+          data: res.body
+        })
+      }
+    })()
+  }
+}
+
 export const addPaper = (paper, callback) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.post(`../api/papers`, paper)
+      const res = await request.post(`/api/papers`, paper)
       if (res.status === HTTP_CODE.CREATED) {
         dispatch(getPapersByPage())
         callback()
@@ -43,7 +57,7 @@ export const addPaper = (paper, callback) => {
 export const editPaper = (paper, callback) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.update(`../api/papers`, paper)
+      const res = await request.update(`/api/papers`, paper)
       if (res.status === HTTP_CODE.NO_CONTENT) {
         dispatch(getPapersByPage())
         callback()

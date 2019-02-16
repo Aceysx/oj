@@ -45,4 +45,8 @@ public class Paper {
     this.title = paper.getTitle();
     this.quizzes = paper.getQuizzes();
   }
+
+  public void removeQuizzesAnswer() {
+    this.getQuizzes().forEach(quiz -> quiz.setAnswer(null));
+  }
 }

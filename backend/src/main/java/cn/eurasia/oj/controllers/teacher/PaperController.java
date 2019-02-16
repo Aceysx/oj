@@ -2,13 +2,10 @@ package cn.eurasia.oj.controllers.teacher;
 
 import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.Paper;
-import cn.eurasia.oj.entities.Quiz;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
-import cn.eurasia.oj.requestParams.CreateQuizParam;
 import cn.eurasia.oj.services.PaperService;
-import cn.eurasia.oj.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,6 +33,12 @@ public class PaperController {
   public ResponseEntity getPapers() {
     return ResponseEntity.ok(paperService.findAll());
   }
+
+  @GetMapping("{paperId}")
+  public ResponseEntity getPaper(@PathVariable Long paperId) throws BusinessException {
+    return ResponseEntity.ok(paperService.findPaper(paperId));
+  }
+
   @PostMapping("")
   public ResponseEntity addPaper(@RequestBody CreatePaperParam createPaperParam,
                                        @Auth User current) {

@@ -1,24 +1,39 @@
 import React from 'react'
+import {Divider, Radio} from 'antd'
 
-const Paper = ({paper}) => {
+const RadioGroup = Radio.Group
+const Paper = ({paper, preview, answers, onChange}) => {
   const getOptions = (quiz) => {
-    const options = JSON.parse(quiz.options)
-    return options.map(option => <li>{option}</li>)
+    let {options, answer} = quiz
+    options = JSON.parse(options)
+
+    return options.map((option, index) => {
+      const isChecked = answer === index
+      return <p><Radio key={index} checked={isChecked} value={index}>{option}</Radio></p>
+    }
+    )
   }
 
   const getQuizzesList = () => {
     const {quizzes} = paper
-    return quizzes.map(quiz => {
-      return <div><p>{quiz.description}</p>
-        <ol>
+
+    return quizzes.map((quiz, index) => {
+      const answer = quiz.answer || answers[quiz.id.toString()]
+      return <div>
+        <p dangerouslySetInnerHTML={{__html: `${index + 1}. ${quiz.description}`}} />
+        <RadioGroup
+          onChange={e => onChange(quiz.id.toString(), e.target.value)}
+          value={answer}
+          disabled={!!preview}>
           {getOptions(quiz)}
-        </ol>
+        </RadioGroup>
+        <Divider type='horizontal' />
       </div>
     })
   }
+
   return <div>
-    <h1>{paper.title}</h1>
-    <h2>题目</h2>
+    <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
     {getQuizzesList()}
   </div>
 }

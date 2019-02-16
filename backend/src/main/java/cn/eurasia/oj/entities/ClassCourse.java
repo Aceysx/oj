@@ -29,6 +29,10 @@ public class ClassCourse {
   @JoinTable(name = "classCoursePaper",joinColumns = @JoinColumn(name = "classCourseId"),
     inverseJoinColumns = @JoinColumn(name = "paperId"))
   private List<Paper> papers;
+  @ManyToMany
+  @JoinTable(name = "userClassCourse",joinColumns = @JoinColumn(name = "classCourseId"),
+    inverseJoinColumns = @JoinColumn(name = "userId"))
+  private List<User> users;
 
   public void update(ClassCourse classCourse) {
     this.title = classCourse.title;

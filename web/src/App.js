@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
 import OjLayout from './component/layout'
-import MyClassCourseBody from './component/student/my-class-course-body'
+import MyClassCourseBody from './component/student/myClassCourse/my-class-course-body'
 import ClassCourseManagementBody from './component/teacher/class-course/class-course-management-Body'
 import MajorManagementBody from './component/teacher/major/major-management-body'
 import UserBody from './component/roles/user-body'
 import QuizManagementBody from './component/teacher/quiz/quizzes-management-Body'
 import Login from './component/login-body'
 import PaperManagement from './component/teacher/paper/paper-management-Body'
+import PaperAnswer from './component/student/myClassCourse/answer-paper'
 
+import 'braft-editor/dist/index.css'
 import {
     BrowserRouter as Router,
     Route
@@ -26,6 +28,7 @@ class App extends Component {
           <Route exact path='/teachers/quizzes' component={QuizManagementBody} />
           <Route exact path='/roles/users' component={UserBody} />
           <Route exact path='/students/class-courses' component={MyClassCourseBody} />
+          <Route exact path='/students/papers/:paperId/answer' component={PaperAnswer} />
         </OjLayout>
       </Router>
     )

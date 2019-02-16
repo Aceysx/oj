@@ -38,3 +38,30 @@ export const editClassCourse = (classCourse, callback) => {
     })()
   }
 }
+
+export const addMyClassCourse = (code, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.post(`../api/classCourses/my?code=${code}`)
+      if (res.status === HTTP_CODE.CREATED) {
+        dispatch(getMyClassCourses())
+        callback()
+      }
+    })()
+  }
+}
+
+export const getMyClassCourses = (current) => {
+  return (dispatch) => {
+    (async () => {
+      const res =
+        await request.get(`../api/classCourses/my?page=${--current}`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'REFRESH_CLASS_COURSES',
+          data: res.body
+        })
+      }
+    })()
+  }
+}
