@@ -1,6 +1,5 @@
 package cn.eurasia.oj.entities;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -10,12 +9,14 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
-@Table(name = "role")
+@Table(name = "userRole")
 @Accessors(chain = true)
-public class Role {
+public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String roleName;
+    private Long userId;
+
+    private Long roleId;
 }

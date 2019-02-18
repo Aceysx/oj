@@ -2,11 +2,14 @@ package cn.eurasia.oj.services;
 
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
+import cn.eurasia.oj.repositories.RoleRepository;
 import cn.eurasia.oj.repositories.UserRepository;
+import cn.eurasia.oj.repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -14,6 +17,8 @@ import java.util.*;
 public class UserCenterService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     public User getUser(Long userId) throws BusinessException {
         return userRepository.findById(userId).orElseThrow(() -> new BusinessException("找不到"));

@@ -36,9 +36,6 @@ class NewUserModal extends React.Component {
     })
   };
 
-  componentDidMount = () => {
-  };
-
   render() {
     const {isNewModalOpen, closeModal, form} = this.props;
     const {getFieldDecorator} = form;
@@ -114,10 +111,10 @@ class NewUserModal extends React.Component {
                 placeholder="请选择用户角色"
                 onChange={handleChange}
               >
-              <Option key='1'>管理员</Option>
-              <Option key='2'>老师</Option>
-              <Option key='3'>学生</Option>
-              <Option key='4'>超级管理员</Option>
+              <Option key='1'>超级管理员</Option>
+              <Option key='2'>管理员</Option>
+              <Option key='3'>老师</Option>
+              <Option key='4'>学生</Option>
             </Select>
             )}
           </Form.Item>

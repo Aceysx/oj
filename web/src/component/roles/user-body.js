@@ -89,14 +89,14 @@ class UserBody extends Component {
           <NewUserModal
             isNewModalOpen={isNewModalOpen}
             closeModal={() => this.setState({isNewModalOpen:false})}
-            roles = {rolePageable.content}
+            roleList = {rolePageable.content}
             addUser={this.props.addUser}
           />
           <EditUserModal
             isEditModalOpen = {isEditModalOpen}
             closeModal={() => this.setState({isEditModalOpen: false})}
             user = {user}
-            roles = {rolePageable.content}
+            roleList = {rolePageable.content}
             putUser = {this.props.putUser}
           />
           <Table

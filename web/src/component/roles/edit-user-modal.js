@@ -24,7 +24,8 @@ class EditUserModal extends React.Component {
 
   state = {
     id: -1,
-    roles: []
+    roles: [],
+    roleList: []
   }
 
   handleSubmit = (e) => {
@@ -44,24 +45,21 @@ class EditUserModal extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    // alert(JSON.stringify(nextProps))
-    const {user, form} = nextProps
+    const {user, form, roleList} = nextProps
     if (user === this.props.user ) {
       return false
     }
     const {id, username, createTime, available, name, phone, email, roles} = user
-    form.setFieldsValue({username, createTime: moment(createTime), available, name, phone, email})
-    console.log(roles)
-    const roleIds = []
-    roles.map(item => {
-        roleIds.push(item.id)
-    })
-    this.setState({id: id, roles : roleIds})
+    const roleIds = roles.map(item => item.id.toString())
+    form.setFieldsValue({username, createTime: moment(createTime), available, name, phone, email, roles: roleIds})
+    this.setState({id: id, roles : roleIds, roleList: roleList})
   }
 
   render() {
     const {isEditModalOpen, closeModal, form} = this.props
     const {getFieldDecorator} = form
+
+    console.log(this.state)
 
     return <div>
       <Modal
@@ -130,15 +128,14 @@ class EditUserModal extends React.Component {
                     }],
                 })(
                     <Select
-                        mode="multiple"
-                        placeholder="请选择用户角色"
-                        defaultValue={this.state.roles}
-                        onChange={handleChange}
+                      mode="multiple"
+                      placeholder="请选择用户角色"
+                      defaultVale={this.state.roles}
+                      onChange={handleChange}
                     >
-                        <Option key='1'>管理员</Option>
-                        <Option key='2'>老师</Option>
-                        <Option key='3'>学生</Option>
-                        <Option key='4'>超级管理员</Option>
+                      {
+                        this.state.roleList.map(item => <Option key={item.id.toString()}>{item.roleName}</Option>)
+                      }
                     </Select>
                 )}
             </Form.Item>
