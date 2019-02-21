@@ -16,10 +16,6 @@ const formItemLayout = {
   },
 }
 
-function handleChange(value) {
-    console.log(`selected ${value}`);
-}
-
 class EditUserModal extends React.Component {
 
   state = {
@@ -44,7 +40,7 @@ class EditUserModal extends React.Component {
     })
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     const {user, form, roleList} = nextProps
     if (user === this.props.user ) {
       return false
@@ -131,7 +127,6 @@ class EditUserModal extends React.Component {
                       mode="multiple"
                       placeholder="请选择用户角色"
                       defaultVale={this.state.roles}
-                      onChange={handleChange}
                     >
                       {
                         this.state.roleList.map(item => <Option key={item.id.toString()}>{item.roleName}</Option>)

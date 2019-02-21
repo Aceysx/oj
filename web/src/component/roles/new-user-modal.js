@@ -15,11 +15,11 @@ const formItemLayout = {
   },
 };
 
-function handleChange(value) {
-  console.log(`selected ${value}`);
-}
-
 class NewUserModal extends React.Component {
+
+  state = {
+    roleList: []
+  }
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -35,6 +35,11 @@ class NewUserModal extends React.Component {
       }
     })
   };
+
+  componentWillReceiveProps = (nextProps) => {
+    const {roleList} = nextProps
+    this.setState({roleList: roleList})
+  }
 
   render() {
     const {isNewModalOpen, closeModal, form} = this.props;
@@ -109,12 +114,10 @@ class NewUserModal extends React.Component {
               <Select
                 mode="multiple"
                 placeholder="请选择用户角色"
-                onChange={handleChange}
               >
-              <Option key='1'>超级管理员</Option>
-              <Option key='2'>管理员</Option>
-              <Option key='3'>老师</Option>
-              <Option key='4'>学生</Option>
+                {
+                  this.state.roleList.map(item => <Option key={item.id.toString()}>{item.roleName}</Option>)
+                }
             </Select>
             )}
           </Form.Item>
