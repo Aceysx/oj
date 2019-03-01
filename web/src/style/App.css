@@ -18,3 +18,9 @@
     text-align: left;
 }
 
+.description-style {
+    word-break:keep-all;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}

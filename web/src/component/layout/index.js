@@ -38,7 +38,7 @@ class OjLayout extends Component {
     const menu = (
       <Menu>
         <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">退出</a>
+          <a href="http://www.logout.com/">退出</a>
         </Menu.Item>
       </Menu>
     );
@@ -86,11 +86,11 @@ class OjLayout extends Component {
 
           </Row>
         </Header>
-        <Content style={{padding: '30px 30px 0 30px', height: '100%'}}>
+        <Content style={{padding: '10px', height: '100%'}}>
           <Layout style={{padding: '24px 0', background: '#fff', height: '100%'}}>
             {
               this.isLogin()?
-                <Sider width={200} style={{background: '#fff'}}>
+                <Sider width={180} style={{background: '#fff'}}>
                   <Menu
                     mode="inline"
                     defaultSelectedKeys={['1']}
@@ -108,7 +108,7 @@ class OjLayout extends Component {
           </Layout>
         </Content>
         <Footer style={{textAlign: 'center', height:'40px',lineHeight:'5px'}}>
-          Platform ©2017
+          Platform ©2019
         </Footer>
       </Layout>
     )

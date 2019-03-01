@@ -1,9 +1,8 @@
 import React from 'react'
 import {Button, Col, Form, Icon, Input, message, Modal, Radio, Row, Select, Tooltip} from 'antd'
-import BraftEditor from 'braft-editor'
 const RadioGroup = Radio.Group
 const {Option} = Select;
-
+const { TextArea } = Input
 const formItemLayout = {
   labelCol: {
     xs: {span: 24},
@@ -22,7 +21,6 @@ class EditQuizModal extends React.Component {
       return false
     }
     let {chapter, description, major = {}, level} = quiz
-    description = BraftEditor.createEditorState(description)
     form.setFieldsValue({chapter, description, major: major.id, level, answer: answer + ''})
   }
 
@@ -65,8 +63,7 @@ class EditQuizModal extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err && this.validateOptions()) {
         let {answer, options, quiz} = this.props
-        const description = values.description.toHTML()
-        quiz = Object.assign({}, values, {id: quiz.id, answer, options: JSON.stringify(options)},{description})
+        quiz = Object.assign({}, values, {id: quiz.id, answer, options: JSON.stringify(options)})
         this.props.editQuiz(quiz, () => {
           message.success('编辑成功')
           this.props.closeModal()
@@ -98,7 +95,7 @@ class EditQuizModal extends React.Component {
                 required: true, message: '请输入题目描述',
               }],
             })(
-              <BraftEditor />
+              <TextArea rows={4} />
             )}
           </Form.Item>
           <Form.Item

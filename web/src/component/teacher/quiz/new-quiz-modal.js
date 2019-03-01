@@ -1,6 +1,7 @@
 import React from 'react'
 import {Button, Col, Form, Icon, Input, message, Modal, Radio, Row, Select, Tooltip} from 'antd'
-import BraftEditor from 'braft-editor'
+
+const { TextArea } = Input
 const RadioGroup = Radio.Group
 const {Option} = Select;
 
@@ -57,8 +58,7 @@ class NewQuizModal extends React.Component {
 
       if (!err && this.validateOptions()) {
         const {answer, options} = this.props
-        const description = values.description.toHTML()
-        const quiz = Object.assign({}, values, {answer, options: JSON.stringify(options)},{description})
+        const quiz = Object.assign({}, values, {answer, options: JSON.stringify(options)})
         this.props.addQuiz(quiz, () => {
           message.success('添加成功')
           this.props.closeModal()
@@ -90,7 +90,7 @@ class NewQuizModal extends React.Component {
                 required: true, message: '请输入题目描述',
               }],
             })(
-              <BraftEditor/>
+              <TextArea rows={4} />
             )}
           </Form.Item>
           <Form.Item

@@ -28,6 +28,15 @@ public class QuizController {
       direction = Sort.Direction.DESC) Pageable pageable) {
     return ResponseEntity.ok(quizService.getQuizzesByPage(pageable));
   }
+
+//  @GetMapping("pageable")
+//  public ResponseEntity getWrongQuizzesByPage(
+//    @Auth User user,
+//    @PageableDefault(sort = {"id"},
+//      direction = Sort.Direction.DESC) Pageable pageable) {
+//    return ResponseEntity.ok(quizService.getWrongQuizzesByPage(pageable, user));
+//  }
+
   @GetMapping("")
   public ResponseEntity getQuizzes() {
     return ResponseEntity.ok(quizService.getQuizzes());

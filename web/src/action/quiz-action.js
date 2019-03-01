@@ -29,6 +29,20 @@ export const getQuizzes = () => {
   }
 }
 
+export const getMyWrongQuizzesByPage = (currentPage=1) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`../api/quizzes/wrong/pageable?page=${--currentPage}`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'REFRESH_QUIZZES_PAGEABLE',
+          data: res.body
+        })
+      }
+    })()
+  }
+}
+
 export const addQuiz = (quiz, callback) => {
   return (dispatch) => {
     (async () => {

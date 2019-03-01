@@ -1,25 +1,39 @@
 import React, {Component} from 'react'
 import Paper from '../../common/paper'
 import {connect} from 'react-redux'
-import {getPaper} from "../../../action/paper-action"
-import {Button, Icon} from "antd";
+import {getPaper, submit} from "../../../action/paper-action"
+import {Button, Icon, Popconfirm, message} from "antd";
 
 class AnswerPaper extends Component {
   state = {
     paperId: -1,
-    answers: []
+    classCourseId: -1,
+    answers: {}
   }
 
   componentDidMount = () => {
-    const {paperId} = this.props.match.params
+    const {paperId, classCourseId} = this.props.match.params
     this.props.getPaper(paperId)
-    this.setState({paperId})
+    this.setState({paperId,classCourseId})
+
   }
 
-  onChange = (quizId, answer)=>{
+  onChange = (quizId, answer) => {
     const {answers} = this.state
     answers[quizId] = answer
     this.setState({answers})
+  }
+
+  submit = () => {
+    const {answers, paperId, classCourseId} = this.state
+    const {paper} = this.props
+    if (paper.quizzes.length !== Object.keys(answers).length) {
+      message.warning('还有未完成的题目')
+      return
+    }
+    this.props.submit(classCourseId, paperId, answers, ()=>{
+      this.props.history.goBack()
+    });
   }
 
   render() {
@@ -27,14 +41,18 @@ class AnswerPaper extends Component {
     const {answers} = this.state
     return <div>
       <a onClick={() => this.props.history.goBack()}>
-        <Icon type="arrow-left" /> 返回</a>
+        <Icon type="arrow-left"/> 返回</a>
       <Paper
         answers={answers}
         onChange={this.onChange}
         paper={paper}
       />
-      <div  style={{textAlign:'center'}}>
-        <Button type='primary'>提交</Button>
+      <div style={{textAlign: 'center'}}>
+        <Popconfirm title="确定提交吗?"
+                    onConfirm={this.submit}
+                    okText="提交" cancelText="取消">
+          <Button type='primary'>提交</Button>
+        </Popconfirm>
       </div>
     </div>
   }
@@ -45,6 +63,7 @@ const mapStateToProps = ({paper}) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getPaper: paperId => dispatch(getPaper(paperId))
+  getPaper: paperId => dispatch(getPaper(paperId)),
+  submit: (classCourseId, paperId, answers, callback) => dispatch(submit(classCourseId, paperId, answers,callback))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(AnswerPaper)

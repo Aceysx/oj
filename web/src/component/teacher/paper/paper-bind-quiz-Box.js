@@ -65,7 +65,6 @@ class PaperBindQuizBox extends Component {
   render() {
     const {quizzes, targetKeys, currentMajorId,currentChapter,currentLevel} = this.props
     const dataSource = this.getQuizzesDataSource(quizzes)
-    console.log(targetKeys)
     return <div><p>
       <Tag color="#f50">专业</Tag>
       <Select value={currentMajorId}
@@ -108,9 +107,10 @@ class PaperBindQuizBox extends Component {
         dataSource={dataSource}
         showSearch
         listStyle={{
-          width: '47%',
+          width: '45%',
           height: '400px',
         }}
+        operations={['添加', '移除']}
         targetKeys={[...targetKeys]}
         onChange={this.handleChange}
         render={this.renderItem}

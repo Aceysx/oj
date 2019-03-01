@@ -1,5 +1,6 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
+import {message} from 'antd'
 
 export const getPapersByPage = (current) => {
   return (dispatch) => {
@@ -50,6 +51,30 @@ export const addPaper = (paper, callback) => {
       if (res.status === HTTP_CODE.CREATED) {
         dispatch(getPapersByPage())
         callback()
+      }
+    })()
+  }
+}
+export const submit = (classCourseId, paperId, submission, callback) => {
+  return () => {
+    (async () => {
+      const res = await request.post(`/api/classCourses/${classCourseId}/papers/${paperId}/submission`, {submission})
+      if (res.status === HTTP_CODE.CREATED) {
+        message.success('提交成功')
+        window.setTimeout(callback(), 1000)
+      }
+    })()
+  }
+}
+export const getReviewQuiz = (classCourseId, paperId) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`/api/classCourses/${classCourseId}/papers/${paperId}/reviewQuiz`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'REFRESH_REVIEW_QUIZ',
+          data: res.body
+        })
       }
     })()
   }

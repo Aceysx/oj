@@ -8,6 +8,8 @@ import QuizManagementBody from './component/teacher/quiz/quizzes-management-Body
 import Login from './component/login-body'
 import PaperManagement from './component/teacher/paper/paper-management-Body'
 import PaperAnswer from './component/student/myClassCourse/answer-paper'
+import PaperReviewQuiz from './component/student/myClassCourse/paper-review-quiz'
+import WrongQuizzesBody from './component/student/wrongQuiz/wrong-quiz-body'
 
 import 'braft-editor/dist/index.css'
 import {
@@ -28,7 +30,9 @@ class App extends Component {
           <Route exact path='/teachers/quizzes' component={QuizManagementBody} />
           <Route exact path='/roles/users' component={UserBody} />
           <Route exact path='/students/class-courses' component={MyClassCourseBody} />
-          <Route exact path='/students/papers/:paperId/answer' component={PaperAnswer} />
+          <Route exact path='/students/class-courses/:classCourseId/papers/:paperId/answer' component={PaperAnswer} />
+          <Route exact path='/students/class-courses/:classCourseId/papers/:paperId/reviewQuiz' component={PaperReviewQuiz} />
+          <Route exact path='/students/wrong-quizzes' component={WrongQuizzesBody} />
         </OjLayout>
       </Router>
     )

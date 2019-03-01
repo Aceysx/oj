@@ -12,6 +12,7 @@ import papers from './papers'
 import roles from './role'
 import rolePageable from './rolePageable'
 import paper from './paper'
+import paperReviewQuiz from './reviewQuiz'
 
 export default combineReducers({
   user,
@@ -26,5 +27,5 @@ export default combineReducers({
   roles,
   rolePageable,
   paper,
-  paperPageable
+  paperReviewQuiz
 })

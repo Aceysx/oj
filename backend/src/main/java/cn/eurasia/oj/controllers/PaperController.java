@@ -5,11 +5,13 @@ import cn.eurasia.oj.entities.Paper;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
+import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
 import cn.eurasia.oj.services.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,4 +55,12 @@ public class PaperController {
     return ResponseEntity.noContent().build();
   }
 
+  @PostMapping("classCourses/{classCourseId}/papers/{paperId}/submission")
+  public ResponseEntity submitPaper(@PathVariable Long paperId,
+                                    @PathVariable Long classCourseId,
+                                    @PathVariable User user,
+                                    @RequestBody CreatePaperSubmissionParam createPaperSubmissionParam) throws BusinessException {
+    paperService.submitPaper(classCourseId,paperId, createPaperSubmissionParam,user.getId());
+    return new ResponseEntity(HttpStatus.CREATED);
+  }
 }

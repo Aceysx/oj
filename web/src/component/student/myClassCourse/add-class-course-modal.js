@@ -33,7 +33,7 @@ class AddClassCourseModal extends React.Component {
 
     return <div>
       <Modal
-        title='添加班课'
+        title='加入班课'
         visible={isAddModalOpen}
         footer={null}
         onCancel={closeModal}

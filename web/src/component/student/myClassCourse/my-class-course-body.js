@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Table, message, Divider} from 'antd'
+import {Button, message, Table, Tag} from 'antd'
 import AddClassCourseModalForm from "./add-class-course-modal";
 import {addMyClassCourse, getMyClassCourses} from "../../../action/class-course-action";
 import {Link} from "react-router-dom";
@@ -33,6 +33,12 @@ class MyClassCourseBody extends Component {
           render: (text, record) => {
             return <span>{record.quizzes.length}</span>
           }
+        }, {
+          title: '状态', dataIndex: 'isFinish', key: 'isFinish',
+          render: (status) => <div>
+            {status ? <Tag color="#87d068">已完成</Tag>
+              : <Tag>未完成</Tag>}
+            </div>
         },
         {
           title: '操作',
@@ -40,7 +46,9 @@ class MyClassCourseBody extends Component {
           key: 'operation',
           render: (text, paper) => {
             return <span className="table-operation">
-            <Link to={`/students/papers/${paper.id}/answer`}>答题</Link>
+            <Link to={`/students/class-courses/${classCourse.id}/papers/${paper.id}/${paper.isFinish?'reviewQuiz':'answer'}`}>
+              {paper.isFinish ? '查看' : '答题'}
+            </Link>
           </span>
           }
           ,
@@ -78,7 +86,10 @@ class MyClassCourseBody extends Component {
       }, {
         title: '截止时间',
         dataIndex: 'endTime',
-        key: 'endTime'
+        key: 'endTime',
+        render : (time) => {
+          return <div>{time.split('T')[0]}</div>
+        }
       }
     ]
     const {classCoursesPageable} = this.props
@@ -88,7 +99,7 @@ class MyClassCourseBody extends Component {
       <p><Button
         type='primary'
         onClick={() => this.setState({isAddModalOpen: true})}>
-        添加班课
+        加入班课
       </Button></p>
 
       <AddClassCourseModalForm

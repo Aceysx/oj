@@ -76,9 +76,10 @@ class ClassCourseBindPaperBox extends Component {
         dataSource={dataSource}
         showSearch
         listStyle={{
-          width: '47%',
+          width: '45%',
           height: '400px',
         }}
+        operations={['添加', '移除']}
         targetKeys={[...targetKeys]}
         onChange={this.handleChange}
         render={this.renderItem}

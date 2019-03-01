@@ -1,8 +1,8 @@
 import React from 'react'
-import {Divider, Radio} from 'antd'
+import {Divider, Radio, Row} from 'antd'
 
 const RadioGroup = Radio.Group
-const Paper = ({paper, preview, answers, onChange}) => {
+const Paper = ({paper, preview, answers, onChange, reviewQuiz}) => {
   const getOptions = (quiz) => {
     let {options, answer} = quiz
     options = JSON.parse(options)
@@ -16,11 +16,20 @@ const Paper = ({paper, preview, answers, onChange}) => {
 
   const getQuizzesList = () => {
     const {quizzes} = paper
-
+    console.log(quizzes)
     return quizzes.map((quiz, index) => {
-      const answer = quiz.answer || answers[quiz.id.toString()]
+      const answer = quiz.answer === undefined ? answers[quiz.id.toString()] : quiz.answer
       return <div>
-        <p dangerouslySetInnerHTML={{__html: `${index + 1}. ${quiz.description}`}} />
+        <Row>
+          <span>{index + 1}. </span>
+          <p style={{
+            border: '10px solid #fbfbfb',
+            display: 'inline-block',
+            width: '98%',
+            borderRadius: 5 }}>
+            {quiz.description}
+          </p>
+        </Row>
         <RadioGroup
           onChange={e => onChange(quiz.id.toString(), e.target.value)}
           value={answer}

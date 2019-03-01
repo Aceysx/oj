@@ -1,12 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Table} from 'antd'
-import NewQuizModal from "./new-quiz-modal"
-import EditQuizModal from './edit-quiz-modal'
-import {addQuiz, editQuiz, getQuizzesByPage} from '../../../action/quiz-action'
+import {Table} from 'antd'
+import {getMyWrongQuizzesByPage, getQuizzesByPage} from '../../../action/quiz-action'
 import {getMajors} from "../../../action/major-action";
 
-class QuizManagementBody extends Component {
+class WrongQuizzesBody extends Component {
   state = {
     currentPage: 1,
     isNewModalOpen: false,
@@ -35,9 +33,8 @@ class QuizManagementBody extends Component {
         title: '描述',
         dataIndex: 'description',
         key: 'description',
-        width:'30%',
         render: text => {
-          return <span>{text.substr(0,50)}</span>
+          return <span>{text.substr(0, 100)}</span>
         }
       }, {
         title: '章节',
@@ -65,51 +62,15 @@ class QuizManagementBody extends Component {
               quiz: record,
               options: JSON.parse(record.options),
               answer: record.answer
-            })}>编辑</a>
+            })}>预览</a>
           </div>
         }
       }
     ]
-    const {quizPageable, addQuiz, majors, editQuiz} = this.props
+    const {quizPageable} = this.props
     const {totalElements, content} = quizPageable
-    const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer} = this.state
+    const {currentPage} = this.state
     return <div>
-      <p><Button
-        type="primary"
-        onClick={() => this.setState({isNewModalOpen: true})}>
-        添加题目
-      </Button></p>
-
-      <NewQuizModal
-        updateOptions={(options) => this.setState({options})}
-        updateAnswer={(answer) => this.setState({answer})}
-        answer={answer}
-        options={options}
-        majors={majors}
-        isNewModalOpen={isNewModalOpen}
-        closeModal={() => this.setState({
-          isNewModalOpen: false,
-          options: ['', '', '', ''],
-          answer: -1
-        })}
-        addQuiz={addQuiz}
-      />
-      <EditQuizModal
-        answer={answer}
-        options={options}
-        majors={majors}
-        isNewModalOpen={isEditModalOpen}
-        updateOptions={(options) => this.setState({options})}
-        updateAnswer={(answer) => this.setState({answer})}
-        closeModal={() => this.setState({
-          isEditModalOpen: false,
-          options: ['', '', '', ''],
-          answer: -1
-        })}
-        editQuiz={editQuiz}
-        quiz={quiz}
-      />
-
       <Table
         bordered
         columns={columns}
@@ -131,10 +92,8 @@ const mapStateToProps = ({user, quizPageable, majors}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getQuizzes: (current) => dispatch(getQuizzesByPage(current)),
-  getMajors: () => dispatch(getMajors()),
-  editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
-  addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback))
+  getQuizzes: (current) => dispatch(getMyWrongQuizzesByPage(current)),
+  getMajors: () => dispatch(getMajors())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(QuizManagementBody)
+export default connect(mapStateToProps, mapDispatchToProps)(WrongQuizzesBody)

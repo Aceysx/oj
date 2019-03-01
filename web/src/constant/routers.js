@@ -3,6 +3,9 @@ const routers = {
     {
       title: '我的班课',
       url: '/students/class-courses'
+    }, {
+      title: '错题本',
+      url: '/students/wrong-quizzes'
     }
   ],
   teachers: [
