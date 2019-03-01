@@ -1,8 +1,9 @@
 package cn.eurasia.oj.repositories;
 
-import cn.eurasia.oj.entities.QuizSubmission;
-import cn.eurasia.oj.entities.UserRole;
+import cn.eurasia.oj.entities.ReviewQuiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface QuizSubmissionRepository extends JpaRepository<QuizSubmission, Long> {
+public interface ReviewQuizRepository extends JpaRepository<ReviewQuiz, Long> {
+  ReviewQuiz findByClassCourseIdAndPaperIdAndUserId(Long id, Long paperId, Long userId);
+
 }

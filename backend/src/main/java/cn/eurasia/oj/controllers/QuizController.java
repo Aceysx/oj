@@ -1,4 +1,4 @@
-package cn.eurasia.oj.controllers.teacher;
+package cn.eurasia.oj.controllers;
 
 import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.Quiz;
@@ -29,13 +29,13 @@ public class QuizController {
     return ResponseEntity.ok(quizService.getQuizzesByPage(pageable));
   }
 
-//  @GetMapping("pageable")
-//  public ResponseEntity getWrongQuizzesByPage(
-//    @Auth User user,
-//    @PageableDefault(sort = {"id"},
-//      direction = Sort.Direction.DESC) Pageable pageable) {
-//    return ResponseEntity.ok(quizService.getWrongQuizzesByPage(pageable, user));
-//  }
+  @GetMapping("wrong/pageable")
+  public ResponseEntity getWrongQuizzesByPage(
+    @Auth User user,
+    @PageableDefault(sort = {"id"},
+      direction = Sort.Direction.DESC) Pageable pageable) {
+    return ResponseEntity.ok(quizService.getWrongQuizzesByPage(pageable, user));
+  }
 
   @GetMapping("")
   public ResponseEntity getQuizzes() {

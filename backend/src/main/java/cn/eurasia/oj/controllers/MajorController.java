@@ -1,4 +1,4 @@
-package cn.eurasia.oj.controllers.teacher;
+package cn.eurasia.oj.controllers;
 
 import cn.eurasia.oj.entities.Major;
 import cn.eurasia.oj.exceptions.BusinessException;

@@ -1,8 +1,13 @@
 package cn.eurasia.oj.repositories;
 
-import cn.eurasia.oj.entities.UserRole;
+import cn.eurasia.oj.entities.QuizSubmission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-    void deleteByUserId(Long id);
+import java.util.List;
+
+public interface QuizSubmissionRepository extends JpaRepository<QuizSubmission, Long> {
+  List<QuizSubmission> findByClassCourseIdAndPaperIdAndUserIdAndQuizIdIn(Long classCourseId, Long id, Long userId, List<Long> quizIds);
+
+  List<QuizSubmission> findByUserIdAndIsCorrectIsFalse(Long id);
+
 }

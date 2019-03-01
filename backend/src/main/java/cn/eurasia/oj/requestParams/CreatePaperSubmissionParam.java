@@ -1,16 +1,13 @@
 package cn.eurasia.oj.requestParams;
 
-import cn.eurasia.oj.entities.Quiz;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
-public class CreatePaperParam {
+public class CreatePaperSubmissionParam {
 
-  private Long id;
-  private String title;
-  private List<Quiz> quizzes;
+  private Map<String,Long> submission;
 }

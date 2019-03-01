@@ -1,26 +1,24 @@
 package cn.eurasia.oj.services;
 
-import cn.eurasia.oj.entities.ClassCourse;
-import cn.eurasia.oj.entities.Paper;
-import cn.eurasia.oj.entities.Quiz;
-import cn.eurasia.oj.entities.User;
+import cn.eurasia.oj.entities.*;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.ClassCourseRepository;
+import cn.eurasia.oj.repositories.ReviewQuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ClassCourseService {
   @Autowired
   private ClassCourseRepository classCourseRepository;
-
+  @Autowired
+  private ReviewQuizRepository reviewQuizRepository;
 
   public Page<ClassCourse> getClassCourses(Pageable pageable) {
 
@@ -54,23 +52,31 @@ public class ClassCourseService {
     return users.stream().anyMatch(user -> user.getId().equals(current.getId()));
   }
 
-  public Page<ClassCourse> getMyClassCourses(Pageable pageable, User current) {
-
+  public Page getMyClassCourses(Pageable pageable, User current) {
+    List<Map> result = new ArrayList<>();
     Page<ClassCourse> classCoursePage = classCourseRepository.findByUserId(current.getId(), pageable);
+    List<ClassCourse> classCourses = classCoursePage.getContent();
+    classCourses.forEach(classCourse -> {
+      Map temp = new HashMap();
+      List<Map> papers = new ArrayList<>();
+      temp.put("id", classCourse.getId());
+      temp.put("code", classCourse.getCode());
+      temp.put("title", classCourse.getTitle());
+      temp.put("endTime", classCourse.getEndTime());
+      classCourse.getPapers().forEach(paper -> {
+        Map tempPaper = new HashMap();
+        ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourse.getId(), paper.getId(), current.getId());
 
-    List<ClassCourse> collect = classCoursePage.getContent().stream().map(classCourse -> {
-      List<Paper> papers = classCourse.getPapers();
-      papers = papers.stream().map(paper -> {
-        List<Quiz> quizzes = paper.getQuizzes().stream().map(quiz -> {
-          quiz.setAnswer(null);
-          return quiz;
-        }).collect(Collectors.toList());
-        paper.setQuizzes(quizzes);
-        return paper;
-      }).collect(Collectors.toList());
-      classCourse.setPapers(papers);
-      return classCourse;
-    }).collect(Collectors.toList());
-    return new PageImpl<>(collect, classCoursePage.getPageable(), classCoursePage.getTotalElements());
+        tempPaper.put("id", paper.getId());
+        tempPaper.put("title", paper.getTitle());
+        tempPaper.put("count", paper.getQuizzes().size());
+        tempPaper.put("isFinish", Objects.nonNull(reviewQuiz));
+        tempPaper.put("quizzes", paper.getQuizzes());
+        papers.add(tempPaper);
+      });
+      temp.put("papers", papers);
+      result.add(temp);
+    });
+    return new PageImpl(result, classCoursePage.getPageable(), classCoursePage.getTotalElements());
   }
 }

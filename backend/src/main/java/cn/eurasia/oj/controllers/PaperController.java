@@ -1,4 +1,4 @@
-package cn.eurasia.oj.controllers.teacher;
+package cn.eurasia.oj.controllers;
 
 import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.Paper;
@@ -55,12 +55,4 @@ public class PaperController {
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("classCourses/{classCourseId}/papers/{paperId}/submission")
-  public ResponseEntity submitPaper(@PathVariable Long paperId,
-                                    @PathVariable Long classCourseId,
-                                    @PathVariable User user,
-                                    @RequestBody CreatePaperSubmissionParam createPaperSubmissionParam) throws BusinessException {
-    paperService.submitPaper(classCourseId,paperId, createPaperSubmissionParam,user.getId());
-    return new ResponseEntity(HttpStatus.CREATED);
-  }
 }

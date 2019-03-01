@@ -1,11 +1,10 @@
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(20),
-  `createTime` TIMESTAMP default current_timestamp,
-  `password` VARCHAR(20),
-  `available` int(1) default 1,
-  `name` VARCHAR(20),
-  `phone` VARCHAR (11),
-  `email` VARCHAR (50),
+CREATE TABLE `quizSubmission` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+  `classCourseId` int(11),
+  `paperId` int(11),
+  `userId` int(11),
+  `quizId` int(11),
+  `answer` int(1),
+  `isCorrect` int(1) ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
