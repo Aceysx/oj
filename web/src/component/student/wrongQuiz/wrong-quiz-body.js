@@ -1,29 +1,24 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Table} from 'antd'
-import {getMyWrongQuizzesByPage, getQuizzesByPage} from '../../../action/quiz-action'
-import {getMajors} from "../../../action/major-action";
+import {getMyWrongQuizzesByPage} from '../../../action/quiz-action'
+import QuizAnswerPreview from '../../common/quiz-answer-preview'
 
 class WrongQuizzesBody extends Component {
   state = {
     currentPage: 1,
-    isNewModalOpen: false,
-    isEditModalOpen: false,
     quiz: {},
-    options: ['', '', '', ''],
-    answer: -1
+    isPreviewModalOpen: false
   }
 
   componentDidMount = () => {
     this.props.getQuizzes(this.state.currentPage)
-    this.props.getMajors()
   }
 
   getClassCourse = (pagination) => {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
       this.props.getClassCourses(current)
-
     })
   }
 
@@ -48,7 +43,7 @@ class WrongQuizzesBody extends Component {
         title: '专业',
         dataIndex: 'major',
         key: 'major',
-        render: (text, record) => {
+        render: (text) => {
           return <span>{text.name}</span>
         }
       }, {
@@ -58,10 +53,8 @@ class WrongQuizzesBody extends Component {
         render: (text, record) => {
           return <div>
             <a onClick={() => this.setState({
-              isEditModalOpen: true,
-              quiz: record,
-              options: JSON.parse(record.options),
-              answer: record.answer
+              isPreviewModalOpen: true,
+              quiz: record
             })}>预览</a>
           </div>
         }
@@ -69,7 +62,7 @@ class WrongQuizzesBody extends Component {
     ]
     const {quizPageable} = this.props
     const {totalElements, content} = quizPageable
-    const {currentPage} = this.state
+    const {currentPage, quiz, isPreviewModalOpen} = this.state
     return <div>
       <Table
         bordered
@@ -81,19 +74,22 @@ class WrongQuizzesBody extends Component {
           defaultCurrent: currentPage,
           total: totalElements
         }}/>
+      <QuizAnswerPreview
+        visible={isPreviewModalOpen}
+        quiz={quiz}
+        handleCancel={()=>this.setState({isPreviewModalOpen:false})}
+      />
     </div>
   }
 }
 
-const mapStateToProps = ({user, quizPageable, majors}) => ({
+const mapStateToProps = ({user, quizPageable}) => ({
   user,
   quizPageable,
-  majors
 })
 
 const mapDispatchToProps = dispatch => ({
   getQuizzes: (current) => dispatch(getMyWrongQuizzesByPage(current)),
-  getMajors: () => dispatch(getMajors())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WrongQuizzesBody)

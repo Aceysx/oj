@@ -55,8 +55,6 @@ class EditUserModal extends React.Component {
     const {isEditModalOpen, closeModal, form} = this.props
     const {getFieldDecorator} = form
 
-    console.log(this.state)
-
     return <div>
       <Modal
         title='更新用户信息'

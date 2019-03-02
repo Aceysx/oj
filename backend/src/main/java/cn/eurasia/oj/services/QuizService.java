@@ -9,12 +9,15 @@ import cn.eurasia.oj.repositories.MajorRepository;
 import cn.eurasia.oj.repositories.QuizRepository;
 import cn.eurasia.oj.repositories.QuizSubmissionRepository;
 import cn.eurasia.oj.requestParams.CreateQuizParam;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,9 +54,16 @@ public class QuizService {
     return quizRepository.findAll();
   }
 
-  public Page<Quiz> getWrongQuizzesByPage(Pageable pageable, User user) {
+  public Page getWrongQuizzesByPage(Pageable pageable, User user) {
     List<QuizSubmission> submissions = quizSubmissionRepository.findByUserIdAndIsCorrectIsFalse(user.getId());
     List<Long> quizIds = submissions.stream().map(QuizSubmission::getQuizId).collect(Collectors.toList());
-    return quizRepository.findAllByIdIn(quizIds, pageable);
+    Page<Quiz> page = quizRepository.findAllByIdIn(quizIds, pageable);
+    List<Map<String, Object>> quizzes = page.getContent().stream().map(quiz -> {
+      Map<String, Object> quizMap = new ObjectMapper().convertValue(quiz, Map.class);
+      Integer answer = submissions.stream().filter(submission -> submission.getQuizId().equals(quiz.getId())).findFirst().get().getAnswer();
+      quizMap.put("userAnswer", answer);
+      return quizMap;
+    }).collect(Collectors.toList());
+    return new PageImpl<>(quizzes, pageable, page.getTotalElements());
   }
 }

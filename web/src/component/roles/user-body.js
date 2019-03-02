@@ -73,7 +73,6 @@ class UserBody extends Component {
     ]
 
     const {userPageable, rolePageable} = this.props
-    console.log(this.props)
     const {totalElements, content} = userPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, user} = this.state
 
