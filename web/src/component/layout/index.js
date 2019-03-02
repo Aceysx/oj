@@ -15,7 +15,10 @@ class OjLayout extends Component {
   isLogin = () => {
     return this.props.user.id > 0
   }
-
+  logout = () => {
+    window.localStorage.removeItem('oToken')
+    window.location.href = '/login'
+  }
   to = (menu) => {
     this.setState({menu})
     this.props.history.push(routers[menu][0].url)
@@ -23,6 +26,7 @@ class OjLayout extends Component {
 
   getSider = () => {
     const {menu} = this.state
+    console.log(this.props.user)
     return routers[menu].map((item, index) =>
       <Menu.Item key={index + 1}>
         <Link to={item.url}>
@@ -38,7 +42,7 @@ class OjLayout extends Component {
     const menu = (
       <Menu>
         <Menu.Item>
-          <a href="http://www.logout.com/">退出</a>
+          <a onClick={this.logout}>退出</a>
         </Menu.Item>
       </Menu>
     );

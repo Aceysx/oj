@@ -2,6 +2,7 @@ package cn.eurasia.oj.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "user")
 @Accessors(chain = true)
 public class User {
@@ -33,4 +35,7 @@ public class User {
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date createTime;
 
+  public User(Long id) {
+    this.id = id;
+  }
 }

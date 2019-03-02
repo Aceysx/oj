@@ -1,11 +1,11 @@
 import HTTP_METHOD from './httpMethod'
 import { message } from 'antd'
 const getTokenFromLocalStorage = () => {
-  return window.localStorage.getItem('jwt')
+  return window.localStorage.getItem('oToken')
 }
 const authenticationFilter = (status) => {
   if (status === 403 || status === 401) {
-    window.location.href = '/learn/auth/logout'
+    window.location.href = '/login'
   }
 }
 function errHandler (res) {
@@ -50,6 +50,8 @@ export const del = async (url) => {
       token: getTokenFromLocalStorage()
 	    })
     })
+    const status = res.status
+    authenticationFilter(status)
     if (!res.ok) {
       return errHandler(res)
     }
@@ -73,8 +75,8 @@ export const post = async (url, data) => {
       }),
       body: JSON.stringify(data)
     })
-
     const status = res.status
+    authenticationFilter(status)
 
     if (!res.ok) {
       return errHandler(res)
@@ -102,6 +104,7 @@ export const update = async (url, data) => {
       body: JSON.stringify(data)
     })
     const {status} = res
+    authenticationFilter(status)
     if (!res.ok) {
       return errHandler(res)
     }

@@ -17,7 +17,7 @@ const Paper = ({paper, preview, answers, onChange}) => {
   const getQuizzesList = () => {
     const {quizzes} = paper
     return quizzes.map((quiz, index) => {
-      const answer = quiz.answer === undefined ? answers[quiz.id.toString()] : quiz.answer
+      const answer = quiz.answer === null ? answers[quiz.id.toString()] : quiz.answer
       return <div>
         <Row>
           <span>{index + 1}. </span>

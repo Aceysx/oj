@@ -10,7 +10,10 @@ import App from './App'
 
 const store = createStore(reducer, applyMiddleware(thunkMiddleware))
 
-store.dispatch(initUser())
+if (!window.location.href.includes('login')) {
+  store.dispatch(initUser())
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

@@ -1,10 +1,10 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
-
 export const initUser = () => {
+  const token = window.localStorage.getItem('oToken')
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`/api/users/1`)
+      const res = await request.post(`/api/users/init`, {token})
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'INIT_USER',
@@ -20,10 +20,12 @@ export const login = (user, callback) => {
     (async () => {
       const res = await request.post(`/api/users/login`, user)
       if (res.status === HTTP_CODE.CREATED) {
+        const {token, user} = res.body
+        window.localStorage.setItem('oToken', token)
         callback()
         dispatch({
           type: 'INIT_USER',
-          user: res.body
+          user
         })
       }
     })()
