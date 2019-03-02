@@ -39,7 +39,6 @@ const Paper = ({paper, preview, answers, onChange}) => {
       </div>
     })
   }
-
   return <div>
     <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
     {getQuizzesList()}

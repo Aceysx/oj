@@ -23,7 +23,7 @@ const routers = {
       url: '/teachers/quizzes'
     }
   ],
-  roles: [
+  admin: [
     {
       title: '用户管理',
       url: '/roles/users'

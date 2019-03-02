@@ -9,7 +9,7 @@ const {Header, Content, Footer, Sider} = Layout
 
 class OjLayout extends Component {
   state = {
-    menu: this.props.user.role || 'students'
+    menu: 'students'
   }
 
   isLogin = () => {
@@ -23,10 +23,13 @@ class OjLayout extends Component {
     this.setState({menu})
     this.props.history.push(routers[menu][0].url)
   }
+  hasRole = role => {
+    const {user} = this.props
+    return user.roles.map(role => role.roleName).includes(role)
+  }
 
   getSider = () => {
     const {menu} = this.state
-    console.log(this.props.user)
     return routers[menu].map((item, index) =>
       <Menu.Item key={index + 1}>
         <Link to={item.url}>
@@ -63,16 +66,26 @@ class OjLayout extends Component {
                     defaultSelectedKeys={['1']}
                     style={{lineHeight: '64px'}}
                   >
-                    <Menu.Item key="1" onClick={() => this.to('students')}>
-                      学生端
-                    </Menu.Item>
-                    <Menu.Item key="2" onClick={() => this.to('teachers')}>
-                      教师端
-                    </Menu.Item>
-                    <Menu.Item key="3" onClick={() => this.to('roles')}>
-                      角色管理
-                    </Menu.Item>
+                    {
+                      this.hasRole('学生') ?
+                        <Menu.Item key="1" onClick={() => this.to('students')}>
+                          学生端
+                        </Menu.Item>
+                        : ''
+                    }
+                    {this.hasRole('教师') ?
+                      <Menu.Item key="2" onClick={() => this.to('teachers')}>
+                        教师端
+                      </Menu.Item>
+                      : ''
+                    }
+                    {this.hasRole('管理员') ?
+                      <Menu.Item key="3" onClick={() => this.to('admin')}>
+                        角色管理
+                      </Menu.Item> : ''
+                    }
                   </Menu>
+
                 </Col>
                 : ''
             }
@@ -85,7 +98,7 @@ class OjLayout extends Component {
                     </a>
                   </Dropdown>
                 </Col>
-                :''
+                : ''
             }
 
           </Row>
@@ -93,7 +106,7 @@ class OjLayout extends Component {
         <Content style={{padding: '10px', height: '100%'}}>
           <Layout style={{padding: '24px 0', background: '#fff', height: '100%'}}>
             {
-              this.isLogin()?
+              this.isLogin() ?
                 <Sider width={180} style={{background: '#fff'}}>
                   <Menu
                     mode="inline"
@@ -111,7 +124,7 @@ class OjLayout extends Component {
             </Content>
           </Layout>
         </Content>
-        <Footer style={{textAlign: 'center', height:'40px',lineHeight:'5px'}}>
+        <Footer style={{textAlign: 'center', height: '40px', lineHeight: '5px'}}>
           Platform ©2019
         </Footer>
       </Layout>

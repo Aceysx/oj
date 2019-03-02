@@ -64,7 +64,7 @@ class PaperReviewQuiz extends React.Component {
       <a onClick={() => this.props.history.goBack()}>
         <Icon type="arrow-left"/> 返回
       </a>
-      <h1 style={{textAlign: 'center'}}>{'title'}</h1>
+      <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
       <p style={{textAlign: 'center'}}>分数：{reviewQuiz.score}</p>
       {this.getQuizzesList(paper, submission)}
     </div>
