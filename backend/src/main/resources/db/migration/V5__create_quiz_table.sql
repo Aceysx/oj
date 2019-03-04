@@ -2,7 +2,7 @@ CREATE TABLE `quiz` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` text,
   `options` text,
-  `createTime` TIMESTAMP,
+  `createTime` TIMESTAMP default current_timestamp,
   `answer` int(1),
   `chapter` VARCHAR(255),
   `level` VARCHAR(20),
