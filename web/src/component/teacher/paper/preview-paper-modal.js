@@ -9,7 +9,9 @@ const PreviewPaperModal = ({paper, visible, onCancel}) => {
     visible={visible}
     footer={null}
     onCancel={onCancel} >
-    <Paper paper={paper} preview />
+    <Paper paper={paper}
+      answers={paper.quizzes.map(quiz => { return {[quiz.id]: quiz.answer} })}
+      preview onChange={() => {}} />
   </Modal>
 }
 

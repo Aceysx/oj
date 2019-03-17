@@ -10,7 +10,7 @@ import PaperManagement from './component/teacher/paper/paper-management-Body'
 import PaperAnswer from './component/student/myClassCourse/answer-paper'
 import PaperReviewQuiz from './component/student/myClassCourse/paper-review-quiz'
 import WrongQuizzesBody from './component/student/wrongQuiz/wrong-quiz-body'
-
+import './style/App.css'
 import 'braft-editor/dist/index.css'
 import {
     BrowserRouter as Router,

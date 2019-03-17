@@ -10,8 +10,9 @@ public class CreateQuizParam {
   private Long id;
   private String description;
   private String options;
-  private Integer answer;
+  private String answer;
   private String chapter;
   private Long major;
   private String level;
+  private String type;
 }

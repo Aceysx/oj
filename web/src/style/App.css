@@ -6,7 +6,7 @@
     display: none;
 }
 
-.center{
+.center {
     text-align: center;
 }
 
@@ -19,8 +19,34 @@
 }
 
 .description-style {
-    word-break:keep-all;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.quiz-finish-style {
+    border: 1px solid #2593fb !important;
+    background: #2593fb;
+    color: white;
+}
+
+.current-quiz-style {
+    border: 1px solid #2593fb !important;
+}
+
+.ant-checkbox-group-item {
+    display: block !important;
+}
+
+.quiz-correct-style {
+    border: 1px solid #2bcd00 !important;
+    background: #2bcd00;
+    color: white;
+}
+
+.quiz-error-style {
+    border: 1px solid #fb2135 !important;
+    background: #fb2135;
+    color: white;
 }

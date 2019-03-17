@@ -44,6 +44,9 @@ export const getMyWrongQuizzesByPage = (currentPage=1) => {
 }
 
 export const addQuiz = (quiz, callback) => {
+  if (quiz.type === '多选题') {
+    quiz.answer = JSON.stringify(quiz.answer)
+  }
   return (dispatch) => {
     (async () => {
       const res = await request.post(`../api/quizzes`, quiz)
@@ -55,6 +58,9 @@ export const addQuiz = (quiz, callback) => {
   }
 }
 export const editQuiz = (quiz, callback) => {
+  if (quiz.type === '多选题') {
+    quiz.answer = JSON.stringify(quiz.answer)
+  }
   return (dispatch) => {
     (async () => {
       const res = await request.update(`../api/quizzes`, quiz)

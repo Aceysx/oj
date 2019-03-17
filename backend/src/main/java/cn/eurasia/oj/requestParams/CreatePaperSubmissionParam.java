@@ -9,5 +9,5 @@ import java.util.Map;
 @Setter
 public class CreatePaperSubmissionParam {
 
-  private Map<String,Long> submission;
+  private Map submission;
 }

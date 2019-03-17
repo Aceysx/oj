@@ -60,7 +60,7 @@ public class QuizService {
     Page<Quiz> page = quizRepository.findAllByIdIn(quizIds, pageable);
     List<Map<String, Object>> quizzes = page.getContent().stream().map(quiz -> {
       Map<String, Object> quizMap = new ObjectMapper().convertValue(quiz, Map.class);
-      Integer answer = submissions.stream().filter(submission -> submission.getQuizId().equals(quiz.getId())).findFirst().get().getAnswer();
+      String answer = submissions.stream().filter(submission -> submission.getQuizId().equals(quiz.getId())).findFirst().get().getAnswer();
       quizMap.put("userAnswer", answer);
       return quizMap;
     }).collect(Collectors.toList());

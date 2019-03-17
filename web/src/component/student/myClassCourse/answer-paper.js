@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Paper from '../../common/paper'
 import {connect} from 'react-redux'
 import {getPaper, submit} from "../../../action/paper-action"
-import {Button, Icon, Popconfirm, message} from "antd";
+import {Button, Icon, Popconfirm, message, Divider} from "antd";
 
 class AnswerPaper extends Component {
   state = {
@@ -31,6 +31,7 @@ class AnswerPaper extends Component {
       message.warning('还有未完成的题目')
       return
     }
+    console.log(answers)
     this.props.submit(classCourseId, paperId, answers, ()=>{
       this.props.history.goBack()
     });
@@ -42,6 +43,7 @@ class AnswerPaper extends Component {
     return <div>
       <a onClick={() => this.props.history.goBack()}>
         <Icon type="arrow-left"/> 返回</a>
+      <Divider/>
       <Paper
         answers={answers}
         onChange={this.onChange}

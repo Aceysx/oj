@@ -20,9 +20,9 @@ public class QuizSubmission {
   private Long quizId;
   private Long userId;
   private Boolean isCorrect;
-  private Integer answer;
+  private String answer;
 
-  public QuizSubmission(Long classCourseId, Long paperId, Long quizId, Integer answer, boolean isCorrect, Long userId) {
+  public QuizSubmission(Long classCourseId, Long paperId, Long quizId, String answer, boolean isCorrect, Long userId) {
     this.classCourseId = classCourseId;
     this.paperId = paperId;
     this.quizId = quizId;

@@ -20,9 +20,10 @@ public class Quiz {
   private Long id;
   private String description;
   private String options;
-  private Integer answer;
+  private String answer;
   private String chapter;
   private String level;
+  private String type;
   @ManyToOne
   @JoinColumn(name = "majorId")
   private Major major;
@@ -32,7 +33,7 @@ public class Quiz {
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date createTime;
 
-  public Quiz(String description, String options, Integer answer, String chapter, Major major, User current, String level) {
+  public Quiz(String description, String options, String answer, String chapter, Major major, User current, String level, String type) {
     this.description = description;
     this.options = options;
     this.answer = answer;
@@ -40,12 +41,13 @@ public class Quiz {
     this.major = major;
     this.user = current;
     this.level = level;
+    this.type = type;
   }
 
   public static Quiz convertParam(CreateQuizParam quizParam, User current) {
     return new Quiz(quizParam.getDescription(), quizParam.getOptions(),
       quizParam.getAnswer(), quizParam.getChapter(),
-      new Major(quizParam.getMajor()), current, quizParam.getLevel());
+      new Major(quizParam.getMajor()), current, quizParam.getLevel(),quizParam.getType());
   }
 
   public void update(CreateQuizParam quizParam, Major major) {

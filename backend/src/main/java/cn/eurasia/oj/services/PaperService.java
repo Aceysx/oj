@@ -7,16 +7,14 @@ import cn.eurasia.oj.repositories.QuizSubmissionRepository;
 import cn.eurasia.oj.repositories.ReviewQuizRepository;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
 import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,37 +61,53 @@ public class PaperService {
       throw new BusinessException("已提交答案");
     }
 
-    Map<String, Long> submission = createPaperSubmissionParam.getSubmission();
+    Map<String, Object> submission = createPaperSubmissionParam.getSubmission();
     Paper paper = paperRepository.findById(paperId).orElseThrow(() -> new BusinessException("不存在"));
 
     dealSubmission(classCourseId, submission, paper, userId);
     dealReviewQuiz(classCourseId, submission, paper, userId);
   }
 
-  private void dealSubmission(Long classCourseId, Map<String, Long> submission, Paper paper, Long userId) {
+  private void dealSubmission(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {
     List<QuizSubmission> quizSubmissions = submission.keySet().stream().map(quizId -> {
 
-      Long count = paper.getQuizzes().stream().filter(quiz -> quiz.getId().equals(Long.valueOf(quizId))
-      && quiz.getAnswer().equals(Integer.valueOf(submission.get(quizId).toString())))
-        .count();
-      boolean isCorrect = count > 0 ;
-      return new QuizSubmission(classCourseId, paper.getId(), Long.valueOf(quizId),Integer.valueOf(submission.get(quizId).toString()),isCorrect , userId);
+      Long count = paper.getQuizzes().stream().filter(quiz -> {
+        boolean isCurrentQuiz = quiz.getId().equals(Long.valueOf(quizId));
+        if (quiz.getType().equals("多选题")) {
+          return isCurrentQuiz && isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quizId));
+        }
+        return quiz.getId().equals(Long.valueOf(quizId))
+          && quiz.getAnswer().equals(submission.get(quizId).toString());
+      }).count();
+
+      boolean isCorrect = count > 0;
+      return new QuizSubmission(classCourseId, paper.getId(), Long.valueOf(quizId), submission.get(quizId).toString(), isCorrect, userId);
     }).collect(Collectors.toList());
 
     quizSubmissionRepository.saveAll(quizSubmissions);
   }
 
-  private void dealReviewQuiz(Long classCourseId, Map<String, Long> submission, Paper paper, Long userId) {
+  private boolean isMulQuizAnswerCorrect(String answer, List<String> userAnswer) {
+    List<String> correct = JSONObject.parseObject(answer, List.class);
+    return correct.size() == userAnswer.size() &&
+      correct.stream().filter(userAnswer::contains).count() == correct.size();
+  }
+
+  private void dealReviewQuiz(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {
     Double score = calculateScore(submission, paper);
     ReviewQuiz reviewQuiz = new ReviewQuiz(classCourseId, paper.getId(), userId, score);
     reviewQuizRepository.save(reviewQuiz);
   }
 
-  private Double calculateScore(Map<String, Long> submission, Paper paper) {
+  private Double calculateScore(Map<String, Object> submission, Paper paper) {
     List<Quiz> quizzes = paper.getQuizzes();
-    long correctCount = quizzes.stream().filter(quiz ->
-      quiz.getAnswer().toString().equals(submission.get(quiz.getId().toString()).toString()))
-      .count();
+    long correctCount = quizzes.stream().filter(quiz -> {
+        if (quiz.getType().equals("多选题")) {
+          return isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quiz.getId().toString()));
+        }
+      return quiz.getAnswer().equals(submission.get(quiz.getId().toString()).toString());
+      }
+    ).count();
     return Double.valueOf(new DecimalFormat("#.00").format(correctCount * 1.0 / quizzes.size() * 100));
   }
 

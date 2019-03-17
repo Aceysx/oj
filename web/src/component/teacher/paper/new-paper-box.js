@@ -113,7 +113,7 @@ class NewPaperBox extends Component {
       />,
     }, {
       title: '完成',
-      content: <Paper paper={paper}/>,
+      content: <Paper paper={paper} preview />,
     }];
 
 

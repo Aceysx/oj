@@ -1,0 +1,1 @@
+alter table quizSubmission modify answer varchar(10000);

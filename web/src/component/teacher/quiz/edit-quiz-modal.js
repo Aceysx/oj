@@ -1,8 +1,11 @@
 import React from 'react'
 import {Button, Col, Form, Icon, Input, message, Modal, Radio, Row, Select, Tooltip} from 'antd'
+import SingleChoiceQuiz from "./single-choice-quiz";
+import MulChoiceQuiz from "./mul-choice-quiz";
+
 const RadioGroup = Radio.Group
 const {Option} = Select;
-const { TextArea } = Input
+const {TextArea} = Input
 const formItemLayout = {
   labelCol: {
     xs: {span: 24},
@@ -20,22 +23,21 @@ class EditQuizModal extends React.Component {
     if (quiz === this.props.quiz) {
       return false
     }
-    let {chapter, description, major = {}, level} = quiz
-    form.setFieldsValue({chapter, description, major: major.id, level, answer: answer + ''})
+    let {chapter, description, major = {}, level, type} = quiz
+    form.setFieldsValue({chapter, description, type, major: major.id, level, answer: answer + ''})
   }
 
-  radioOnChange(e) {
-    const answer = e.target.value
+  radioOnChange = answer => {
     this.props.updateAnswer(answer)
   }
 
-  optionOnChange(index, e) {
+  optionOnChange = (index, e) => {
     const {options} = this.props
     options[index] = e.target.value
     this.props.updateOptions(options)
   }
 
-  handleDeleteSelectItem(index) {
+  handleDeleteSelectItem = index => {
     let {options} = this.props
 
     options = options.filter((options, idx) => index !== idx)
@@ -49,8 +51,8 @@ class EditQuizModal extends React.Component {
   }
 
   validateOptions = () => {
-    const {options, answer} = this.props
-    const validated = options.every(option => option.trim() !== '') && answer < options.length
+    const {options} = this.props
+    const validated = options.every(option => option.trim() !== '')
     if (validated) {
       return true
     }
@@ -74,7 +76,7 @@ class EditQuizModal extends React.Component {
 
 
   render() {
-    const {isNewModalOpen, closeModal, form, options, majors} = this.props
+    const {isNewModalOpen, closeModal, form, options, majors, quiz, answer} = this.props
     const {getFieldDecorator} = form
 
     return <div>
@@ -85,6 +87,22 @@ class EditQuizModal extends React.Component {
         footer={null}
         onCancel={() => closeModal()}
       >
+        <Form.Item
+          {...formItemLayout}
+          label="类型"
+        >
+          {getFieldDecorator('type', {
+            rules: [{
+              required: true, message: '请输入题目类型',
+            }],
+            initialValue: '单选题'
+          })(
+            <RadioGroup disabled>
+              <Radio value='单选题'>单选题</Radio>
+              <Radio value='多选题'>多选题</Radio>
+            </RadioGroup>
+          )}
+        </Form.Item>
         <Form onSubmit={this.handleSubmit}>
           <Form.Item
             {...formItemLayout}
@@ -95,7 +113,7 @@ class EditQuizModal extends React.Component {
                 required: true, message: '请输入题目描述',
               }],
             })(
-              <TextArea rows={4} />
+              <TextArea rows={4}/>
             )}
           </Form.Item>
           <Form.Item
@@ -154,23 +172,21 @@ class EditQuizModal extends React.Component {
                 required: true, message: '请勾选答案',
               }],
             })(
-              <RadioGroup onChange={this.radioOnChange.bind(this)}>
-                {options.map((option, index) => {
-                  return (
-                    <Radio value={`${index}`} key={index}>
-                      <Input value={option} style={{width: '300'}}
-                             onChange={this.optionOnChange.bind(this, index)}
-                      />
-                      {index > 1
-                        ? <Tooltip title={'删除选项'}>
-                          <Icon style={{fontSize: 20, marginLeft: 30}} type='minus-circle-o'
-                                onClick={this.handleDeleteSelectItem.bind(this, index)}/>
-                        </Tooltip>
-                        : ''}
-                    </Radio>
-                  )
-                })}
-              </RadioGroup>
+              quiz.type === '单选题' ?
+                <SingleChoiceQuiz
+                  options={options}
+                  answer={answer}
+                  radioOnChange={this.radioOnChange}
+                  optionOnChange={this.optionOnChange}
+                  handleDeleteSelectItem={this.handleDeleteSelectItem}
+                />
+                : <MulChoiceQuiz
+                  options={options}
+                  answer={answer}
+                  radioOnChange={this.radioOnChange}
+                  optionOnChange={this.optionOnChange}
+                  handleDeleteSelectItem={this.handleDeleteSelectItem}
+                />
             )}
             <Tooltip title={'添加一个选项'}>
               <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>

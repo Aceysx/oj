@@ -55,6 +55,10 @@ class QuizManagementBody extends Component {
           return <span>{text.name}</span>
         }
       }, {
+        title: '类型',
+        dataIndex: 'type',
+        key: 'type'
+      }, {
         title: '操作',
         dataIndex: 'actions',
         key: 'actions',
@@ -64,7 +68,7 @@ class QuizManagementBody extends Component {
               isEditModalOpen: true,
               quiz: record,
               options: JSON.parse(record.options),
-              answer: record.answer
+              answer: record.type === '多选题' ? JSON.parse(record.answer):record.answer
             })}>编辑</a>
           </div>
         }
@@ -90,7 +94,7 @@ class QuizManagementBody extends Component {
         closeModal={() => this.setState({
           isNewModalOpen: false,
           options: ['', '', '', ''],
-          answer: -1
+          answer: ''
         })}
         addQuiz={addQuiz}
       />
@@ -104,7 +108,7 @@ class QuizManagementBody extends Component {
         closeModal={() => this.setState({
           isEditModalOpen: false,
           options: ['', '', '', ''],
-          answer: -1
+          answer: ''
         })}
         editQuiz={editQuiz}
         quiz={quiz}

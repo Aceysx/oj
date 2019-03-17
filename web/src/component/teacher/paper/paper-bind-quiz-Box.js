@@ -32,7 +32,8 @@ class PaperBindQuizBox extends Component {
         title: quiz.description,
         description:  <span>
           <Tag color="#2db7f5">章节</Tag>{quiz.chapter }<Divider type='vertical'/>
-          <Tag color="#f50">专业</Tag>{quiz.major.name }
+          <Tag color="#f50">专业</Tag>{quiz.major.name }<Divider type='vertical'/>
+          <Tag color="green">{quiz.type}</Tag>
           </span>,
       };
     })
