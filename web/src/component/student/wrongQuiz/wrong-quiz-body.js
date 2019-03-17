@@ -46,6 +46,10 @@ class WrongQuizzesBody extends Component {
         render: (text) => {
           return <span>{text.name}</span>
         }
+      },{
+        title: '类型',
+        dataIndex: 'type',
+        key: 'type',
       }, {
         title: '操作',
         dataIndex: 'actions',
@@ -74,11 +78,15 @@ class WrongQuizzesBody extends Component {
           defaultCurrent: currentPage,
           total: totalElements
         }}/>
-      <QuizAnswerPreview
-        visible={isPreviewModalOpen}
-        quiz={quiz}
-        handleCancel={()=>this.setState({isPreviewModalOpen:false})}
-      />
+      {
+        quiz.id ?
+        <QuizAnswerPreview
+          visible={isPreviewModalOpen}
+          quiz={quiz}
+          handleCancel={() => this.setState({isPreviewModalOpen: false})}
+        />
+          :''
+      }
     </div>
   }
 }
