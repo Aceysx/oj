@@ -5,13 +5,6 @@ buildscript {
 
 
     repositories {
-
-        maven {
-            url 'http://ec2-54-222-235-15.cn-north-1.compute.amazonaws.com.cn:8081/repository/maven-public/'
-        }
-        maven {
-            url 'http://ec2-54-222-235-15.cn-north-1.compute.amazonaws.com.cn:8081/repository/gradle-m2/'
-        }
         mavenCentral()
     }
 
@@ -38,9 +31,7 @@ apply plugin: 'jacoco'
 group 'cn.eurasia.oj'
 
 repositories {
-    maven {
-        url 'http://ec2-54-222-235-15.cn-north-1.compute.amazonaws.com.cn:8081/repository/maven-public/'
-    }
+    mavenCentral()
 }
 
 sourceCompatibility = 1.8
