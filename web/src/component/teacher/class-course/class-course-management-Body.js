@@ -25,7 +25,6 @@ class ClassCourseManagementBody extends Component {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
       this.props.getClassCourses(current)
-
     })
   }
 

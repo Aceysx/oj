@@ -19,12 +19,13 @@ const formItemLayout = {
 
 class EditQuizModal extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const {quiz, form, answer} = nextProps
+    let {quiz, form, answer=[]} = nextProps
     if (quiz === this.props.quiz) {
       return false
     }
-    let {chapter, description, major = {}, level, type} = quiz
-    form.setFieldsValue({chapter, description, type, major: major.id, level, answer: answer + ''})
+    let {chapter, description, major, level, type} = quiz
+
+    form.setFieldsValue({chapter, description, type, major:major? major.id: '', level, answer})
   }
 
   radioOnChange = answer => {

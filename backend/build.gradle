@@ -73,7 +73,7 @@ dependencies {
     testCompile('org.codehaus.groovy:groovy-all:2.4.6')
     testCompile('org.spockframework:spock-core:1.0-groovy-2.4')
     testCompile('org.spockframework:spock-spring:1.0-groovy-2.4')
-
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
     compile 'com.hankcs:hanlp:portable-1.6.8'
 }
 ext {

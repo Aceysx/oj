@@ -10,6 +10,9 @@ import PaperManagement from './component/teacher/paper/paper-management-Body'
 import PaperAnswer from './component/student/myClassCourse/answer-paper'
 import PaperReviewQuiz from './component/student/myClassCourse/paper-review-quiz'
 import WrongQuizzesBody from './component/student/wrongQuiz/wrong-quiz-body'
+import PictureManagementBody from './component/teacher/pictures/picture-management-Body'
+import MakeLabelBody from './component/teacher/pictures/make-label-body'
+
 import './style/App.css'
 import 'braft-editor/dist/index.css'
 import {
@@ -28,6 +31,8 @@ class App extends Component {
           <Route exact path='/teachers/majors' component={MajorManagementBody} />
           <Route exact path='/teachers/papers' component={PaperManagement} />
           <Route exact path='/teachers/quizzes' component={QuizManagementBody} />
+          <Route exact path='/teachers/pictures' component={PictureManagementBody} />
+          <Route exact path='/teachers/pictures/:pictureId/labels' component={MakeLabelBody} />
           <Route exact path='/roles/users' component={UserBody} />
           <Route exact path='/students/class-courses' component={MyClassCourseBody} />
           <Route exact path='/students/class-courses/:classCourseId/papers/:paperId/answer' component={PaperAnswer} />

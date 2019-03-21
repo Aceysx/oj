@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URI;
 
 @RestController
@@ -55,5 +58,18 @@ public class QuizController {
     quizService.editQuiz(quizParam);
     return ResponseEntity.noContent().build();
   }
+  @PostMapping("excel")
+  public ResponseEntity excelImport(@RequestParam("file") MultipartFile file,
+                                    @Auth User current) throws BusinessException, IOException {
+    if (validateExcelFormat(file)) {
+      quizService.excelImport(file, current);
+      return new ResponseEntity(HttpStatus.CREATED);
+    }
+    throw new BusinessException("Wrong format. Only support .xls or .xlsx");
+  }
 
+  public Boolean validateExcelFormat(MultipartFile file) {
+    String fileName = file.getOriginalFilename();
+    return fileName.endsWith(".xls") || fileName.endsWith(".xlsx");
+  }
 }

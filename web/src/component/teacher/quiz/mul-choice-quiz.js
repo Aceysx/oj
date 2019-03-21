@@ -4,6 +4,7 @@ import {Checkbox, Icon, Input, Tooltip} from 'antd'
 const CheckboxGroup = Checkbox.Group
 
 const MulChoiceQuiz = ({options, answer, radioOnChange, optionOnChange, handleDeleteSelectItem}) => {
+  answer = answer? answer.map(item => item.toString()) :answer
   const getOptions = () => {
     return options.map((option, index) => {
       return {

@@ -50,7 +50,6 @@ class PaperReviewQuiz extends React.Component {
     >
       {
         quizzes.map((quiz, index) => {
-          console.log(submission, quiz.id)
           const userAnswer = submission.find(item => item.quizId === quiz.id) || {}
           const className = quiz.id === currentQuizId ? 'current-quiz-style' : (userAnswer.isCorrect ? 'quiz-correct-style' : 'quiz-error-style')
           return <Col span={6}>

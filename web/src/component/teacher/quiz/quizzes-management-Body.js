@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Table} from 'antd'
+import {Button, Table, Row, Col} from 'antd'
 import NewQuizModal from "./new-quiz-modal"
 import EditQuizModal from './edit-quiz-modal'
 import {addQuiz, editQuiz, getQuizzesByPage} from '../../../action/quiz-action'
 import {getMajors} from "../../../action/major-action";
+import ImportQuizModal from "../../common/import_quiz_modal";
 
 class QuizManagementBody extends Component {
   state = {
@@ -24,7 +25,7 @@ class QuizManagementBody extends Component {
   getClassCourse = (pagination) => {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
-      this.props.getClassCourses(current)
+      this.props.getQuizzes(current)
 
     })
   }
@@ -35,9 +36,9 @@ class QuizManagementBody extends Component {
         title: '描述',
         dataIndex: 'description',
         key: 'description',
-        width:'30%',
+        width: '30%',
         render: text => {
-          return <span>{text.substr(0,50)}</span>
+          return <span>{text.substr(0, 50)}</span>
         }
       }, {
         title: '章节',
@@ -52,7 +53,7 @@ class QuizManagementBody extends Component {
         dataIndex: 'major',
         key: 'major',
         render: (text, record) => {
-          return <span>{text.name}</span>
+          return <span>{text ? text.name : ''}</span>
         }
       }, {
         title: '类型',
@@ -68,7 +69,7 @@ class QuizManagementBody extends Component {
               isEditModalOpen: true,
               quiz: record,
               options: JSON.parse(record.options),
-              answer: record.type === '多选题' ? JSON.parse(record.answer):record.answer
+              answer: record.type === '多选题' ? JSON.parse(record.answer) : record.answer
             })}>编辑</a>
           </div>
         }
@@ -78,12 +79,22 @@ class QuizManagementBody extends Component {
     const {totalElements, content} = quizPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer} = this.state
     return <div>
-      <p><Button
-        type="primary"
-        onClick={() => this.setState({isNewModalOpen: true})}>
-        添加题目
-      </Button></p>
-
+      <p>
+        <Row>
+          <Col span={2}>
+            <Button
+              type="primary"
+              onClick={() => this.setState({isNewModalOpen: true})}>
+              添加题目
+            </Button>
+          </Col>
+          <Col span={4}>
+            <ImportQuizModal
+              refreshQuizzes={this.props.getQuizzes}
+            />
+          </Col>
+        </Row>
+      </p>
       <NewQuizModal
         updateOptions={(options) => this.setState({options})}
         updateAnswer={(answer) => this.setState({answer})}

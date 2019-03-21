@@ -44,7 +44,7 @@ class WrongQuizzesBody extends Component {
         dataIndex: 'major',
         key: 'major',
         render: (text) => {
-          return <span>{text.name}</span>
+          return <span>{text? text.name:''}</span>
         }
       },{
         title: '类型',

@@ -44,6 +44,16 @@ public class Quiz {
     this.type = type;
   }
 
+  public Quiz(String description, String options, String answer, String chapter, User current,String type) {
+    this.description = description;
+    this.options = options;
+    this.answer = answer;
+    this.chapter = chapter;
+    this.user = current;
+    this.level = "简单";
+    this.type = type;
+  }
+
   public static Quiz convertParam(CreateQuizParam quizParam, User current) {
     return new Quiz(quizParam.getDescription(), quizParam.getOptions(),
       quizParam.getAnswer(), quizParam.getChapter(),

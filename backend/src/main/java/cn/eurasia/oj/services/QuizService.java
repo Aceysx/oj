@@ -15,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +30,8 @@ public class QuizService {
   private MajorRepository majorRepository;
   @Autowired
   private QuizSubmissionRepository quizSubmissionRepository;
+  @Autowired
+  private QuizExcelImportService quizExcelImportService;
 
   public Page<Quiz> getQuizzesByPage(Pageable pageable) {
 
@@ -65,5 +69,10 @@ public class QuizService {
       return quizMap;
     }).collect(Collectors.toList());
     return new PageImpl<>(quizzes, pageable, page.getTotalElements());
+  }
+
+  public void excelImport(MultipartFile file, User current) throws IOException, BusinessException {
+    quizExcelImportService.init(file);
+    quizExcelImportService.importExcel(current);
   }
 }

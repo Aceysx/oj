@@ -100,7 +100,7 @@ class PaperManagementBody extends Component {
         columns={columns}
         dataSource={content}
         rowKey='id'
-        onChange={(pagination) => this.getClassCourse(pagination)}
+        onChange={(pagination) => this.getPictures(pagination)}
         pagination={{
           defaultCurrent: currentPage,
           total: totalElements

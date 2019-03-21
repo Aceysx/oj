@@ -103,7 +103,7 @@ class OjLayout extends Component {
 
           </Row>
         </Header>
-        <Content style={{padding: '10px', height: '100%'}}>
+        <Content style={{padding: '10px'}}>
           <Layout style={{padding: '24px 0', background: '#fff', height: '100%'}}>
             {
               this.isLogin() ?

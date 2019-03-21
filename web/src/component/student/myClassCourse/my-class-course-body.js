@@ -113,7 +113,7 @@ class MyClassCourseBody extends Component {
         dataSource={content}
         rowKey='id'
         expandedRowRender={this.expandedRowRender}
-        onChange={(pagination) => this.getClassCourse(pagination)}
+        onChange={(pagination) => this.getPictures(pagination)}
         pagination={{
           defaultCurrent: currentPage,
           total: totalElements

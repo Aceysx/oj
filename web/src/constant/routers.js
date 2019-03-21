@@ -21,6 +21,9 @@ const routers = {
     }, {
       title: '题目管理',
       url: '/teachers/quizzes'
+    }, {
+      title: '图片管理',
+      url: '/teachers/pictures'
     }
   ],
   admin: [
