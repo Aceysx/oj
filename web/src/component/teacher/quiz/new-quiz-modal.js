@@ -2,6 +2,8 @@ import React from 'react'
 import {Button, Col, Form, Icon, Input, message, Modal, Radio, Row, Select, Tooltip} from 'antd'
 import SingleChoiceQuiz from "./single-choice-quiz";
 import MulChoiceQuiz from "./mul-choice-quiz";
+import MakeQuiz from "./make-quiz";
+import {Link} from "react-router-dom";
 
 const {TextArea} = Input
 const RadioGroup = Radio.Group
@@ -57,9 +59,8 @@ class NewQuizModal extends React.Component {
   }
 
   validateOptions = () => {
-    const {options} = this.props
-    const validated = options.every(option => option.trim() !== '')
-    if (validated) {
+    const {answer} = this.props
+    if ('' !== answer) {
       return true
     }
     message.error('请填写选项，勾选答案')
@@ -70,7 +71,6 @@ class NewQuizModal extends React.Component {
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err && this.validateOptions()) {
-
         let {answer, options} = this.props
         const quiz = Object.assign({}, values, {answer, options: JSON.stringify(options)});
         this.props.addQuiz(quiz, () => {
@@ -80,11 +80,20 @@ class NewQuizModal extends React.Component {
       }
     })
   }
+  getCurrentSelectPicture = (pictures, form) => {
+    return pictures.find(picture => picture.id === parseInt(form.getFieldValue('pictureId'))) || {}
+  }
 
+  getPictures = pictures => {
+    return pictures.map(item => <Option key={item.id}>{item.title}</Option>)
+  }
 
   render() {
-    const {isNewModalOpen, closeModal, form, options, answer, majors} = this.props
+    const {picturesPageable, isNewModalOpen, closeModal, form, options, answer, majors} = this.props
+    const {content = []} = picturesPageable
+    const {type} = this.state
     const {getFieldDecorator} = form
+
 
     return <div>
       <Modal
@@ -108,21 +117,25 @@ class NewQuizModal extends React.Component {
               <RadioGroup onChange={e => this.changeType(e.target.value)}>
                 <Radio value='单选题'>单选题</Radio>
                 <Radio value='多选题'>多选题</Radio>
+                <Radio value='识图题'>识图题</Radio>
               </RadioGroup>
             )}
           </Form.Item>
-          <Form.Item
-            {...formItemLayout}
-            label="题目描述"
-          >
-            {getFieldDecorator('description', {
-              rules: [{
-                required: true, message: '请输入题目描述',
-              }],
-            })(
-              <TextArea rows={4}/>
-            )}
-          </Form.Item>
+          {type !== '识图题' ?
+            <Form.Item
+              {...formItemLayout}
+              label="题目描述"
+            >
+              {getFieldDecorator('description', {
+                rules: [{
+                  required: true, message: '请输入题目描述',
+                }],
+              })(
+                <TextArea rows={4}/>
+              )}
+            </Form.Item>
+            : ''
+          }
           <Form.Item
             {...formItemLayout}
             label="专业"
@@ -170,34 +183,67 @@ class NewQuizModal extends React.Component {
               </Select>
             )}
           </Form.Item>
+          {type === '识图题' ?
+            <Form.Item
+              {...formItemLayout}
+              label="图片选择"
+            >
+              {getFieldDecorator('pictureId', {
+                rules: [{
+                  required: true, message: '输入图片名称',
+                }],
+              })(
+                <Select
+                  showSearch
+                  placeholder='输入图片名称'
+                  defaultActiveFirstOption={false}
+                  showArrow={false}
+                  filterOption={false}
+                  onSearch={this.props.searchPictures}
+                  notFoundContent={null}
+                >
+                  {this.getPictures(content)}
+                </Select>
+              )}
+            </Form.Item>:''
+          }
           <Form.Item
             {...formItemLayout}
-            label="选项"
+            label={type === '识图题' ? '标注选项': "选项"}
           >
             {getFieldDecorator('options', {
               rules: [{
                 required: true, message: '请输入选项',
               }],
             })(
-              this.state.type === '单选题' ?
+              type === '单选题' ?
                 <SingleChoiceQuiz
                   options={options}
                   answer={answer}
                   radioOnChange={this.radioOnChange}
                   optionOnChange={this.optionOnChange}
                   handleDeleteSelectItem={this.handleDeleteSelectItem}
-                />
-                : <MulChoiceQuiz
-                  options={options}
-                  answer={answer}
-                  radioOnChange={this.radioOnChange}
-                  optionOnChange={this.optionOnChange}
-                  handleDeleteSelectItem={this.handleDeleteSelectItem}
-                />
+                /> :
+                (type === '多选题' ?
+                    <MulChoiceQuiz
+                      options={options}
+                      answer={answer}
+                      radioOnChange={this.radioOnChange}
+                      optionOnChange={this.optionOnChange}
+                      handleDeleteSelectItem={this.handleDeleteSelectItem}
+                    /> :
+                    <MakeQuiz
+                      picture={this.getCurrentSelectPicture(content, form)}
+                      answer={answer}
+                      radioOnChange={this.radioOnChange}/>
+                )
             )}
-            <Tooltip title={'添加一个选项'}>
-              <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
-            </Tooltip>
+            {type !== '识图题' ?
+              <Tooltip title={'添加一个选项'}>
+                <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
+              </Tooltip>
+              : ''
+            }
           </Form.Item>
           <Row type='flex' align='middle'>
             <Col>

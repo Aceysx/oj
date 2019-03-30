@@ -36,7 +36,6 @@ repositories {
 
 sourceCompatibility = 1.8
 
-
 ext {
     springCloudVersion = 'Finchley.SR1'
 }

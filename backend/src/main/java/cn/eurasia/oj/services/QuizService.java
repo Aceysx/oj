@@ -1,11 +1,9 @@
 package cn.eurasia.oj.services;
 
-import cn.eurasia.oj.entities.Major;
-import cn.eurasia.oj.entities.Quiz;
-import cn.eurasia.oj.entities.QuizSubmission;
-import cn.eurasia.oj.entities.User;
+import cn.eurasia.oj.entities.*;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.MajorRepository;
+import cn.eurasia.oj.repositories.PictureRepository;
 import cn.eurasia.oj.repositories.QuizRepository;
 import cn.eurasia.oj.repositories.QuizSubmissionRepository;
 import cn.eurasia.oj.requestParams.CreateQuizParam;
@@ -32,6 +30,8 @@ public class QuizService {
   private QuizSubmissionRepository quizSubmissionRepository;
   @Autowired
   private QuizExcelImportService quizExcelImportService;
+  @Autowired
+  private PictureRepository pictureRepository;
 
   public Page<Quiz> getQuizzesByPage(Pageable pageable) {
 
@@ -40,6 +40,10 @@ public class QuizService {
 
   public Quiz addQuiz(CreateQuizParam quizParam, User current) {
     Quiz quiz = Quiz.convertParam(quizParam, current);
+    if ("识图题".equals(quizParam.getType())) {
+      Picture picture = pictureRepository.findById(quizParam.getPictureId()).get();
+      quiz.setPicture(picture);
+    }
     return quizRepository.save(quiz);
   }
 

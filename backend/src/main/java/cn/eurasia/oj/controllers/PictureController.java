@@ -27,15 +27,16 @@ public class PictureController {
   @Autowired
   private PictureRepository pictureRepository;
 
-  @GetMapping("")
+  @GetMapping("pageable")
   public ResponseEntity getPictures(
+    @RequestParam String title,
     @PageableDefault(sort = {"id"},
       direction = Sort.Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(pictureService.getPictures(pageable));
+    return ResponseEntity.ok(pictureService.getPictures(pageable,title));
   }
 
   @GetMapping("{pictureId}")
-  public ResponseEntity getPictures(@PathVariable Long pictureId){
+  public ResponseEntity getPicture(@PathVariable Long pictureId){
     return ResponseEntity.ok(pictureRepository.findById(pictureId).get());
   }
 

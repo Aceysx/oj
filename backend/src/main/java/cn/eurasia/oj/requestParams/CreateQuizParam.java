@@ -15,4 +15,5 @@ public class CreateQuizParam {
   private Long major;
   private String level;
   private String type;
+  private Long pictureId;
 }

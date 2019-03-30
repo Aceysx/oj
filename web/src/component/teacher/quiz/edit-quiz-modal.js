@@ -2,6 +2,7 @@ import React from 'react'
 import {Button, Col, Form, Icon, Input, message, Modal, Radio, Row, Select, Tooltip} from 'antd'
 import SingleChoiceQuiz from "./single-choice-quiz";
 import MulChoiceQuiz from "./mul-choice-quiz";
+import MakeQuiz from "./make-quiz";
 
 const RadioGroup = Radio.Group
 const {Option} = Select;
@@ -24,8 +25,8 @@ class EditQuizModal extends React.Component {
       return false
     }
     let {chapter, description, major, level, type} = quiz
-
-    form.setFieldsValue({chapter, description, type, major:major? major.id: '', level, answer})
+    form.setFieldsValue({chapter, description, type, major:major? major.id: '',
+      level, answer})
   }
 
   radioOnChange = answer => {
@@ -51,10 +52,14 @@ class EditQuizModal extends React.Component {
     this.props.updateOptions(options)
   }
 
+  getPictures = pictures => {
+    return pictures.map(item => <Option key={item.id}>{item.title}</Option>)
+  }
+
   validateOptions = () => {
-    const {options} = this.props
+    const {options, quiz} = this.props
     const validated = options.every(option => option.trim() !== '')
-    if (validated) {
+    if (validated ||quiz.type === '识图题') {
       return true
     }
     message.error('请填写选项，勾选答案')
@@ -62,10 +67,10 @@ class EditQuizModal extends React.Component {
   }
 
   handleSubmit = (e) => {
+    let {answer, options, quiz} = this.props
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err && this.validateOptions()) {
-        let {answer, options, quiz} = this.props
         quiz = Object.assign({}, values, {id: quiz.id, answer, options: JSON.stringify(options)})
         this.props.editQuiz(quiz, () => {
           message.success('编辑成功')
@@ -77,7 +82,7 @@ class EditQuizModal extends React.Component {
 
 
   render() {
-    const {isNewModalOpen, closeModal, form, options, majors, quiz, answer} = this.props
+    const {isNewModalOpen,closeModal, form, options, majors, quiz, answer} = this.props
     const {getFieldDecorator} = form
 
     return <div>
@@ -101,22 +106,27 @@ class EditQuizModal extends React.Component {
             <RadioGroup disabled>
               <Radio value='单选题'>单选题</Radio>
               <Radio value='多选题'>多选题</Radio>
+              <Radio value='识图题'>识图题</Radio>
             </RadioGroup>
           )}
         </Form.Item>
+
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item
-            {...formItemLayout}
-            label="题目描述"
-          >
-            {getFieldDecorator('description', {
-              rules: [{
-                required: true, message: '请输入题目描述',
-              }],
-            })(
-              <TextArea rows={4}/>
-            )}
-          </Form.Item>
+          {quiz.type !== '识图题' ?
+            <Form.Item
+              {...formItemLayout}
+              label="题目描述"
+            >
+              {getFieldDecorator('description', {
+                rules: [{
+                  required: true, message: '请输入题目描述',
+                }],
+              })(
+                <TextArea rows={4}/>
+              )}
+            </Form.Item>
+            : ''
+          }
           <Form.Item
             {...formItemLayout}
             label="专业"
@@ -164,9 +174,17 @@ class EditQuizModal extends React.Component {
               </Select>
             )}
           </Form.Item>
+          {quiz.type === '识图题' ?
+            <Form.Item
+              {...formItemLayout}
+              label="图片"
+            >
+                <Input value={quiz.picture.title} disabled/>
+            </Form.Item>:''
+          }
           <Form.Item
             {...formItemLayout}
-            label="选项"
+            label={quiz.type === '识图题' ? '标注选项': "选项"}
           >
             {getFieldDecorator('answer', {
               rules: [{
@@ -181,17 +199,24 @@ class EditQuizModal extends React.Component {
                   optionOnChange={this.optionOnChange}
                   handleDeleteSelectItem={this.handleDeleteSelectItem}
                 />
-                : <MulChoiceQuiz
+                : (quiz.type === '多选题'? <MulChoiceQuiz
                   options={options}
                   answer={answer}
                   radioOnChange={this.radioOnChange}
                   optionOnChange={this.optionOnChange}
                   handleDeleteSelectItem={this.handleDeleteSelectItem}
-                />
+                /> :
+                <MakeQuiz
+                  picture={quiz.picture}
+                  answer={answer}
+                  radioOnChange={this.radioOnChange}/>)
             )}
-            <Tooltip title={'添加一个选项'}>
-              <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
-            </Tooltip>
+            {quiz.type !== '识图题' ?
+              <Tooltip title={'添加一个选项'}>
+                <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
+              </Tooltip>
+              :''
+            }
           </Form.Item>
           <Row type='flex' align='middle'>
             <Col>

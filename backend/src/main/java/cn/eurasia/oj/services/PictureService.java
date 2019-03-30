@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +26,12 @@ public class PictureService {
     return pictureRepository.save(picture);
   }
 
-  public Page<Picture> getPictures(Pageable pageable) {
-    return pictureRepository.findAll(pageable);
+  public Page<Picture> getPictures(Pageable pageable, String title) {
+    if ("".equals(title)) {
+      return pictureRepository.findAll(pageable);
+    }
+    return pictureRepository.findByTitleIsLike("%"+title+"%", pageable);
+
   }
 
   public void editPictureLabels(Long pictureId, User current, List<Map> labelsStr) throws BusinessException {

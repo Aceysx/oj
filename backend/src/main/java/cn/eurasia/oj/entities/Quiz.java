@@ -30,6 +30,10 @@ public class Quiz {
   @ManyToOne
   @JoinColumn(name = "userId")
   private User user;
+  @OneToOne
+  @JoinColumn(name = "pictureId")
+  private Picture picture;
+
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date createTime;
 

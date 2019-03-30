@@ -6,6 +6,7 @@ import EditQuizModal from './edit-quiz-modal'
 import {addQuiz, editQuiz, getQuizzesByPage} from '../../../action/quiz-action'
 import {getMajors} from "../../../action/major-action";
 import ImportQuizModal from "../../common/import_quiz_modal";
+import {getPictures} from "../../../action/picture-action";
 
 class QuizManagementBody extends Component {
   state = {
@@ -37,8 +38,8 @@ class QuizManagementBody extends Component {
         dataIndex: 'description',
         key: 'description',
         width: '30%',
-        render: text => {
-          return <span>{text.substr(0, 50)}</span>
+        render: (text) => {
+          return <span>{text?text.substr(0, 50):''}</span>
         }
       }, {
         title: '章节',
@@ -52,7 +53,7 @@ class QuizManagementBody extends Component {
         title: '专业',
         dataIndex: 'major',
         key: 'major',
-        render: (text, record) => {
+        render: (text) => {
           return <span>{text ? text.name : ''}</span>
         }
       }, {
@@ -75,7 +76,7 @@ class QuizManagementBody extends Component {
         }
       }
     ]
-    const {quizPageable, addQuiz, majors, editQuiz} = this.props
+    const {quizPageable, addQuiz, majors, editQuiz,picturesPageable} = this.props
     const {totalElements, content} = quizPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer} = this.state
     return <div>
@@ -98,6 +99,8 @@ class QuizManagementBody extends Component {
       <NewQuizModal
         updateOptions={(options) => this.setState({options})}
         updateAnswer={(answer) => this.setState({answer})}
+        searchPictures={this.props.searchPictures}
+        picturesPageable={picturesPageable}
         answer={answer}
         options={options}
         majors={majors}
@@ -113,6 +116,8 @@ class QuizManagementBody extends Component {
         answer={answer}
         options={options}
         majors={majors}
+        searchPictures={this.props.searchPictures}
+        picturesPageable={picturesPageable}
         isNewModalOpen={isEditModalOpen}
         updateOptions={(options) => this.setState({options})}
         updateAnswer={(answer) => this.setState({answer})}
@@ -139,15 +144,17 @@ class QuizManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizPageable, majors}) => ({
+const mapStateToProps = ({user, quizPageable, majors,picturesPageable}) => ({
   user,
   quizPageable,
-  majors
+  majors,
+  picturesPageable
 })
 
 const mapDispatchToProps = dispatch => ({
   getQuizzes: (current) => dispatch(getQuizzesByPage(current)),
   getMajors: () => dispatch(getMajors()),
+  searchPictures: (title) => dispatch(getPictures(1,title)),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
   addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback))
 })
