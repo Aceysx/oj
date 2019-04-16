@@ -1,9 +1,9 @@
 import React from 'react'
 import {Button, Card, Col, Checkbox, Divider, Radio, Row} from 'antd'
-
+import {LabelImg} from "./labelimg";
 const RadioGroup = Radio.Group
 const CheckboxGroup = Checkbox.Group
-
+let label;
 class Paper extends React.Component {
   state = {
     quizId: -1,
@@ -26,9 +26,7 @@ class Paper extends React.Component {
     this.setDefaultQuizId(nextProps.paper)
   }
 
-  getOptions = (quiz) => {
-    let {options} = quiz
-    options = JSON.parse(options)
+  getOptions = (options) => {
     return options.map((option, index) => {
         return <p><Radio key={index} value={index}>{option}</Radio></p>
       }
@@ -36,7 +34,7 @@ class Paper extends React.Component {
   }
 
   getQuizSider = (type, currentQuizId) => {
-    const {paper, answers = []} = this.props
+    const {paper, answers = [], preview} = this.props
     const quizzes = paper.quizzes.filter(quiz => quiz.type === type)
     if (quizzes.length === 0) {
       return
@@ -47,7 +45,9 @@ class Paper extends React.Component {
     >
       {
         quizzes.map((quiz, index) => {
-          const className = quiz.id === currentQuizId ? 'current-quiz-style' : (answers[quiz.id] ? 'quiz-finish-style' : '')
+          let className = quiz.id === currentQuizId ? 'current-quiz-style' : (answers[quiz.id] ? 'quiz-finish-style' : '')
+          className = preview && className === 'quiz-finish-style' ? '' : className
+
           return <Col span={6}>
             <p
               onClick={() => this.setState({quizId: quiz.id})}
@@ -74,7 +74,7 @@ class Paper extends React.Component {
       onChange={e => onChange(quiz.id.toString(), e.target.value)}
       value={parseInt(answer)}
       disabled={preview}>
-      {this.getOptions(quiz)}
+      {this.getOptions(JSON.parse(quiz.options))}
     </RadioGroup>
   }
   getMulQuiz = (quiz, answer, preview, radioOnChange) => {
@@ -93,7 +93,29 @@ class Paper extends React.Component {
     return <CheckboxGroup options={getMulOptions()}
                           value={answer}
                           disabled={preview}
-                          onChange={value => radioOnChange(quiz.id.toString(), value)} />
+                          onChange={value => radioOnChange(quiz.id.toString(), value)}/>
+  }
+  getMarkQuiz = (quiz, answer, preview, onChange) => {
+    const picture = quiz.picture
+    let {url} = picture
+    const labels = [...quiz.picture.labels]
+    const labelPositions = labels.map(label => {
+      return {...label,position:JSON.parse(label.position)}
+    })
+    const list = [
+      {
+        imgUrl: url,
+        labeled: false
+      }
+    ]
+    label = new LabelImg({
+      submit: labels => this.setState({labels}),
+      initData: labelPositions,
+      element:'make-picture',
+      isPreview: true
+    })
+    label.addImg(list[0].imgUrl)
+    window.setTimeout(label.init, 500)
   }
 
   getQuiz = () => {
@@ -118,11 +140,18 @@ class Paper extends React.Component {
       {
         quiz.type === '单选题' ?
           this.getSingleQuiz(quiz, answer, preview, onChange)
-          :
-          this.getMulQuiz(quiz, answer, preview, onChange)
-
+          : ''
       }
-
+      {
+        quiz.type === '多选题' ?
+          this.getMulQuiz(quiz, answer, preview, onChange)
+          : ''
+      }
+      {
+        quiz.type === '识图题' ?
+          this.getMarkQuiz(quiz, answer, preview, onChange)
+          : ''
+      }
       <Divider/>
       <Button disabled={currentIdIndex <= 0}
               onClick={() => this.setState({quizId: quizIds[currentIdIndex - 1]})}>上一题</Button>
@@ -135,7 +164,7 @@ class Paper extends React.Component {
 
   render() {
     const {paper} = this.props
-    return <div>
+    return <Row>
       <Col span={5}>
         <div>
           {
@@ -152,9 +181,10 @@ class Paper extends React.Component {
       </Col>
       <Col span={16} offset={1}>
         <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
+        <div id='make-picture'/>
         {this.getQuiz()}
       </Col>
-    </div>;
+    </Row>
   }
 }
 

@@ -4,9 +4,10 @@
   var _self // 该插件内的全局变量，用来获取 this
   function LabelImg (opt) {
     this.openModal = opt.openModal
-    this.el = document.getElementById('canva')
+    this.el = document.getElementById(opt.element ? opt.element : 'canva')
     this.shape = opt.shape || 'polygon'
     this.submit = opt.submit
+    this.isPreview = opt.isPreview
     this.initData = opt.initData
     this.x = 0
     this.y = 0
@@ -83,7 +84,8 @@
         polygon.setAttribute('data-position', JSON.stringify(position))
         parent.appendChild(polygon)
         var infoItem = render.infoBox(title)
-        document.querySelector('.lbi-info-box').appendChild(infoItem)
+        var infoBox = document.querySelector('.lbi-info-box') || {}
+        infoBox || infoBox.appendChild(infoItem)
 
         // _self.labelsConfig.stack.push(infoItem)
         var svg = document.querySelector('.lbi-svg'),
@@ -98,19 +100,29 @@
     // 获取 整体 UI 框架的 html 结构字符串并渲染
     this.el.innerHTML = render.ui()
     // 获取 toolbox 的 html 结构字符串并渲染
-    document.querySelector('.lbi-tool-box').innerHTML = render.toolBox(this.TOOLS)
-    tool()
+    if (!this.isPreview) {
+      document.querySelector('.lbi-tool-box').innerHTML = render.toolBox(this.TOOLS)
+      tool()
 
-    // colorBox
-    document.querySelector('.lbi-color-box').innerHTML = render.colorBox(this.COLORS)
-    render.handleColor()
-
-    render.handleSelect()
-    render.axisSetting(document.querySelector('.lbi-svg-box'))
+      // colorBox
+      document.querySelector('.lbi-color-box').innerHTML = render.colorBox(this.COLORS)
+      render.handleColor()
+      render.handleSelect()
+      render.axisSetting(document.querySelector('.lbi-svg-box'))
+    }
   }
 
   // 整体UI框架的 html 结构
   render.ui = function () {
+    if (_self.isPreview) {
+      return `<div class="lbi-main">
+				<div class="lbi-paint-box">
+					<div class="lbi-svg-box">
+						<img src="" alt="" class="lbi-img" />
+						<svg class="lbi-svg"></svg>
+					</div></div></div>
+      `
+    }
     var uiHtml = `
 			<div class="lbi-main">
 				<div class="lbi-tool-box"></div>
@@ -317,14 +329,12 @@
     _self.submit(_self.output())
   }
   tool.clean = function () {
-    var svg = document.querySelector('.lbi-svg')
-    var infoBox = document.querySelector('.lbi-info-box')
+    var svg = document.querySelector('.lbi-svg') || {}
+    var infoBox = document.querySelector('.lbi-info-box') || {}
     infoBox.innerHTML = ''
     svg.innerHTML = ''
     _self.polygonConfig.points = []
     _self.polygonConfig.stack = []
-    document.querySelector('.lbi-mask').style.display = 'none'
-    _self.submit(_self.output())
   }
 
   // 同步标注图片和 svg 大小，使两者保持一致

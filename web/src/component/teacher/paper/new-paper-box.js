@@ -74,6 +74,7 @@ class NewPaperBox extends Component {
   }
   operPaper = () => {
     const {paper} = this.state
+    console.log(paper)
     if (paper.id) {
       this.props.editPaper(paper, () => {
         message.success('编辑成功')
@@ -113,7 +114,7 @@ class NewPaperBox extends Component {
       />,
     }, {
       title: '完成',
-      content: <Paper paper={paper} preview />,
+      content: <Paper paper={{...paper}} preview />,
     }];
 
 

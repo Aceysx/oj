@@ -2,7 +2,6 @@ package cn.eurasia.oj.entities;
 
 import cn.eurasia.oj.requestParams.CreatePaperParam;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
