@@ -1,10 +1,12 @@
 import React from 'react'
-import {Button, Card, Checkbox, Col, Divider, Icon, Radio, Row} from 'antd'
+import {Card, Checkbox, Col, Divider, Icon, Input, Radio, Row} from 'antd'
 import {getPaper, getReviewQuiz} from '../../../action/paper-action'
 import {connect} from 'react-redux'
+import {LabelImg} from "../../common/labelimg";
 
 const RadioGroup = Radio.Group
 const CheckboxGroup = Checkbox.Group
+let label
 
 class PaperReviewQuiz extends React.Component {
   state = {
@@ -89,6 +91,36 @@ class PaperReviewQuiz extends React.Component {
       {getOptions(quiz)}
     </RadioGroup>
   }
+
+  getMakerQuiz = (quiz) => {
+    const picture = quiz.picture
+    let {url} = picture
+    const labels = [...quiz.picture.labels]
+    const labelPositions = labels.map(label => {
+      return {...label, position: JSON.parse(label.position)}
+    })
+    const list = [
+      {
+        imgUrl: url,
+        labeled: false
+      }
+    ]
+    label = new LabelImg({
+      submit: labels => this.setState({labels}),
+      initData: labelPositions,
+      element: 'make-picture',
+      isPreview: true
+    })
+    label.addImg(list[0].imgUrl)
+    window.setTimeout(label.init, 500)
+  }
+
+  removeMarkQuizDescription = () => {
+    if (label) {
+      label.clean();
+    }
+  }
+
   getMulQuiz = (quiz, answer) => {
     const getMulOptions = () => {
       return JSON.parse(quiz.options).map((option, index) => {
@@ -111,7 +143,6 @@ class PaperReviewQuiz extends React.Component {
     const quiz = paper.quizzes.find(quiz => quiz.id === quizId)
     if (!quiz) return
     const answer = quiz.answer === null ? submission[quiz.id.toString()] : quiz.answer
-
     return <div>
       <Row>
         <p style={{
@@ -124,26 +155,45 @@ class PaperReviewQuiz extends React.Component {
         </p>
       </Row>
       {
-        quiz.type === '单选题' ?
-          this.getSingleQuiz(quiz, answer)
-          :
-          this.getMulQuiz(quiz, answer)
+        quiz.type === '单选题'
+          ? this.getSingleQuiz(quiz, answer)
+          : ''
+      }
+      {quiz.type === '多选题'
+        ? this.getMulQuiz(quiz, answer)
+        : ''
+      }
+      {quiz.type === '识图题'
+        ? this.getMakerQuiz(quiz, answer)
+        : ''
       }
 
       <Divider/>
-      <h2>正确答案：{
-        quiz.type === '多选题' ?
-          JSON.parse(quiz.answer).map(answer => ++answer).sort().join('、')
-          :
-          ++quiz.answer
-      }</h2>
+      <h2>正确答案：
+        {
+          quiz.type === '多选题' ?
+            JSON.parse(quiz.answer).map(answer => ++answer).sort().join('、')
+            : ''
+        }
+        {
+          quiz.type === '单选题' ?
+            ++quiz.answer
+            : ''
+        }
+        {
+          quiz.type === '识图题' ?
+            quiz.answer
+            : ''
+        }
+
+      </h2>
     </div>;
   }
 
   render() {
     const {paperReviewQuiz} = this.props
     const {paper, reviewQuiz, submission} = paperReviewQuiz
-
+    this.removeMarkQuizDescription()
     return <div>
       <p>
         <a onClick={() => this.props.history.goBack()}>
@@ -167,6 +217,7 @@ class PaperReviewQuiz extends React.Component {
       <Col span={16} offset={1}>
         <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
         <p style={{textAlign: 'center'}}>分数：{reviewQuiz.score}</p>
+        <div id='make-picture'/>
         {this.getQuiz(paper, submission)}
       </Col>
     </div>

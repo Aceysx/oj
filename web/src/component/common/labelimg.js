@@ -9,6 +9,11 @@
     this.submit = opt.submit
     this.isPreview = opt.isPreview
     this.initData = opt.initData
+    this.clean = () => {
+      let elementById = document.getElementById('make-picture')
+      console.log(elementById)
+      elementById.innerHTML = ''
+    }
     this.x = 0
     this.y = 0
 
@@ -84,8 +89,10 @@
         polygon.setAttribute('data-position', JSON.stringify(position))
         parent.appendChild(polygon)
         var infoItem = render.infoBox(title)
-        var infoBox = document.querySelector('.lbi-info-box') || {}
-        infoBox || infoBox.appendChild(infoItem)
+        var infoBox = document.querySelector('.lbi-info-box')
+        if (infoBox) {
+          infoBox.appendChild(infoItem)
+        }
 
         // _self.labelsConfig.stack.push(infoItem)
         var svg = document.querySelector('.lbi-svg'),
@@ -356,6 +363,7 @@
   }
 
   function drawPolygon (parent) {
+    if(_self.isPreview) return
     // 在执行 drawPolygon 函数之前，先把上个绘制函数事件删除，否则上个绘制函数也会一直执行
     parent.onmousedown = parent.onmousemove = parent.onmouseup = null
     // 绘制栈，保存起始点和每条线的 DOM 节点，当多边形绘制完毕后，需要删除之前的circle和line节点

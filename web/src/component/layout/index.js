@@ -54,7 +54,7 @@ class OjLayout extends Component {
         <Header>
           <Row>
             <Col span={4}>
-              <a href=''>Oj在线系统</a>
+              <a href=''>DRVS在线考试系统</a>
             </Col>
             {
               this.isLogin() ?

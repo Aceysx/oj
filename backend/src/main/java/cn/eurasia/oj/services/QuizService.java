@@ -43,6 +43,7 @@ public class QuizService {
     if ("识图题".equals(quizParam.getType())) {
       Picture picture = pictureRepository.findById(quizParam.getPictureId()).get();
       quiz.setPicture(picture);
+      quiz.setDescription(picture.getUrl());
     }
     return quizRepository.save(quiz);
   }

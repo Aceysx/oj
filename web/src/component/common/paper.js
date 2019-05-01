@@ -1,9 +1,11 @@
 import React from 'react'
-import {Button, Card, Col, Checkbox, Divider, Radio, Row} from 'antd'
+import {Button, Card, Col, Checkbox, Divider, Radio, Row, Input} from 'antd'
 import {LabelImg} from "./labelimg";
+
 const RadioGroup = Radio.Group
 const CheckboxGroup = Checkbox.Group
 let label;
+
 class Paper extends React.Component {
   state = {
     quizId: -1,
@@ -70,6 +72,7 @@ class Paper extends React.Component {
 
   }
   getSingleQuiz = (quiz, answer, preview, onChange) => {
+
     return <RadioGroup
       onChange={e => onChange(quiz.id.toString(), e.target.value)}
       value={parseInt(answer)}
@@ -95,12 +98,12 @@ class Paper extends React.Component {
                           disabled={preview}
                           onChange={value => radioOnChange(quiz.id.toString(), value)}/>
   }
-  getMarkQuiz = (quiz, answer, preview, onChange) => {
+  getMarkQuiz = (quiz, answer, isPreview, onChange) => {
     const picture = quiz.picture
     let {url} = picture
     const labels = [...quiz.picture.labels]
     const labelPositions = labels.map(label => {
-      return {...label,position:JSON.parse(label.position)}
+      return {...label, position: JSON.parse(label.position)}
     })
     const list = [
       {
@@ -111,11 +114,24 @@ class Paper extends React.Component {
     label = new LabelImg({
       submit: labels => this.setState({labels}),
       initData: labelPositions,
-      element:'make-picture',
+      element: 'make-picture',
       isPreview: true
     })
     label.addImg(list[0].imgUrl)
     window.setTimeout(label.init, 500)
+
+    return <Row>
+      <Col span={2}>答案:</Col>
+      <Col span={5}><Input value={answer}
+                           disabled={isPreview}
+                           onChange={(e) => onChange(quiz.id.toString(), e.target.value)}/></Col>
+    </Row>
+  }
+
+  removeMarkQuizDescription = () => {
+    if (label) {
+      label.clean();
+    }
   }
 
   getQuiz = () => {
@@ -125,7 +141,7 @@ class Paper extends React.Component {
     if (!quiz) return
     const answer = quiz.answer === null ? answers[quiz.id.toString()] : quiz.answer
     let currentIdIndex = quizIds.indexOf(quizId)
-
+    this.removeMarkQuizDescription()
     return <div>
       <Row>
         <p style={{

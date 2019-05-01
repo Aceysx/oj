@@ -65,7 +65,11 @@ public class Quiz {
   }
 
   public void update(CreateQuizParam quizParam, Major major) {
-    this.description = quizParam.getDescription();
+    String description = quizParam.getDescription();
+    if ("识图题".equals(quizParam.getType())) {
+      description = this.picture.getUrl() + " — " + "";
+    }
+    this.description = description;
     this.options = quizParam.getOptions();
     this.answer = quizParam.getAnswer();
     this.chapter = quizParam.getChapter();

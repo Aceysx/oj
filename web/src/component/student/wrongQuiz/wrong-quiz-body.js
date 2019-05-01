@@ -18,7 +18,7 @@ class WrongQuizzesBody extends Component {
   getClassCourse = (pagination) => {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
-      this.props.getClassCourses(current)
+      this.props.getQuizzes(current)
     })
   }
 
@@ -29,7 +29,7 @@ class WrongQuizzesBody extends Component {
         dataIndex: 'description',
         key: 'description',
         render: text => {
-          return <span>{text.substr(0, 100)}</span>
+          return <span>{text ? text.substr(0, 100) : ''}</span>
         }
       }, {
         title: '章节',
