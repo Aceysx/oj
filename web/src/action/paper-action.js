@@ -90,3 +90,16 @@ export const editPaper = (paper, callback) => {
     })()
   }
 }
+export const statistic = (paperId) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`/api/papers/${paperId}/statistics`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'PAPER_STATISTICS',
+          data: res.body
+        })
+      }
+    })()
+  }
+}

@@ -4,6 +4,7 @@ import {Button, Divider, Table} from 'antd'
 import NewPaperBox from './new-paper-box'
 import {getPapersByPage} from "../../../action/paper-action";
 import PreviewPaperModal from "./preview-paper-modal";
+import {Link} from "react-router-dom";
 
 class PaperManagementBody extends Component {
   state = {
@@ -53,6 +54,8 @@ class PaperManagementBody extends Component {
             <a onClick={() => this.setState({isPreviewModalOpen: true, paper})}>预览</a>
             <Divider type='vertical'/>
             <a onClick={() => this.setState({isEditModalOpen: true, paper})}>编辑</a>
+            <Divider type='vertical'/>
+            <Link to={`/teachers/papers/review/${paper.id}`}>阅卷</Link>
           </div>
         }
       }

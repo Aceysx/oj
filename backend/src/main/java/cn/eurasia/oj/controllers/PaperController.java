@@ -21,38 +21,44 @@ import java.net.URI;
 @RequestMapping(value = "/api/papers")
 public class PaperController {
 
-  @Autowired
-  private PaperService paperService;
+    @Autowired
+    private PaperService paperService;
 
-  @GetMapping("pageable")
-  public ResponseEntity getPapersByPage(
-    @PageableDefault(sort = {"id"},
-      direction = Sort.Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(paperService.getQuizzesByPage(pageable));
-  }
+    @GetMapping("pageable")
+    public ResponseEntity getPapersByPage(
+        @PageableDefault(sort = {"id"},
+            direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(paperService.getQuizzesByPage(pageable));
+    }
 
-  @GetMapping("")
-  public ResponseEntity getPapers() {
-    return ResponseEntity.ok(paperService.findAll());
-  }
+    @GetMapping("")
+    public ResponseEntity getPapers() {
+        return ResponseEntity.ok(paperService.findAll());
+    }
 
-  @GetMapping("{paperId}")
-  public ResponseEntity getPaper(@PathVariable Long paperId) throws BusinessException {
-    return ResponseEntity.ok(paperService.findPaper(paperId));
-  }
+    @GetMapping("{paperId}")
+    public ResponseEntity getPaper(@PathVariable Long paperId) throws BusinessException {
+        return ResponseEntity.ok(paperService.findPaper(paperId));
+    }
 
-  @PostMapping("")
-  public ResponseEntity addPaper(@RequestBody CreatePaperParam createPaperParam,
-                                       @Auth User current) {
+    @PostMapping("")
+    public ResponseEntity addPaper(@RequestBody CreatePaperParam createPaperParam,
+                                   @Auth User current) {
 
-    Paper paper = paperService.addPaper(createPaperParam,current);
-    return ResponseEntity.created(URI.create("/api/papers/"+paper.getId())).build();
-  }
+        Paper paper = paperService.addPaper(createPaperParam, current);
+        return ResponseEntity.created(URI.create("/api/papers/" + paper.getId())).build();
+    }
 
-  @PutMapping("")
-  public ResponseEntity editPaper(@RequestBody Paper paper) throws BusinessException {
-    paperService.editPaper(paper);
-    return ResponseEntity.noContent().build();
-  }
+    @PutMapping("")
+    public ResponseEntity editPaper(@RequestBody Paper paper) throws BusinessException {
+        paperService.editPaper(paper);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("{paperId}/statistics")
+    public ResponseEntity statistic(@PathVariable Long paperId) {
+        return ResponseEntity.ok(paperService.statistic(paperId));
+    }
 
 }

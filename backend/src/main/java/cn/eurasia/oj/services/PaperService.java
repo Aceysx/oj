@@ -19,109 +19,123 @@ import java.util.stream.Collectors;
 
 @Service
 public class PaperService {
-  @Autowired
-  private PaperRepository paperRepository;
-  @Autowired
-  private QuizSubmissionRepository quizSubmissionRepository;
-  @Autowired
-  private ReviewQuizRepository reviewQuizRepository;
+    @Autowired
+    private PaperRepository paperRepository;
+    @Autowired
+    private QuizSubmissionRepository quizSubmissionRepository;
+    @Autowired
+    private ReviewQuizRepository reviewQuizRepository;
 
-  public Paper addPaper(CreatePaperParam createPaperParam, User current) {
-    Paper paper = Paper.convertParam(createPaperParam, current);
-    return paperRepository.save(paper);
-  }
-
-  public Page<Paper> getQuizzesByPage(Pageable pageable) {
-    return paperRepository.findAll(pageable);
-  }
-
-  public void editPaper(Paper paper) throws BusinessException {
-    Paper currentPaper = paperRepository.findById(paper.getId()).orElseThrow(
-      () -> new BusinessException("未找到该试卷")
-    );
-    currentPaper.update(paper);
-    paperRepository.save(paper);
-  }
-
-  public List<Paper> findAll() {
-    return paperRepository.findAll();
-  }
-
-  public Paper findPaper(Long paperId) throws BusinessException {
-    Paper paper = paperRepository.findById(paperId).orElseThrow(
-      () -> new BusinessException("未找到")
-    );
-    paper.removeQuizzesAnswer();
-    return paper;
-  }
-
-  public void submitPaper(Long classCourseId, Long paperId, CreatePaperSubmissionParam createPaperSubmissionParam, Long userId) throws BusinessException {
-    ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourseId, paperId, userId);
-    if (Objects.nonNull(reviewQuiz)) {
-      throw new BusinessException("已提交答案");
+    public Paper addPaper(CreatePaperParam createPaperParam, User current) {
+        Paper paper = Paper.convertParam(createPaperParam, current);
+        return paperRepository.save(paper);
     }
 
-    Map<String, Object> submission = createPaperSubmissionParam.getSubmission();
-    Paper paper = paperRepository.findById(paperId).orElseThrow(() -> new BusinessException("不存在"));
+    public Page<Paper> getQuizzesByPage(Pageable pageable) {
+        return paperRepository.findAll(pageable);
+    }
 
-    dealSubmission(classCourseId, submission, paper, userId);
-    dealReviewQuiz(classCourseId, submission, paper, userId);
-  }
+    public void editPaper(Paper paper) throws BusinessException {
+        Paper currentPaper = paperRepository.findById(paper.getId()).orElseThrow(
+            () -> new BusinessException("未找到该试卷")
+        );
+        currentPaper.update(paper);
+        paperRepository.save(paper);
+    }
 
-  private void dealSubmission(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {
-    List<QuizSubmission> quizSubmissions = submission.keySet().stream().map(quizId -> {
+    public List<Paper> findAll() {
+        return paperRepository.findAll();
+    }
 
-      Long count = paper.getQuizzes().stream().filter(quiz -> {
-        boolean isCurrentQuiz = quiz.getId().equals(Long.valueOf(quizId));
-        if (quiz.getType().equals("多选题")) {
-          return isCurrentQuiz && isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quizId));
+    public Paper findPaper(Long paperId) throws BusinessException {
+        Paper paper = paperRepository.findById(paperId).orElseThrow(
+            () -> new BusinessException("未找到")
+        );
+        paper.removeQuizzesAnswer();
+        return paper;
+    }
+
+    public void submitPaper(Long classCourseId, Long paperId, CreatePaperSubmissionParam createPaperSubmissionParam, Long userId) throws BusinessException {
+        ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourseId, paperId, userId);
+        if (Objects.nonNull(reviewQuiz)) {
+            throw new BusinessException("已提交答案");
         }
-        return quiz.getId().equals(Long.valueOf(quizId))
-          && quiz.getAnswer().equals(submission.get(quizId).toString());
-      }).count();
 
-      boolean isCorrect = count > 0;
-      return new QuizSubmission(classCourseId, paper.getId(), Long.valueOf(quizId), submission.get(quizId).toString(), isCorrect, userId);
-    }).collect(Collectors.toList());
+        Map<String, Object> submission = createPaperSubmissionParam.getSubmission();
+        Paper paper = paperRepository.findById(paperId).orElseThrow(() -> new BusinessException("不存在"));
 
-    quizSubmissionRepository.saveAll(quizSubmissions);
-  }
+        dealSubmission(classCourseId, submission, paper, userId);
+        dealReviewQuiz(classCourseId, submission, paper, userId);
+    }
 
-  private boolean isMulQuizAnswerCorrect(String answer, List<String> userAnswer) {
-    List<String> correct = JSONObject.parseObject(answer, List.class);
-    return correct.size() == userAnswer.size() &&
-      correct.stream().filter(userAnswer::contains).count() == correct.size();
-  }
+    private void dealSubmission(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {
+        List<QuizSubmission> quizSubmissions = submission.keySet().stream().map(quizId -> {
 
-  private void dealReviewQuiz(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {
-    Double score = calculateScore(submission, paper);
-    ReviewQuiz reviewQuiz = new ReviewQuiz(classCourseId, paper.getId(), userId, score);
-    reviewQuizRepository.save(reviewQuiz);
-  }
+            Long count = paper.getQuizzes().stream().filter(quiz -> {
+                boolean isCurrentQuiz = quiz.getId().equals(Long.valueOf(quizId));
+                if (quiz.getType().equals("多选题")) {
+                    return isCurrentQuiz && isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quizId));
+                }
+                return quiz.getId().equals(Long.valueOf(quizId))
+                    && quiz.getAnswer().equals(submission.get(quizId).toString());
+            }).count();
 
-  private Double calculateScore(Map<String, Object> submission, Paper paper) {
-    List<Quiz> quizzes = paper.getQuizzes();
-    long correctCount = quizzes.stream().filter(quiz -> {
-        if (quiz.getType().equals("多选题")) {
-          return isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quiz.getId().toString()));
-        }
-      return quiz.getAnswer().equals(submission.get(quiz.getId().toString()).toString());
-      }
-    ).count();
-    return Double.valueOf(new DecimalFormat("#.00").format(correctCount * 1.0 / quizzes.size() * 100));
-  }
+            boolean isCorrect = count > 0;
+            return new QuizSubmission(classCourseId, paper.getId(), Long.valueOf(quizId), submission.get(quizId).toString(), isCorrect, userId);
+        }).collect(Collectors.toList());
 
-  public Map getPaperReviewQuiz(Long classCourseId, Long paperId, Long userId) throws BusinessException {
-    Map result = new HashMap();
-    Paper paper = paperRepository.findById(paperId).orElseThrow(
-      () -> new BusinessException("未找到")
-    );
-    List<Long> quizIds = paper.getQuizzes().stream().map(Quiz::getId).collect(Collectors.toList());
-    List<QuizSubmission> submission = quizSubmissionRepository.findByClassCourseIdAndPaperIdAndUserIdAndQuizIdIn(classCourseId, paper.getId(), userId, quizIds);
-    ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourseId, paperId, userId);
-    result.put("paper", paper);
-    result.put("submission", submission);
-    result.put("reviewQuiz", reviewQuiz);
-    return result;
-  }
+        quizSubmissionRepository.saveAll(quizSubmissions);
+    }
+
+    private boolean isMulQuizAnswerCorrect(String answer, List<String> userAnswer) {
+        List<String> correct = JSONObject.parseObject(answer, List.class);
+        return correct.size() == userAnswer.size() &&
+            correct.stream().filter(userAnswer::contains).count() == correct.size();
+    }
+
+    private void dealReviewQuiz(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {
+        Double score = calculateScore(submission, paper);
+        ReviewQuiz reviewQuiz = new ReviewQuiz(classCourseId, paper.getId(), userId, score);
+        reviewQuizRepository.save(reviewQuiz);
+    }
+
+    private Double calculateScore(Map<String, Object> submission, Paper paper) {
+        List<Quiz> quizzes = paper.getQuizzes();
+        long correctCount = quizzes.stream().filter(quiz -> {
+                if (quiz.getType().equals("多选题")) {
+                    return isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quiz.getId().toString()));
+                }
+                return quiz.getAnswer().equals(submission.get(quiz.getId().toString()).toString());
+            }
+        ).count();
+        return Double.valueOf(new DecimalFormat("#.00").format(correctCount * 1.0 / quizzes.size() * 100));
+    }
+
+    public Map getPaperReviewQuiz(Long classCourseId, Long paperId, Long userId) throws BusinessException {
+        Map result = new HashMap();
+        Paper paper = paperRepository.findById(paperId).orElseThrow(
+            () -> new BusinessException("未找到")
+        );
+        List<Long> quizIds = paper.getQuizzes().stream().map(Quiz::getId).collect(Collectors.toList());
+        List<QuizSubmission> submission = quizSubmissionRepository.findByClassCourseIdAndPaperIdAndUserIdAndQuizIdIn(classCourseId, paper.getId(), userId, quizIds);
+        ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourseId, paperId, userId);
+        result.put("paper", paper);
+        result.put("submission", submission);
+        result.put("reviewQuiz", reviewQuiz);
+        return result;
+    }
+
+    public Map statistic(Long paperId) {
+        Map result = new HashMap();
+        Long total = paperRepository.statisticTotalCount(paperId);
+        List<ReviewQuiz> reviewQuizs = reviewQuizRepository.findByPaperId(paperId);
+        Map scoreStatistics = reviewQuizRepository.statisticScore(paperId);
+        result.put("total", total);
+        result.put("avg", scoreStatistics.get("avg"));
+        result.put("highest", scoreStatistics.get("max"));
+        result.put("lowest", scoreStatistics.get("min"));
+        result.put("finish", reviewQuizs.size());
+
+        return result;
+    }
 }
