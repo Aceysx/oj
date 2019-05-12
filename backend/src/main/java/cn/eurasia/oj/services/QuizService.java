@@ -53,7 +53,7 @@ public class QuizService {
       () -> new BusinessException("找不到该quiz")
     );
     Major major = majorRepository.findById(quizParam.getMajor()).orElseThrow(
-      () -> new BusinessException("找不到该专业")
+      () -> new BusinessException("找不到该课程名称")
     );
     quiz.update(quizParam, major);
     return quizRepository.save(quiz);

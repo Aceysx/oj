@@ -13,7 +13,7 @@ const routers = {
       title: '班课管理',
       url: '/teachers/class-courses'
     }, {
-      title: '专业管理',
+      title: '课程名称管理',
       url: '/teachers/majors'
     }, {
       title: '试卷管理',

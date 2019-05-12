@@ -66,7 +66,7 @@ class MajorManagementBody extends Component {
           type="primary"
           onClick={() => this.setState({isNewModalOpen: true})}
         >
-          添加专业
+          添加课程名称
         </Button>
       </p>
 

@@ -50,7 +50,7 @@ class EditMajorModal extends React.Component {
 
     return <div>
       <Modal
-        title='更新专业'
+        title='更新课程名称'
         visible={isEditModalOpen}
         footer={null}
         onCancel={() => closeModal()}
@@ -58,11 +58,11 @@ class EditMajorModal extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Item
             {...formItemLayout}
-            label="专业名称"
+            label="课程名称名称"
           >
             {getFieldDecorator('name', {
               rules: [{
-                required: true, message: '请输入专业名称',
+                required: true, message: '请输入课程名称名称',
               }],
             })(
               <Input/>

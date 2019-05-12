@@ -138,7 +138,7 @@ class NewQuizModal extends React.Component {
           }
           <Form.Item
             {...formItemLayout}
-            label="专业"
+            label="课程名称"
           >
             {getFieldDecorator('major', {
               rules: [{

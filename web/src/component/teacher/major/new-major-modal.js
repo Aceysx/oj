@@ -36,7 +36,7 @@ class NewMajorModal extends React.Component {
 
     return <div>
       <Modal
-        title='添加专业'
+        title='添加课程名称'
         visible={isNewModalOpen}
         footer={null}
         onCancel={() => closeModal()}
@@ -44,11 +44,11 @@ class NewMajorModal extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Item
             {...formItemLayout}
-            label="专业名称"
+            label="课程名称名称"
           >
             {getFieldDecorator('name', {
               rules: [{
-                required: true, message: '请输入专业名称',
+                required: true, message: '请输入课程名称名称',
               }],
             })(
               <Input/>

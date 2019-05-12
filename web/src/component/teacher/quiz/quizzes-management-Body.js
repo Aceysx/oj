@@ -50,7 +50,7 @@ class QuizManagementBody extends Component {
         dataIndex: 'level',
         key: 'level'
       }, {
-        title: '专业',
+        title: '课程名称',
         dataIndex: 'major',
         key: 'major',
         render: (text) => {

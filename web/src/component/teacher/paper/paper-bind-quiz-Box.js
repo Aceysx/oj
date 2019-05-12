@@ -66,7 +66,7 @@ class PaperBindQuizBox extends Component {
     const {quizzes, targetKeys, currentMajorId,currentChapter,currentLevel} = this.props
     const dataSource = this.getQuizzesDataSource(quizzes)
     return <div><p>
-      <Tag color="#f50">专业</Tag>
+      <Tag color="#f50">课程名称</Tag>
       <Select value={currentMajorId}
               style={{width: 120}}
               onChange={this.props.majorChangeHandle}>
