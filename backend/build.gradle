@@ -5,7 +5,9 @@ buildscript {
 
 
     repositories {
-        mavenCentral()
+        maven {
+            url 'http://ec2-54-223-172-127.cn-north-1.compute.amazonaws.com.cn:8081/repository/maven-public/'
+        }
     }
 
     dependencies {
@@ -31,7 +33,9 @@ apply plugin: 'jacoco'
 group 'cn.eurasia.oj'
 
 repositories {
-    mavenCentral()
+    maven {
+        url 'http://ec2-54-223-172-127.cn-north-1.compute.amazonaws.com.cn:8081/repository/maven-public/'
+    }
 }
 
 sourceCompatibility = 1.8
