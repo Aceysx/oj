@@ -30,6 +30,16 @@ class QuizManagementBody extends Component {
 
     })
   }
+  getDescription = quiz => {
+    const {description, picture,answer, type} = quiz
+    if (type === '识图题' && picture!==null) {
+      const {labels} = picture
+      const label = labels.find(label =>label.id === parseInt(answer)) || {}
+      return `${picture.title}-${label.title}`
+    }
+
+    return description
+  }
 
   render() {
     const columns = [
@@ -38,8 +48,11 @@ class QuizManagementBody extends Component {
         dataIndex: 'description',
         key: 'description',
         width: '30%',
-        render: (text) => {
-          return <span>{text?text.substr(0, 50):''}</span>
+        render: (text, record) => {
+          return <span>{this.getDescription(record)
+            ? this.getDescription(record).substr(0, 50)
+            : ''}
+            </span>
         }
       }, {
         title: '章节',
@@ -76,7 +89,7 @@ class QuizManagementBody extends Component {
         }
       }
     ]
-    const {quizPageable, addQuiz, majors, editQuiz,picturesPageable} = this.props
+    const {quizPageable, addQuiz, majors, editQuiz, picturesPageable} = this.props
     const {totalElements, content} = quizPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer} = this.state
     return <div>
@@ -144,7 +157,7 @@ class QuizManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizPageable, majors,picturesPageable}) => ({
+const mapStateToProps = ({user, quizPageable, majors, picturesPageable}) => ({
   user,
   quizPageable,
   majors,
@@ -154,7 +167,7 @@ const mapStateToProps = ({user, quizPageable, majors,picturesPageable}) => ({
 const mapDispatchToProps = dispatch => ({
   getQuizzes: (current) => dispatch(getQuizzesByPage(current)),
   getMajors: () => dispatch(getMajors()),
-  searchPictures: (title) => dispatch(getPictures(1,title)),
+  searchPictures: (title) => dispatch(getPictures(1, title)),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
   addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback))
 })
