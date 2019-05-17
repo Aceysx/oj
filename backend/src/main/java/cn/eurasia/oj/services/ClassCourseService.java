@@ -71,6 +71,7 @@ public class ClassCourseService {
         tempPaper.put("title", paper.getTitle());
         tempPaper.put("count", paper.getQuizzes().size());
         tempPaper.put("isFinish", Objects.nonNull(reviewQuiz));
+        tempPaper.put("score", Objects.isNull(reviewQuiz) ? 0 : reviewQuiz.getScore());
         tempPaper.put("quizzes", paper.getQuizzes());
         papers.add(tempPaper);
       });

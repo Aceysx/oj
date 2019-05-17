@@ -39,6 +39,8 @@ class MyClassCourseBody extends Component {
             {status ? <Tag color="#87d068">已完成</Tag>
               : <Tag>未完成</Tag>}
             </div>
+        }, {
+          title: '分数', dataIndex: 'score', key: 'score'
         },
         {
           title: '操作',
