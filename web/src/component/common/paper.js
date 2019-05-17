@@ -63,7 +63,7 @@ class Paper extends React.Component {
                 borderRadius: '50%',
                 border: '1px solid gray'
               }}>
-              {++index}
+              {index+1}
             </p>
           </Col>
         })

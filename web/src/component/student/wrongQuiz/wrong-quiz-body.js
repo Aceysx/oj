@@ -21,15 +21,27 @@ class WrongQuizzesBody extends Component {
       this.props.getQuizzes(current)
     })
   }
+  getDescription = quiz => {
+    const {description, picture,answer, type} = quiz
+    if (type === '识图题' && picture!==null) {
+      const {labels} = picture
+      const label = labels.find(label =>label.id === parseInt(answer)) || {}
+      return `${picture.title}-${label.title}`
+    }
 
+    return description
+  }
   render() {
     const columns = [
       {
         title: '描述',
         dataIndex: 'description',
         key: 'description',
-        render: text => {
-          return <span>{text ? text.substr(0, 100) : ''}</span>
+        render: (text,record) => {
+          return <span>{this.getDescription(record)
+            ? this.getDescription(record).substr(0, 50)
+            : ''}
+            </span>
         }
       }, {
         title: '章节',

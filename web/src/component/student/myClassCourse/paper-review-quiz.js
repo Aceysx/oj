@@ -67,7 +67,7 @@ class PaperReviewQuiz extends React.Component {
                 borderRadius: '50%',
                 border: '1px solid gray'
               }}>
-              {++index}
+              {index+1}
             </p>
           </Col>
         })
@@ -177,7 +177,7 @@ class PaperReviewQuiz extends React.Component {
         }
         {
           quiz.type === '单选题' ?
-            ++quiz.answer
+            parseInt(quiz.answer)+1
             : ''
         }
         {
