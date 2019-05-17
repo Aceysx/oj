@@ -1,13 +1,26 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
 
-export const getQuizzesByPage = (current) => {
+export const getQuizzesByPage = (current, type, chapter) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/quizzes/pageable?page=${--current}`)
+      const res = await request.get(`../api/quizzes/pageable?page=${--current}&type=${type}&chapter=${chapter}`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'REFRESH_QUIZZES_PAGEABLE',
+          data: res.body
+        })
+      }
+    })()
+  }
+}
+export const getChapters = () => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`../api/quizzes/chapters`)
+      if (res.status === HTTP_CODE.OK) {
+        dispatch({
+          type: 'REFRESH_CHAPTERS',
           data: res.body
         })
       }
@@ -29,7 +42,7 @@ export const getQuizzes = () => {
   }
 }
 
-export const getMyWrongQuizzesByPage = (currentPage=1) => {
+export const getMyWrongQuizzesByPage = (currentPage = 1) => {
   return (dispatch) => {
     (async () => {
       const res = await request.get(`../api/quizzes/wrong/pageable?page=${--currentPage}`)

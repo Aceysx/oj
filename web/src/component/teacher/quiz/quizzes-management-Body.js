@@ -1,15 +1,18 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Table, Row, Col} from 'antd'
+import {Button, Table, Row, Col, Select, Divider} from 'antd'
 import NewQuizModal from "./new-quiz-modal"
 import EditQuizModal from './edit-quiz-modal'
-import {addQuiz, editQuiz, getQuizzesByPage} from '../../../action/quiz-action'
+import {addQuiz, editQuiz, getChapters, getQuizzesByPage} from '../../../action/quiz-action'
 import {getMajors} from "../../../action/major-action";
 import ImportQuizModal from "../../common/import_quiz_modal";
 import {getPictures} from "../../../action/picture-action";
 
+const Option = Select.Option
 class QuizManagementBody extends Component {
   state = {
+    type:'',
+    chapter:'',
     currentPage: 1,
     isNewModalOpen: false,
     isEditModalOpen: false,
@@ -19,14 +22,16 @@ class QuizManagementBody extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getQuizzes(this.state.currentPage)
+    this.props.getQuizzes(this.state.currentPage,'','')
     this.props.getMajors()
+    this.props.getChapters()
   }
 
-  getClassCourse = (pagination) => {
+  getQuizzes = (pagination) => {
     const {current} = pagination
+    const {type,chapter} = this.state
     this.setState({currentPage: current}, () => {
-      this.props.getQuizzes(current)
+      this.props.getQuizzes(current,type,chapter)
 
     })
   }
@@ -40,7 +45,13 @@ class QuizManagementBody extends Component {
 
     return description
   }
+  search = ()=>{
+    const {type,chapter} = this.state
+    this.setState({currentPage: 1}, () => {
+      this.props.getQuizzes(1,type,chapter)
 
+    })
+  }
   render() {
     const columns = [
       {
@@ -89,9 +100,9 @@ class QuizManagementBody extends Component {
         }
       }
     ]
-    const {quizPageable, addQuiz, majors, editQuiz, picturesPageable} = this.props
+    const {quizPageable, addQuiz, majors, editQuiz, picturesPageable,chapters} = this.props
     const {totalElements, content} = quizPageable
-    const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer} = this.state
+    const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer,type,chapter} = this.state
     return <div>
       <p>
         <Row>
@@ -106,6 +117,35 @@ class QuizManagementBody extends Component {
             <ImportQuizModal
               refreshQuizzes={this.props.getQuizzes}
             />
+          </Col>
+          <Col>
+            搜索：
+            <Select
+              placeholder="选择章节"
+              style={{width:200}}
+              value={chapter}
+              onChange={chapter=>this.setState({chapter})}
+            >
+              <Option value="">全选</Option>
+              {
+                chapters.map(chapter =><Option value={chapter}>{chapter}</Option>)
+              }
+
+            </Select>
+            <Divider type='vertical'/>
+            <Select
+              placeholder="选择类型"
+              style={{width:200}}
+              value={type}
+              onChange={type=>this.setState({type})}
+            >
+              <Option value="">全选</Option>
+              <Option value="单选题">单选题</Option>
+              <Option value="多选题">多选题</Option>
+              <Option value="识图题">识图题</Option>
+            </Select>
+            <Divider type='vertical'/>
+            <Button onClick={this.search} type='primary'>搜索</Button>
           </Col>
         </Row>
       </p>
@@ -148,7 +188,7 @@ class QuizManagementBody extends Component {
         columns={columns}
         dataSource={content}
         rowKey='id'
-        onChange={(pagination) => this.getClassCourse(pagination)}
+        onChange={(pagination) => this.getQuizzes(pagination)}
         pagination={{
           defaultCurrent: currentPage,
           total: totalElements
@@ -157,15 +197,17 @@ class QuizManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizPageable, majors, picturesPageable}) => ({
+const mapStateToProps = ({user, quizPageable, majors, picturesPageable,chapters}) => ({
   user,
   quizPageable,
   majors,
-  picturesPageable
+  picturesPageable,
+  chapters
 })
 
 const mapDispatchToProps = dispatch => ({
-  getQuizzes: (current) => dispatch(getQuizzesByPage(current)),
+  getChapters: () => dispatch(getChapters()),
+  getQuizzes: (current,type,chapter) => dispatch(getQuizzesByPage(current,type,chapter)),
   getMajors: () => dispatch(getMajors()),
   searchPictures: (title) => dispatch(getPictures(1, title)),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),

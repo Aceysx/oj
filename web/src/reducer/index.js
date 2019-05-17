@@ -16,8 +16,11 @@ import rolePageable from './rolePageable'
 import paper from './paper'
 import paperReviewQuiz from './reviewQuiz'
 import paperStatistics from './paper-statistics'
+import chapters from './chapters'
+
 export default combineReducers({
   user,
+  chapters,
   paperStatistics,
   userPageable,
   majors,

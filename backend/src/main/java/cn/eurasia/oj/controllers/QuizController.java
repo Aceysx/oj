@@ -22,54 +22,63 @@ import java.net.URI;
 @RequestMapping(value = "/api/quizzes")
 public class QuizController {
 
-  @Autowired
-  private QuizService quizService;
+    @Autowired
+    private QuizService quizService;
 
-  @GetMapping("pageable")
-  public ResponseEntity getQuizzesByPage(
-    @PageableDefault(sort = {"id"},
-      direction = Sort.Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(quizService.getQuizzesByPage(pageable));
-  }
-
-  @GetMapping("wrong/pageable")
-  public ResponseEntity getWrongQuizzesByPage(
-    @Auth User user,
-    @PageableDefault(sort = {"id"},
-      direction = Sort.Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(quizService.getWrongQuizzesByPage(pageable, user));
-  }
-
-  @GetMapping("")
-  public ResponseEntity getQuizzes() {
-    return ResponseEntity.ok(quizService.getQuizzes());
-  }
-
-  @PostMapping("")
-  public ResponseEntity addQuiz(@RequestBody CreateQuizParam quizParam,
-                                       @Auth User current) {
-
-    Quiz quiz = quizService.addQuiz(quizParam,current);
-    return ResponseEntity.created(URI.create("/api/quizzes/"+quiz.getId())).build();
-  }
-
-  @PutMapping("")
-  public ResponseEntity editQuiz(@RequestBody CreateQuizParam quizParam) throws BusinessException {
-    quizService.editQuiz(quizParam);
-    return ResponseEntity.noContent().build();
-  }
-  @PostMapping("excel")
-  public ResponseEntity excelImport(@RequestParam("file") MultipartFile file,
-                                    @Auth User current) throws BusinessException, IOException {
-    if (validateExcelFormat(file)) {
-      quizService.excelImport(file, current);
-      return new ResponseEntity(HttpStatus.CREATED);
+    @GetMapping("pageable")
+    public ResponseEntity getQuizzesByPage(
+        @PageableDefault(sort = {"id"},
+            direction = Sort.Direction.DESC) Pageable pageable,
+        @RequestParam(name = "type") String type,
+        @RequestParam(name = "chapter") String chapter
+        ) {
+        return ResponseEntity.ok(quizService.getQuizzesByPage(pageable,type,chapter));
     }
-    throw new BusinessException("Wrong format. Only support .xls or .xlsx");
-  }
 
-  public Boolean validateExcelFormat(MultipartFile file) {
-    String fileName = file.getOriginalFilename();
-    return fileName.endsWith(".xls") || fileName.endsWith(".xlsx");
-  }
+    @GetMapping("chapters")
+    public ResponseEntity getChapters() {
+        return ResponseEntity.ok(quizService.getChapters());
+    }
+
+    @GetMapping("wrong/pageable")
+    public ResponseEntity getWrongQuizzesByPage(
+        @Auth User user,
+        @PageableDefault(sort = {"id"},
+            direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(quizService.getWrongQuizzesByPage(pageable, user));
+    }
+
+    @GetMapping("")
+    public ResponseEntity getQuizzes() {
+        return ResponseEntity.ok(quizService.getQuizzes());
+    }
+
+    @PostMapping("")
+    public ResponseEntity addQuiz(@RequestBody CreateQuizParam quizParam,
+                                  @Auth User current) {
+
+        Quiz quiz = quizService.addQuiz(quizParam, current);
+        return ResponseEntity.created(URI.create("/api/quizzes/" + quiz.getId())).build();
+    }
+
+    @PutMapping("")
+    public ResponseEntity editQuiz(@RequestBody CreateQuizParam quizParam) throws BusinessException {
+        quizService.editQuiz(quizParam);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("excel")
+    public ResponseEntity excelImport(@RequestParam("file") MultipartFile file,
+                                      @Auth User current) throws BusinessException, IOException {
+        if (validateExcelFormat(file)) {
+            quizService.excelImport(file, current);
+            return new ResponseEntity(HttpStatus.CREATED);
+        }
+        throw new BusinessException("Wrong format. Only support .xls or .xlsx");
+    }
+
+    public Boolean validateExcelFormat(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        return fileName.endsWith(".xls") || fileName.endsWith(".xlsx");
+    }
 }
