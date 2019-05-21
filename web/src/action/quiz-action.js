@@ -1,7 +1,7 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
 
-export const getQuizzesByPage = (current, type, chapter) => {
+export const getQuizzesByPage = (current = 1, type = '', chapter = '') => {
   return (dispatch) => {
     (async () => {
       const res = await request.get(`../api/quizzes/pageable?page=${--current}&type=${type}&chapter=${chapter}`)
