@@ -10,8 +10,7 @@
     this.isPreview = opt.isPreview
     this.initData = opt.initData
     this.clean = () => {
-      let elementById = document.getElementById('make-picture')
-      console.log(elementById)
+      let elementById = document.getElementById('make-picture') || {}
       elementById.innerHTML = ''
     }
     this.x = 0
