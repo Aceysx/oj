@@ -1,7 +1,7 @@
 database:
-  url: jdbc:mysql://47.100.248.51:3306/oj?useUnicode=true&characterEncoding=utf-8
+  url: jdbc:mysql://localhost:3306/oj?useUnicode=true&characterEncoding=utf-8
   username: root
-  password: mlw6198
+  password: pass
 spring:
   datasource:
     url: ${database.url}
