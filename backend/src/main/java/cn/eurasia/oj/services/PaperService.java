@@ -140,7 +140,7 @@ public class PaperService {
     }
 
     public void deletePaper(Long id) throws BusinessException {
-        Paper paper = paperRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+        Paper paper = paperRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该试卷"));
         paperRepository.delete(paper);
     }
 

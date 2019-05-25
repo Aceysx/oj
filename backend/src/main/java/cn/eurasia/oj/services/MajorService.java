@@ -35,7 +35,7 @@ public class MajorService {
     }
 
     public void deleteMajor(Long id) throws BusinessException {
-        Major major = majorRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+        Major major = majorRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该专业"));
         majorRepository.delete(major);
     }
 }

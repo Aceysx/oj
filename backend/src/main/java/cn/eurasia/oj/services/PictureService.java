@@ -52,7 +52,7 @@ public class PictureService {
   }
 
     public void deletePicture(Long id) throws BusinessException {
-      Picture picture = pictureRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+      Picture picture = pictureRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该图片"));
       pictureRepository.delete(picture);
     }
 }

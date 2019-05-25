@@ -83,4 +83,8 @@ public class ClassCourseService {
         return new PageImpl(result, classCoursePage.getPageable(), classCoursePage.getTotalElements());
     }
 
+    public void deleteClassCourse(Long id) throws BusinessException {
+        ClassCourse classCourse = classCourseRepository.findById(id).orElseThrow(() -> new BusinessException("未找到该课程"));
+        classCourseRepository.delete(classCourse);
+    }
 }
