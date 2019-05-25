@@ -121,6 +121,8 @@ class QuizManagementBody extends Component {
               refresh={this.props.getQuizzes}
             />
           </Col>
+        </Row>
+        <Row style={{marginTop:20}}>
           <Col>
             搜索：
             <Select
