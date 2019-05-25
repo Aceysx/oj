@@ -20,7 +20,7 @@ public class ClassCourseService {
     @Autowired
     private ReviewQuizRepository reviewQuizRepository;
 
-    public Page<ClassCourse> getClassCourses(Pageable pageable) {
+    public Page<ClassCourse> getClassCoursesPageable(Pageable pageable) {
 
         return classCourseRepository.findAll(pageable);
     }
@@ -82,4 +82,5 @@ public class ClassCourseService {
         });
         return new PageImpl(result, classCoursePage.getPageable(), classCoursePage.getTotalElements());
     }
+
 }

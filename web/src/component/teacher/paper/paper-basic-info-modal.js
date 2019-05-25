@@ -22,7 +22,7 @@ const PaperBasicInfoModal = ({paper, updatePaper}) => {
     </Form.Item>
     <Form.Item
       {...formItemLayout}
-      label='试卷名称'>
+      label='截止时间'>
       {
         paper.id
         ? <Input value={paper.endTime} disabled />

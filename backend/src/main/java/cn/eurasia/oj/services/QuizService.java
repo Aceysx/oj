@@ -40,7 +40,7 @@ public class QuizService {
     @Autowired
     private PictureRepository pictureRepository;
 
-    public Page<Quiz> getQuizzesByPage(Pageable pageable, String type, String chapter) {
+    public Page<Quiz> getQuizzesByPage(Pageable pageable, String type, String chapter, String majorId) {
         Specification<Quiz> specification = (Specification<Quiz>) (root, query, criteriaBuilder) -> {
             List<Predicate> pre = new ArrayList();
             if (!"".equals(type)) {
@@ -48,6 +48,9 @@ public class QuizService {
             }
             if (!"".equals(chapter)) {
                 pre.add(criteriaBuilder.equal(root.get("chapter"), chapter));
+            }
+            if (!"".equals(majorId)) {
+                pre.add(criteriaBuilder.equal(root.get("major").get("id"), Long.parseLong(majorId)));
             }
             return criteriaBuilder.and(pre.toArray(new Predicate[pre.size()]));
         };

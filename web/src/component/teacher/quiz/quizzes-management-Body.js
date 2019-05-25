@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Table, Row, Col, Select, Divider} from 'antd'
+import {Button, Col, Divider, Row, Select, Table} from 'antd'
 import NewQuizModal from "./new-quiz-modal"
 import EditQuizModal from './edit-quiz-modal'
 import {addQuiz, deleteQuiz, editQuiz, getChapters, getQuizzesByPage} from '../../../action/quiz-action'
@@ -18,20 +18,21 @@ class QuizManagementBody extends Component {
     isEditModalOpen: false,
     quiz: {},
     options: ['', '', '', ''],
-    answer: -1
+    answer: -1,
+    majorId: ""
   }
 
   componentDidMount = () => {
-    this.props.getQuizzes(this.state.currentPage,'','')
+    this.props.getQuizzes(this.state.currentPage,'','','')
     this.props.getMajors()
     this.props.getChapters()
   }
 
   getQuizzes = (pagination) => {
     const {current} = pagination
-    const {type,chapter} = this.state
+    const {type,chapter,majorId} = this.state
     this.setState({currentPage: current}, () => {
-      this.props.getQuizzes(current,type,chapter)
+      this.props.getQuizzes(current,type,chapter,majorId)
 
     })
   }
@@ -46,9 +47,9 @@ class QuizManagementBody extends Component {
     return description
   }
   search = ()=>{
-    const {type,chapter} = this.state
+    const {type,chapter,majorId} = this.state
     this.setState({currentPage: 1}, () => {
-      this.props.getQuizzes(1,type,chapter)
+      this.props.getQuizzes(1,type,chapter,majorId)
 
     })
   }
@@ -104,7 +105,7 @@ class QuizManagementBody extends Component {
     ]
     const {quizPageable, addQuiz, majors, editQuiz, picturesPageable,chapters} = this.props
     const {totalElements, content} = quizPageable
-    const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer,type,chapter} = this.state
+    const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer,type,chapter,majorId} = this.state
     return <div>
       <p>
         <Row>
@@ -128,7 +129,7 @@ class QuizManagementBody extends Component {
               value={chapter}
               onChange={chapter=>this.setState({chapter})}
             >
-              <Option value="">全选</Option>
+              <Option value="">全选章节</Option>
               {
                 chapters.map(chapter =><Option value={chapter}>{chapter}</Option>)
               }
@@ -141,10 +142,23 @@ class QuizManagementBody extends Component {
               value={type}
               onChange={type=>this.setState({type})}
             >
-              <Option value="">全选</Option>
+              <Option value="">全选题目类型</Option>
               <Option value="单选题">单选题</Option>
               <Option value="多选题">多选题</Option>
               <Option value="识图题">识图题</Option>
+            </Select>
+            <Divider type='vertical'/>
+            <Select
+              placeholder="选择课程类别"
+              style={{width:200}}
+              value={majorId}
+              onChange={majorId=>this.setState({majorId})}
+            >
+              <Option value="">全选课程类别</Option>
+              {
+                majors.map(item =><Option value={item.id}>{item.name}</Option>)
+              }
+
             </Select>
             <Divider type='vertical'/>
             <Button onClick={this.search} type='primary'>搜索</Button>
@@ -199,9 +213,10 @@ class QuizManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizPageable, majors, picturesPageable,chapters}) => ({
+const mapStateToProps = ({user, quizPageable, majors, picturesPageable,chapters,allClassCourses}) => ({
   user,
   quizPageable,
+  allClassCourses,
   majors,
   picturesPageable,
   chapters
@@ -209,7 +224,7 @@ const mapStateToProps = ({user, quizPageable, majors, picturesPageable,chapters}
 
 const mapDispatchToProps = dispatch => ({
   getChapters: () => dispatch(getChapters()),
-  getQuizzes: (current,type,chapter) => dispatch(getQuizzesByPage(current,type,chapter)),
+  getQuizzes: (current,type,chapter,majorId) => dispatch(getQuizzesByPage(current,type,chapter,majorId)),
   getMajors: () => dispatch(getMajors()),
   searchPictures: (title) => dispatch(getPictures(1, title)),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),

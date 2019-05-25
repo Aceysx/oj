@@ -30,9 +30,10 @@ public class QuizController {
         @PageableDefault(sort = {"id"},
             direction = Sort.Direction.DESC) Pageable pageable,
         @RequestParam(name = "type") String type,
+        @RequestParam(name = "majorId") String majorId,
         @RequestParam(name = "chapter") String chapter
         ) {
-        return ResponseEntity.ok(quizService.getQuizzesByPage(pageable,type,chapter));
+        return ResponseEntity.ok(quizService.getQuizzesByPage(pageable,type,chapter,majorId));
     }
 
     @GetMapping("chapters")

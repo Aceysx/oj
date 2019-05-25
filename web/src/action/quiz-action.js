@@ -2,10 +2,10 @@ import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
 import {message} from 'antd'
 
-export const getQuizzesByPage = (current = 1, type = '', chapter = '') => {
+export const getQuizzesByPage = (current = 1, type = '', chapter = '', majorId='') => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/quizzes/pageable?page=${--current}&type=${type}&chapter=${chapter}`)
+      const res = await request.get(`../api/quizzes/pageable?page=${--current}&type=${type}&chapter=${chapter}&majorId=${majorId}`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'REFRESH_QUIZZES_PAGEABLE',
