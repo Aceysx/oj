@@ -1,8 +1,6 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
-import { message } from 'antd'
-import { getPapersByPage } from './paper-action'
-import picture from '../reducer/picture'
+import {message} from 'antd'
 
 export const getPictures = (current, title='') => {
   return (dispatch) => {

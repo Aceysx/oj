@@ -39,6 +39,8 @@ public class QuizService {
     private QuizExcelImportService quizExcelImportService;
     @Autowired
     private PictureRepository pictureRepository;
+    @Autowired
+    private PaperService paperService;
 
     public Page<Quiz> getQuizzesByPage(Pageable pageable, String type, String chapter, String majorId) {
         Specification<Quiz> specification = (Specification<Quiz>) (root, query, criteriaBuilder) -> {
@@ -106,6 +108,11 @@ public class QuizService {
 
     public void deleteQuiz(Long id) throws BusinessException {
         Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+        quizRepository.deletePaperQuiz(quiz.getId());
         quizRepository.delete(quiz);
+    }
+
+    public void deleteQuizByPictureId(Long id) {
+        quizRepository.deleteByPictureId(id);
     }
 }

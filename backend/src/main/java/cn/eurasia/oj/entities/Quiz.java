@@ -30,7 +30,7 @@ public class Quiz {
   @ManyToOne
   @JoinColumn(name = "userId")
   private User user;
-  @OneToOne
+  @OneToOne(cascade = {CascadeType.REMOVE})
   @JoinColumn(name = "pictureId")
   private Picture picture;
 

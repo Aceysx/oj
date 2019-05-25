@@ -85,6 +85,7 @@ public class ClassCourseService {
 
     public void deleteClassCourse(Long id) throws BusinessException {
         ClassCourse classCourse = classCourseRepository.findById(id).orElseThrow(() -> new BusinessException("未找到该课程"));
+        classCourseRepository.deleteClassCoursePaper(classCourse.getId());
         classCourseRepository.delete(classCourse);
     }
 }

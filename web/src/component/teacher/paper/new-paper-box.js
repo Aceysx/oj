@@ -19,8 +19,8 @@ class NewPaperBox extends Component {
     currentLevel: -1,
     paper: {
       title: '',
-      id:'1',
-      endTime:'2019-09-01 11:11:10',
+      id:'',
+      endTime:'',
       quizzes: []
     },
     targetKeys: []

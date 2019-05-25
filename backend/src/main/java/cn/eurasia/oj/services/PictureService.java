@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 public class PictureService {
   @Autowired
   private PictureRepository pictureRepository;
+  @Autowired
+  private QuizService quizService;
 
   public Picture addPicture(Picture picture, User current) {
     picture.setUserId(current.getId());
@@ -53,6 +55,7 @@ public class PictureService {
 
     public void deletePicture(Long id) throws BusinessException {
       Picture picture = pictureRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该图片"));
+      quizService.deleteQuizByPictureId(picture.getId());
       pictureRepository.delete(picture);
     }
 }

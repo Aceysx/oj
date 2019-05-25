@@ -13,7 +13,6 @@ const formItemLayout = {
   }
 }
 const PaperBasicInfoModal = ({paper, updatePaper}) => {
-  console.log(paper)
   return <div>
     <Form.Item
       {...formItemLayout}
