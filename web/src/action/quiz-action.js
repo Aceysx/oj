@@ -1,5 +1,6 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
+import {message} from 'antd'
 
 export const getQuizzesByPage = (current = 1, type = '', chapter = '') => {
   return (dispatch) => {
@@ -80,6 +81,18 @@ export const editQuiz = (quiz, callback) => {
       if (res.status === HTTP_CODE.NO_CONTENT) {
         dispatch(getQuizzesByPage())
         callback()
+      }
+    })()
+  }
+}
+
+export const deleteQuiz = (id) => {
+  return dispatch => {
+    (async () => {
+      const res = await request.del(`/api/quizzes/${id}`)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        message.success('删除成功')
+        dispatch(getQuizzesByPage())
       }
     })()
   }

@@ -3,6 +3,7 @@ const init = {
   title: 'ces',
   quizzes: [],
   createTime: '2017-01-01',
+  endTime: '2017-01-01',
   user: {}
 }
 export default (state = init, action) => {

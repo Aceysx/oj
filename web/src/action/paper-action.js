@@ -80,6 +80,9 @@ export const getReviewQuiz = (classCourseId, paperId) => {
   }
 }
 export const editPaper = (paper, callback) => {
+  if (paper.endTime._i) {
+    paper.endTime = paper.endTime._i
+  }
   return (dispatch) => {
     (async () => {
       const res = await request.update(`/api/papers`, paper)
@@ -88,7 +91,7 @@ export const editPaper = (paper, callback) => {
         callback()
       }
     })()
-  }
+  };
 }
 export const statistic = (paperId) => {
   return (dispatch) => {

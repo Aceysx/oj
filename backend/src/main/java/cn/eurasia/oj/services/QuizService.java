@@ -51,7 +51,7 @@ public class QuizService {
             }
             return criteriaBuilder.and(pre.toArray(new Predicate[pre.size()]));
         };
-        return quizRepository.findAll(specification,pageable);
+        return quizRepository.findAll(specification, pageable);
     }
 
     public Quiz addQuiz(CreateQuizParam quizParam, User current) {
@@ -99,5 +99,10 @@ public class QuizService {
 
     public Set<String> getChapters() {
         return quizRepository.findChapters();
+    }
+
+    public void deleteQuiz(Long id) throws BusinessException {
+        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+        quizRepository.delete(quiz);
     }
 }

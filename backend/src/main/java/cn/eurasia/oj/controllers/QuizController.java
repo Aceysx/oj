@@ -81,4 +81,11 @@ public class QuizController {
         String fileName = file.getOriginalFilename();
         return fileName.endsWith(".xls") || fileName.endsWith(".xlsx");
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteQuiz(@PathVariable Long id) throws BusinessException {
+        quizService.deleteQuiz(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
 }

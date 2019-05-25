@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Button, Table, Row, Col, Select, Divider} from 'antd'
 import NewQuizModal from "./new-quiz-modal"
 import EditQuizModal from './edit-quiz-modal'
-import {addQuiz, editQuiz, getChapters, getQuizzesByPage} from '../../../action/quiz-action'
+import {addQuiz, deleteQuiz, editQuiz, getChapters, getQuizzesByPage} from '../../../action/quiz-action'
 import {getMajors} from "../../../action/major-action";
 import ImportQuizModal from "../../common/import_quiz_modal";
 import {getPictures} from "../../../action/picture-action";
@@ -96,6 +96,8 @@ class QuizManagementBody extends Component {
               options: JSON.parse(record.options),
               answer: record.type === '多选题' ? JSON.parse(record.answer) : record.answer
             })}>编辑</a>
+            <Divider type='vertical'/>
+            <a onClick={() => this.props.deleteQuiz(record.id)}>删除</a>
           </div>
         }
       }
@@ -211,7 +213,8 @@ const mapDispatchToProps = dispatch => ({
   getMajors: () => dispatch(getMajors()),
   searchPictures: (title) => dispatch(getPictures(1, title)),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
-  addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback))
+  addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback)),
+  deleteQuiz : id => dispatch(deleteQuiz(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizManagementBody)

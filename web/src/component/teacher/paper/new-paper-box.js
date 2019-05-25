@@ -8,6 +8,7 @@ import {getMajors} from '../../../action/major-action'
 import {getQuizzes} from "../../../action/quiz-action";
 import Paper from '../../common/paper'
 import {addPaper, editPaper} from "../../../action/paper-action";
+import moment from "moment";
 
 const Step = Steps.Step
 
@@ -19,6 +20,7 @@ class NewPaperBox extends Component {
     currentLevel: -1,
     paper: {
       title: '',
+      endTime:'2019-09-01 11:11:10',
       quizzes: []
     },
     targetKeys: []
@@ -51,9 +53,9 @@ class NewPaperBox extends Component {
     this.setState({current});
   }
 
-  updatePaperTitle = (title) => {
-    const {paper} = this.state
-    paper.title = title
+  updatePaper = (key,value) => {
+    const {paper} = this.state;
+    paper[key] = value
     this.setState({paper})
   }
 
@@ -74,7 +76,6 @@ class NewPaperBox extends Component {
   }
   operPaper = () => {
     const {paper} = this.state
-    console.log(paper)
     if (paper.id) {
       this.props.editPaper(paper, () => {
         message.success('编辑成功')
@@ -96,7 +97,7 @@ class NewPaperBox extends Component {
       title: '创建试卷',
       content: <PaperBasicInfoModal
         paper={paper}
-        onChangeHandle={(e) => this.updatePaperTitle(e.target.value)}/>,
+        updatePaper={this.updatePaper}/>,
     }, {
       title: '绑定试题',
       content: <PaperBindQuizBox
