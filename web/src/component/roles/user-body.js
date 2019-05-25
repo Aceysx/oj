@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Table} from 'antd'
+import {Button, Divider, Table, Col} from 'antd'
 import {getUsersByPage, addUser, putUser, getRolePageable} from '../../action/user'
 import NewUserModal from './new-user-modal'
 import EditUserModal from './edit-user-modal'
+import ImportModal from '../common/import-modal'
 
 class UserBody extends Component {
   state = {
@@ -32,7 +33,7 @@ class UserBody extends Component {
     })
   }
 
-  render () {
+  render() {
     const columns = [
       {
         title: '用户名',
@@ -76,40 +77,49 @@ class UserBody extends Component {
     const {totalElements, content} = userPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, user} = this.state
 
-    return <div >
-           <p>
-            <Button
-              type="primary"
-              onClick={() => this.setState({isNewModalOpen: true})}
-            >
-              添加用户
-            </Button>
-          </p>
-          <NewUserModal
-            isNewModalOpen={isNewModalOpen}
-            closeModal={() => this.setState({isNewModalOpen:false})}
-            roleList = {rolePageable.content}
-            addUser={this.props.addUser}
-          />
-          <EditUserModal
-            isEditModalOpen = {isEditModalOpen}
-            closeModal={() => this.setState({isEditModalOpen: false})}
-            user = {user}
-            roleList = {rolePageable.content}
-            putUser = {this.props.putUser}
-          />
-          <Table
-            bordered
-            columns={columns}
-            dataSource={content}
-            rowKey='id'
-            onChange={(pagination) => this.getUsers(pagination)}
-            pagination={{
-              defaultCurrent: currentPage,
-              total: totalElements
-            }}
-          />
-        </div>
+    return <div>
+      <p>
+      <Col span={2}>
+        <Button
+          type="primary"
+          onClick={() => this.setState({isNewModalOpen: true})}
+        >
+          添加用户
+        </Button>
+      </Col>
+      <Divider type='vertical'/>
+      <Col span={4}>
+        <ImportModal
+          type='user'
+          refresh={this.props.getUsers}
+        />
+      </Col>
+      </p>
+      <NewUserModal
+        isNewModalOpen={isNewModalOpen}
+        closeModal={() => this.setState({isNewModalOpen: false})}
+        roleList={rolePageable.content}
+        addUser={this.props.addUser}
+      />
+      <EditUserModal
+        isEditModalOpen={isEditModalOpen}
+        closeModal={() => this.setState({isEditModalOpen: false})}
+        user={user}
+        roleList={rolePageable.content}
+        putUser={this.props.putUser}
+      />
+      <Table
+        bordered
+        columns={columns}
+        dataSource={content}
+        rowKey='id'
+        onChange={(pagination) => this.getUsers(pagination)}
+        pagination={{
+          defaultCurrent: currentPage,
+          total: totalElements
+        }}
+      />
+    </div>
   }
 }
 

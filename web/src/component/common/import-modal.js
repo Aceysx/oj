@@ -1,11 +1,13 @@
 import React from 'react'
 import {Button, Icon, message, Upload} from 'antd'
 
-const ImportQuizModal = ({type, refreshQuizzes}) => {
+const ImportModal = ({type, refresh}) => {
   const checkFileFormat = file => {
     return file.name.endsWith('.xlsx') || file.name.endsWith('.xls')
   }
-  const action = `/api/quizzes/excel`
+  const action = type === 'user'
+    ? `/api/users/excel`
+    : `/api/quizzes/excel`
 
   const props = {
     name: 'file',
@@ -22,8 +24,8 @@ const ImportQuizModal = ({type, refreshQuizzes}) => {
     },
     onChange (info) {
       if (info.file.status === 'done') {
-        message.success(`Quiz imported successfully.`)
-        refreshQuizzes()
+        message.success(`上传成功`)
+        refresh()
       } else if (info.file.status === 'error') {
         message.error(info.file.response.message)
       }
@@ -39,4 +41,4 @@ const ImportQuizModal = ({type, refreshQuizzes}) => {
   </div>
 }
 
-export default ImportQuizModal
+export default ImportModal

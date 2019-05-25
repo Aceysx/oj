@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Col, DatePicker, Form, Input, message, Modal, Row} from 'antd'
+import {Button, Col, Form, Input, message, Modal, Row} from 'antd'
 
 const formItemLayout = {
   labelCol: {

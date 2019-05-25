@@ -5,7 +5,7 @@ import NewQuizModal from "./new-quiz-modal"
 import EditQuizModal from './edit-quiz-modal'
 import {addQuiz, deleteQuiz, editQuiz, getChapters, getQuizzesByPage} from '../../../action/quiz-action'
 import {getMajors} from "../../../action/major-action";
-import ImportQuizModal from "../../common/import_quiz_modal";
+import ImportModal from "../../common/import-modal";
 import {getPictures} from "../../../action/picture-action";
 
 const Option = Select.Option
@@ -117,8 +117,8 @@ class QuizManagementBody extends Component {
             </Button>
           </Col>
           <Col span={4}>
-            <ImportQuizModal
-              refreshQuizzes={this.props.getQuizzes}
+            <ImportModal
+              refresh={this.props.getQuizzes}
             />
           </Col>
           <Col>
