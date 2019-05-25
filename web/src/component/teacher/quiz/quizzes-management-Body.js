@@ -109,6 +109,11 @@ class QuizManagementBody extends Component {
     return <div>
       <p>
         <Row>
+          <Button
+            type="primary"
+            onClick={() => this.setState({isNewModalOpen: true})}>
+            添加题目
+          </Button>
           <Col span={2}>
             <Button
               type="primary"
