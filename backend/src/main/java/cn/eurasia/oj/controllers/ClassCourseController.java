@@ -73,6 +73,14 @@ public class ClassCourseController {
     return new ResponseEntity(HttpStatus.CREATED);
   }
 
+  @PostMapping("{classCourseId}/papers/{paperId}/submission/starter")
+  public ResponseEntity startAnswer(@PathVariable Long paperId,
+                                    @PathVariable Long classCourseId,
+                                    @Auth User user) {
+    paperService.startAnswer(classCourseId,paperId,user.getId());
+    return new ResponseEntity(HttpStatus.CREATED);
+  }
+
 
   @GetMapping("{classCourseId}/papers/{paperId}/reviewQuiz")
   public ResponseEntity getReviewQuiz(@PathVariable Long paperId,

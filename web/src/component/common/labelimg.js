@@ -74,7 +74,7 @@
       return outputData
     },
     init: function () {
-      var parent = document.querySelector('.lbi-svg')
+      var parent = document.querySelector('.lbi-svg') || {}
       _self.initData.forEach(item => {
         const {position, title, fill} = item
 

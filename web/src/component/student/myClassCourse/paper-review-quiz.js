@@ -135,14 +135,15 @@ class PaperReviewQuiz extends React.Component {
     }
 
     return <CheckboxGroup options={getMulOptions()}
-                          value={answer}
+                          value={answer === '-1' ? [answer] : answer}
                           disabled/>
   }
   getQuiz = (paper, submission) => {
     const {quizId} = this.state
     const quiz = paper.quizzes.find(quiz => quiz.id === quizId)
     if (!quiz) return
-    const answer = quiz.answer === null ? submission[quiz.id.toString()] : quiz.answer
+    submission = submission.find(item => item.quizId === quizId)
+    const answer = submission ? submission.answer : '-1'
     return <div>
       <Row>
         <p style={{
@@ -216,7 +217,7 @@ class PaperReviewQuiz extends React.Component {
       </Col>
       <Col span={16} offset={1}>
         <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
-        <p style={{textAlign: 'center'}}>分数：{reviewQuiz.score}</p>
+        <p style={{textAlign: 'center'}}>分数：{reviewQuiz?reviewQuiz.score:'答题时间已过'}</p>
         <div id='make-picture'/>
         {this.getQuiz(paper, submission)}
       </Col>

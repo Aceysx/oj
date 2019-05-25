@@ -66,6 +66,16 @@ export const submit = (classCourseId, paperId, submission, callback) => {
     })()
   }
 }
+export const startAnswer = (classCourseId, paperId,callback) => {
+  return () => {
+    (async () => {
+      const res = await request.post(`/api/classCourses/${classCourseId}/papers/${paperId}/submission/starter`)
+      if (res.status === HTTP_CODE.CREATED) {
+        callback()
+      }
+    })()
+  }
+}
 export const getReviewQuiz = (classCourseId, paperId) => {
   return (dispatch) => {
     (async () => {

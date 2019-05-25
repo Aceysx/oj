@@ -1,16 +1,21 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, message, Table, Tag} from 'antd'
+import {Button, message, Table} from 'antd'
 import AddClassCourseModalForm from "./add-class-course-modal";
 import {addMyClassCourse, getMyClassCourses} from "../../../action/class-course-action";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
+import moment from "moment";
+import {startAnswer} from "../../../action/paper-action";
 
 class MyClassCourseBody extends Component {
   state = {
     currentPage: 1,
     isAddModalOpen: false,
   }
-
+  isTimeOut = paper => {
+    console.log(new Date(moment(paper.endTime).format()))
+    return new Date().getTime() > new Date(moment(paper.endTime).format()).getTime()
+  }
   componentDidMount = () => {
     this.props.getMyClassCourses(this.state.currentPage)
   }
@@ -22,6 +27,11 @@ class MyClassCourseBody extends Component {
     })
   }
 
+  startAnswer = (paper,classCourseId) => {
+    this.props.startAnswer(classCourseId, paper.id , ()=>{
+      this.props.history.push(`/students/class-courses/${classCourseId}/papers/${paper.id}/answer`)
+    })
+  }
   expandedRowRender = (classCourse) => {
     const {papers} = classCourse
     const columns = [
@@ -34,23 +44,30 @@ class MyClassCourseBody extends Component {
             return <span>{record.quizzes.length}</span>
           }
         }, {
-          title: '状态', dataIndex: 'isFinish', key: 'isFinish',
-          render: (status) => <div>
-            {status ? <Tag color="#87d068">已完成</Tag>
-              : <Tag>未完成</Tag>}
-            </div>
+          title: '状态', dataIndex: 'submissionStatus', key: 'submissionStatus',
         }, {
           title: '分数', dataIndex: 'score', key: 'score'
+        }, {
+          title: '答题时长(分钟)', dataIndex: 'timeBox', key: 'timeBox'
+        }, {
+          title: '截止时间', dataIndex: 'endTime', key: 'endTime',
+        render: text => {
+          return moment(text).format('YYYY-MM-DD HH:mm')}
         },
         {
           title: '操作',
           dataIndex: 'operation',
           key: 'operation',
           render: (text, paper) => {
+            console.log(paper.title)
+            console.log(this.isTimeOut(paper))
+            console.log(paper.submissionStatus)
             return <span className="table-operation">
-            <Link to={`/students/class-courses/${classCourse.id}/papers/${paper.id}/${paper.isFinish?'reviewQuiz':'answer'}`}>
-              {paper.isFinish ? '查看' : '答题'}
-            </Link>
+
+              {!this.isTimeOut(paper) && paper.submissionStatus!=='已提交'
+                ? <a onClick={()=>this.startAnswer(paper,classCourse.id)}>答题</a>
+                :<Link to={`/students/class-courses/${classCourse.id}/papers/${paper.id}/reviewQuiz`}>查看</Link>
+              }
           </span>
           }
           ,
@@ -131,7 +148,8 @@ const mapStateToProps = ({user, classCoursesPageable}) => ({
 
 const mapDispatchToProps = dispatch => ({
   addClassCourse: (code, callback) => dispatch(addMyClassCourse(code, callback)),
+  startAnswer: (classCourseId, paperId,callback) => dispatch(startAnswer(classCourseId, paperId,callback)),
   getMyClassCourses: (currentPage) => dispatch(getMyClassCourses(currentPage))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyClassCourseBody)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyClassCourseBody))

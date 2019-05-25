@@ -15,69 +15,71 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClassCourseService {
-  @Autowired
-  private ClassCourseRepository classCourseRepository;
-  @Autowired
-  private ReviewQuizRepository reviewQuizRepository;
+    @Autowired
+    private ClassCourseRepository classCourseRepository;
+    @Autowired
+    private ReviewQuizRepository reviewQuizRepository;
 
-  public Page<ClassCourse> getClassCourses(Pageable pageable) {
+    public Page<ClassCourse> getClassCourses(Pageable pageable) {
 
-    return classCourseRepository.findAll(pageable);
-  }
-
-  public ClassCourse addClassCourse(ClassCourse classCourse, User current) {
-    classCourse.setUser(current);
-    return classCourseRepository.save(classCourse);
-  }
-
-  public ClassCourse editClassCourse(ClassCourse classCourse) throws BusinessException {
-    ClassCourse course = classCourseRepository.findById(classCourse.getId()).orElseThrow(
-      () -> new BusinessException("未找到当天班课"));
-    course.update(classCourse);
-    return classCourseRepository.save(course);
-  }
-
-  public ClassCourse addMyClassCourse(String code, User current) throws BusinessException {
-    ClassCourse classCourse = classCourseRepository.findByCode(code).orElseThrow(() -> new BusinessException("当前code无效"));
-    List<User> users = classCourse.getUsers();
-    if (isExist(users, current)) {
-      throw new BusinessException("已经加入过该班课");
+        return classCourseRepository.findAll(pageable);
     }
-    users.add(current);
-    classCourse.setUsers(users);
-    return classCourseRepository.save(classCourse);
-  }
 
-  private boolean isExist(List<User> users, User current) {
-    return users.stream().anyMatch(user -> user.getId().equals(current.getId()));
-  }
+    public ClassCourse addClassCourse(ClassCourse classCourse, User current) {
+        classCourse.setUser(current);
+        return classCourseRepository.save(classCourse);
+    }
 
-  public Page getMyClassCourses(Pageable pageable, User current) {
-    List<Map> result = new ArrayList<>();
-    Page<ClassCourse> classCoursePage = classCourseRepository.findByUserId(current.getId(), pageable);
-    List<ClassCourse> classCourses = classCoursePage.getContent();
-    classCourses.forEach(classCourse -> {
-      Map temp = new HashMap();
-      List<Map> papers = new ArrayList<>();
-      temp.put("id", classCourse.getId());
-      temp.put("code", classCourse.getCode());
-      temp.put("title", classCourse.getTitle());
-      temp.put("endTime", classCourse.getEndTime());
-      classCourse.getPapers().forEach(paper -> {
-        Map tempPaper = new HashMap();
-        ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourse.getId(), paper.getId(), current.getId());
+    public ClassCourse editClassCourse(ClassCourse classCourse) throws BusinessException {
+        ClassCourse course = classCourseRepository.findById(classCourse.getId()).orElseThrow(
+            () -> new BusinessException("未找到当天班课"));
+        course.update(classCourse);
+        return classCourseRepository.save(course);
+    }
 
-        tempPaper.put("id", paper.getId());
-        tempPaper.put("title", paper.getTitle());
-        tempPaper.put("count", paper.getQuizzes().size());
-        tempPaper.put("isFinish", Objects.nonNull(reviewQuiz));
-        tempPaper.put("score", Objects.isNull(reviewQuiz) ? 0 : reviewQuiz.getScore());
-        tempPaper.put("quizzes", paper.getQuizzes());
-        papers.add(tempPaper);
-      });
-      temp.put("papers", papers);
-      result.add(temp);
-    });
-    return new PageImpl(result, classCoursePage.getPageable(), classCoursePage.getTotalElements());
-  }
+    public ClassCourse addMyClassCourse(String code, User current) throws BusinessException {
+        ClassCourse classCourse = classCourseRepository.findByCode(code).orElseThrow(() -> new BusinessException("当前code无效"));
+        List<User> users = classCourse.getUsers();
+        if (isExist(users, current)) {
+            throw new BusinessException("已经加入过该班课");
+        }
+        users.add(current);
+        classCourse.setUsers(users);
+        return classCourseRepository.save(classCourse);
+    }
+
+    private boolean isExist(List<User> users, User current) {
+        return users.stream().anyMatch(user -> user.getId().equals(current.getId()));
+    }
+
+    public Page getMyClassCourses(Pageable pageable, User current) {
+        List<Map> result = new ArrayList<>();
+        Page<ClassCourse> classCoursePage = classCourseRepository.findByUserId(current.getId(), pageable);
+        List<ClassCourse> classCourses = classCoursePage.getContent();
+        classCourses.forEach(classCourse -> {
+            Map temp = new HashMap();
+            List<Map> papers = new ArrayList<>();
+            temp.put("id", classCourse.getId());
+            temp.put("code", classCourse.getCode());
+            temp.put("title", classCourse.getTitle());
+            temp.put("endTime", classCourse.getEndTime());
+            classCourse.getPapers().forEach(paper -> {
+                Map tempPaper = new HashMap();
+                ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourse.getId(), paper.getId(), current.getId());
+
+                tempPaper.put("id", paper.getId());
+                tempPaper.put("title", paper.getTitle());
+                tempPaper.put("count", paper.getQuizzes().size());
+                tempPaper.put("score", Objects.isNull(reviewQuiz) ? 0 : reviewQuiz.getScore());
+                tempPaper.put("quizzes", paper.getQuizzes());
+                tempPaper.put("submissionStatus", Objects.nonNull(reviewQuiz) ? reviewQuiz.getSubmissionStatus() : "未开始");
+                tempPaper.put("endTime", paper.getEndTime().getTime());
+                tempPaper.put("timeBox", paper.getTimeBox());
+                papers.add(tempPaper);
+            });
+            temp.put("papers", papers);
+            result.add(temp);
+        });
+        return new PageImpl(result, classCoursePage.getPageable(), classCoursePage.getTotalElements());
+    }
 }
