@@ -15,6 +15,15 @@ class AnswerPaper extends Component {
   }
 
   componentDidMount = () => {
+    const submit = this.submit
+    window.onblur = function() {
+      submit()
+    };
+    window.document.addEventListener("visibilitychange", function() {
+      if(document.visibilityState == "hidden") {
+        submit()
+      }
+    });
     const {paperId, classCourseId} = this.props.match.params
     this.props.getReviewQuiz(classCourseId, paperId)
     this.props.getPaper(paperId)
