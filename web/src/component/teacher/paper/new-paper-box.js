@@ -8,7 +8,6 @@ import {getMajors} from '../../../action/major-action'
 import {getQuizzes} from "../../../action/quiz-action";
 import Paper from '../../common/paper'
 import {addPaper, editPaper} from "../../../action/paper-action";
-import moment from "moment";
 
 const Step = Steps.Step
 
@@ -20,6 +19,7 @@ class NewPaperBox extends Component {
     currentLevel: -1,
     paper: {
       title: '',
+      id:'1',
       endTime:'2019-09-01 11:11:10',
       quizzes: []
     },

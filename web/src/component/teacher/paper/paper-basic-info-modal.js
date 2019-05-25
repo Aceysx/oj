@@ -1,5 +1,5 @@
 import React from 'react'
-import {Input, Form, DatePicker, TimePicker} from 'antd'
+import {DatePicker, Form, Input} from 'antd'
 import moment from 'moment'
 
 const formItemLayout = {
@@ -23,18 +23,22 @@ const PaperBasicInfoModal = ({paper, updatePaper}) => {
     <Form.Item
       {...formItemLayout}
       label='试卷名称'>
-      <DatePicker value={typeof paper.endTime === 'string'
-          ? moment(paper.endTime, 'YYYY-MM-DD HH:mm:ss')
-        : paper.endTime}
-        showTime
-        format='YYYY-MM-DD HH:mm:ss'
-        onChange={time => updatePaper('endTime', time)}
-      />
+      {
+        paper.id
+        ? <Input value={paper.endTime} disabled />
+        : <DatePicker value={paper.endTime}
+          showTime
+          format='YYYY-MM-DD HH:mm:ss'
+          onChange={time => updatePaper('endTime', time)}
+        />
+      }
     </Form.Item>
     <Form.Item
       {...formItemLayout}
       label='答卷时间'>
-      <Input style={{width: 200}} type='number' value={paper.timeBox}
+      <Input style={{width: 200}}
+        type='number' value={paper.timeBox}
+        disabled={!!paper.id}
         onChange={e => updatePaper('timeBox', e.target.value)} />
     </Form.Item>
 
