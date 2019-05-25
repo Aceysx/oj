@@ -90,5 +90,11 @@ public class ClassCourseController {
     return ResponseEntity.ok(result);
   }
 
+  @DeleteMapping("{id}")
+  public ResponseEntity deleteClassCourse(@PathVariable Long id) throws BusinessException {
+    classCourseService.deleteClassCourse(id);
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
+
 
 }

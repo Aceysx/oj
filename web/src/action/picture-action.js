@@ -1,5 +1,8 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
+import { message } from 'antd'
+import { getPapersByPage } from './paper-action'
+import picture from '../reducer/picture'
 
 export const getPictures = (current, title='') => {
   return (dispatch) => {
@@ -64,3 +67,16 @@ export const editPicture = (picture, callback) => {
     })()
   }
 }
+
+export const deletePicture = (id) => {
+  return dispatch => {
+    (async () => {
+      const res = await request.del(`/api/pictures/${id}`)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        message.success('删除成功')
+        dispatch(getPictures())
+      }
+    })()
+  }
+}
+

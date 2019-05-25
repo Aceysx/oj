@@ -1,5 +1,6 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
+import { message } from 'antd'
 
 export const getMajorsByPage = (current) => {
   return (dispatch) => {
@@ -48,6 +49,18 @@ export const  putMajor = (major, callback) => {
       if (res.status === HTTP_CODE.NO_CONTENT) {
         dispatch(getMajorsByPage())
         callback()
+      }
+    })()
+  }
+}
+
+export const deleteMajor = (id) => {
+  return dispatch => {
+    (async () => {
+      const res = await request.del(`/api/majors/${id}`)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        message.success('删除成功')
+        dispatch(getMajorsByPage())
       }
     })()
   }

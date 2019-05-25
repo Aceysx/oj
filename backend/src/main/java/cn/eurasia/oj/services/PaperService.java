@@ -139,6 +139,11 @@ public class PaperService {
         return result;
     }
 
+    public void deletePaper(Long id) throws BusinessException {
+        Paper paper = paperRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+        paperRepository.delete(paper);
+    }
+
     public void startAnswer(Long classCourseId, Long paperId, Long id) {
         ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourseId, paperId, id);
         if (Objects.nonNull(reviewQuiz)) {

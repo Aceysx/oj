@@ -1,5 +1,6 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
+import { message } from 'antd'
 
 export const getClassCourses = (current) => {
   return (dispatch) => {
@@ -65,3 +66,16 @@ export const getMyClassCourses = (current) => {
     })()
   }
 }
+
+export const deleteClassCourse = (id) => {
+  return dispatch => {
+    (async () => {
+      const res = await request.del(`/api/classCourses/${id}`)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        message.success('删除成功')
+        dispatch(getClassCourses())
+      }
+    })()
+  }
+}
+

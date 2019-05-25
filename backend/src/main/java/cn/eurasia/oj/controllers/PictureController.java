@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,12 @@ public class PictureController {
 
     pictureService.editPicture(createPictureParam,current);
     return ResponseEntity.created(URI.create("/api/pictures")).build();
+  }
+
+  @DeleteMapping("{id}")
+  public ResponseEntity deletePicture(@PathVariable Long id) throws BusinessException {
+    pictureService.deletePicture(id);
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
   }
 
 }

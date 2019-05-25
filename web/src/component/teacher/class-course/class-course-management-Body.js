@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
-import {addClassCourse, editClassCourse, getClassCourses} from '../../../action/class-course-action'
+import {addClassCourse, deleteClassCourse,editClassCourse, getClassCourses} from '../../../action/class-course-action'
 import NewClassCourseModal from "./new-class-course-modal"
 import EditClassCourseModal from './edit-class-course-modal'
 import ClassCourseBindPaperBox from "./classCourse-bind-paper-Box";
@@ -64,6 +64,8 @@ class ClassCourseManagementBody extends Component {
             <a onClick={() => this.setState({isEditModalOpen: true, classCourse})}>编辑</a>
             <Divider type='vertical'/>
             <a onClick={() => this.setState({isBindPaperModalOpen: true, classCourse})}>绑定试卷</a>
+            <Divider type='vertical'/>
+            <a onClick={() => this.props.deleteClassCourse(classCourse.id)}>删除</a>
           </div>
         }
       }
@@ -122,7 +124,8 @@ const mapDispatchToProps = dispatch => ({
   getClassCourses: (current) => dispatch(getClassCourses(current)),
   addClassCourse: (classCourse, callback) => dispatch(addClassCourse(classCourse, callback)),
   editClassCourse: (classCourse, callback) => dispatch(editClassCourse(classCourse, callback)),
-  getPapers: () => dispatch(getPapers())
+  getPapers: () => dispatch(getPapers()),
+  deleteClassCourse: id => dispatch(deleteClassCourse(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassCourseManagementBody)

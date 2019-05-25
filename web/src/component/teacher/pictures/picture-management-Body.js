@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
 import NewPictureModal from './new-picture-modal'
-import {addPicture, editPicture, getPictures} from "../../../action/picture-action";
+import {addPicture, deletePicture,editPicture, getPictures} from "../../../action/picture-action";
 import EditPictureModal from './edit-picture-modal'
 
 class PictureManagementBody extends Component {
@@ -58,6 +58,8 @@ class PictureManagementBody extends Component {
             <a onClick={() => this.setState({isEditModalOpen: true, picture})}>编辑</a>
             <Divider type='vertical'/>
             <a onClick={() => this.props.history.push(`/teachers/pictures/${picture.id}/labels`)}>标注</a>
+            <Divider type='vertical'/>
+            <a onClick={() => this.props.deletePicture(picture.id)}>删除</a>
           </div>
         }
       }
@@ -107,6 +109,7 @@ const mapDispatchToProps = dispatch => ({
   getPictures: (current) => dispatch(getPictures(current)),
   addPicture: (picture, callback) => dispatch(addPicture(picture, callback)),
   editPicture: (picture, callback) => dispatch(editPicture(picture, callback)),
+  deletePicture: id => dispatch(deletePicture(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PictureManagementBody)

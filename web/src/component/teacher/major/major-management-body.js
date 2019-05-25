@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {Button, Table} from 'antd'
-import {getMajorsByPage, addMajor, putMajor} from '../../../action/major-action'
+import { Button, Divider, Table } from 'antd'
+import {getMajorsByPage,deleteMajor, addMajor, putMajor} from '../../../action/major-action'
 import NewMajorModal from "./new-major-modal"
 import EditMajorModal from './edit-major-modal'
+import { deleteCource } from '../../../action/class-course-action'
 
 
 class MajorManagementBody extends Component {
@@ -51,6 +52,8 @@ class MajorManagementBody extends Component {
         render: (text, record) => {
           return <div>
             <a onClick={() => this.setState({isEditModalOpen: true, major: record})}>编辑</a>
+            <Divider type='vertical'/>
+            <a onClick={() => this.props.deleteMajor(record.id)}>删除</a>
           </div>
         }
 
@@ -106,7 +109,8 @@ const mapStateToProps = ({user, majorPageable}) => ({
 const mapDispatchToProps = dispatch => ({
   putMajor: (major, callback) => dispatch(putMajor(major, callback)),
   getMajors: (current) => dispatch(getMajorsByPage(current)),
-  addMajor: (major, callback) => dispatch(addMajor(major, callback))
+  addMajor: (major, callback) => dispatch(addMajor(major, callback)),
+  deleteMajor: id => dispatch(deleteMajor(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MajorManagementBody)

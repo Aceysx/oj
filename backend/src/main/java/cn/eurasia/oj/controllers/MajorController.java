@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +39,11 @@ public class MajorController {
     public ResponseEntity putMajor(@RequestBody Major major) throws BusinessException {
         majorService.putMajor(major);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteMajor(@PathVariable Long id) throws BusinessException {
+        majorService.deleteMajor(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

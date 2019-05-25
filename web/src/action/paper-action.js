@@ -1,6 +1,7 @@
 import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
 import {message} from 'antd'
+import { getMajorsByPage } from './major-action'
 
 export const getPapersByPage = (current) => {
   return (dispatch) => {
@@ -112,6 +113,17 @@ export const statistic = (paperId) => {
           type: 'PAPER_STATISTICS',
           data: res.body
         })
+      }
+    })()
+  }
+}
+export const deletePaper = (id) => {
+  return dispatch => {
+    (async () => {
+      const res = await request.del(`/api/papers/${id}`)
+      if (res.status === HTTP_CODE.NO_CONTENT) {
+        message.success('删除成功')
+        dispatch(getPapersByPage())
       }
     })()
   }

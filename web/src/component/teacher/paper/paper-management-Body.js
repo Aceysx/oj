@@ -2,9 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
 import NewPaperBox from './new-paper-box'
-import {getPapersByPage} from "../../../action/paper-action";
+import {getPapersByPage,deletePaper} from "../../../action/paper-action";
 import PreviewPaperModal from "./preview-paper-modal";
 import {Link} from "react-router-dom";
+import { deleteMajor } from '../../../action/major-action'
 
 class PaperManagementBody extends Component {
   state = {
@@ -56,6 +57,8 @@ class PaperManagementBody extends Component {
             <a onClick={() => this.setState({isEditModalOpen: true, paper})}>编辑</a>
             <Divider type='vertical'/>
             <Link to={`/teachers/papers/review/${paper.id}`}>阅卷</Link>
+            <Divider type='vertical'/>
+            <a onClick={() => this.props.deletePaper(paper.id)}>删除</a>
           </div>
         }
       }
@@ -120,7 +123,8 @@ const mapStateToProps = ({user, paperPageable}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getPapersByPage: (current) => dispatch(getPapersByPage(current))
+  getPapersByPage: (current) => dispatch(getPapersByPage(current)),
+  deletePaper: id => dispatch(deletePaper(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaperManagementBody)

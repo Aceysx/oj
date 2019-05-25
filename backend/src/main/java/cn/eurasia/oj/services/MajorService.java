@@ -1,5 +1,6 @@
 package cn.eurasia.oj.services;
 
+import cn.eurasia.oj.entities.ClassCourse;
 import cn.eurasia.oj.entities.Major;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.MajorRepository;
@@ -31,5 +32,10 @@ public class MajorService {
         majorRepository.findById(major.getId()).orElseThrow(
                 () -> new BusinessException("无当前数据"));
         majorRepository.save(major);
+    }
+
+    public void deleteMajor(Long id) throws BusinessException {
+        Major major = majorRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+        majorRepository.delete(major);
     }
 }

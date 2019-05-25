@@ -50,4 +50,9 @@ public class PictureService {
     picture.setUserId(current.getId());
     pictureRepository.save(picture);
   }
+
+    public void deletePicture(Long id) throws BusinessException {
+      Picture picture = pictureRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该题目"));
+      pictureRepository.delete(picture);
+    }
 }

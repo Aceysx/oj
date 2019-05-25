@@ -61,4 +61,10 @@ public class PaperController {
         return ResponseEntity.ok(paperService.statistic(paperId));
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity deletePaper(@PathVariable Long id) throws BusinessException {
+        paperService.deletePaper(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
 }
