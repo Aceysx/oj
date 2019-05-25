@@ -77,8 +77,12 @@ public class PaperService {
             Object answer = submission.get(quiz.getId().toString());
             return new QuizSubmission(classCourseId, paper.getId(), quiz.getId(), Objects.isNull(answer)?"-1":answer.toString(), isCorrect, userId);
         }).collect(Collectors.toList());
+        try {
+            quizSubmissionRepository.saveAll(quizSubmissions);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        quizSubmissionRepository.saveAll(quizSubmissions);
     }
 
     private boolean isMulQuizAnswerCorrect(String answer, List<String> userAnswer) {

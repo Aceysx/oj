@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Checkbox, Col, Divider, Icon, Input, Radio, Row} from 'antd'
+import {Card, Checkbox, Col, Divider, Icon, Radio, Row} from 'antd'
 import {getPaper, getReviewQuiz} from '../../../action/paper-action'
 import {connect} from 'react-redux'
 import {LabelImg} from "../../common/labelimg";

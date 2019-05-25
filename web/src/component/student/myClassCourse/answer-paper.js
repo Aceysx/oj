@@ -11,19 +11,24 @@ class AnswerPaper extends Component {
     paperId: -1,
     classCourseId: -1,
     answers: {},
-    restTime: 1
+    restTime: 1,
+    isSubmit: false
+  }
+  componentWillUnmount = () =>{
+    window.onblur = ()=>{}
+    window.document.removeEventListener("visibilitychange",this.visibilityChangeHandle,false)
   }
 
+  visibilityChangeHandle = () =>{
+    if(document.visibilityState == "hidden") {
+      this.submit()
+    }
+  }
   componentDidMount = () => {
-    const submit = this.submit
-    window.onblur = function() {
-      submit()
-    };
-    window.document.addEventListener("visibilitychange", function() {
-      if(document.visibilityState == "hidden") {
-        submit()
-      }
-    });
+    window.onblur = ()=> {
+      this.submit()
+    }
+    window.document.addEventListener("visibilitychange",this.visibilityChangeHandle );
     const {paperId, classCourseId} = this.props.match.params
     this.props.getReviewQuiz(classCourseId, paperId)
     this.props.getPaper(paperId)
@@ -48,7 +53,7 @@ class AnswerPaper extends Component {
   submit = () => {
     const {answers, paperId, classCourseId} = this.state
     this.props.submit(classCourseId, paperId, answers, () => {
-      this.props.history.goBack()
+      this.props.history.push('/students/class-courses')
     });
   }
   getRestTime = () => {
