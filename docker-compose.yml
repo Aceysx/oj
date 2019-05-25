@@ -4,7 +4,7 @@ services:
       image: java:8
       container_name: oj_backend
       ports:
-        - 8080:8080
+        - 8082:8080
       volumes:
         - ./backend:/home/app/oj
       command: sh -c "cd /home/app/oj && ./gradlew build && java -jar build/libs/backend.jar"
