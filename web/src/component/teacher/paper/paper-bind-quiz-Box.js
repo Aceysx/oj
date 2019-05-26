@@ -16,7 +16,11 @@ class PaperBindQuizBox extends Component {
       result = result.filter(quiz => quiz.chapter === currentChapter)
     }
     if (currentMajorId !== -1) {
-      result = result.filter(quiz => quiz.major.id === currentMajorId)
+
+      result = result.filter(quiz => {
+        if(!quiz.major) return false
+        return quiz.major.id === currentMajorId
+      })
     }
     if (currentLevel !== -1) {
       result = result.filter(quiz => quiz.level === currentLevel)

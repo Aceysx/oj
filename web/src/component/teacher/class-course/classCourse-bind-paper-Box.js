@@ -67,6 +67,8 @@ class ClassCourseBindPaperBox extends Component {
     return <Modal
       title='绑定试卷'
       width='70%'
+      okText='确定'
+      cancelText='取消'
       visible={visible}
       maskClosable={false}
       onCancel={this.props.closeModal}

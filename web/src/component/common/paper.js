@@ -111,14 +111,18 @@ class Paper extends React.Component {
         labeled: false
       }
     ]
-    label = new LabelImg({
-      submit: labels => this.setState({labels}),
-      initData: labelPositions,
-      element: 'make-picture',
-      isPreview: true
-    })
-    label.addImg(list[0].imgUrl)
-    window.setTimeout(label.init, 500)
+    console.log(!label)
+    // if (!label) {
+      label = new LabelImg({
+        submit: labels => this.setState({labels}),
+        initData: labelPositions,
+        element: 'make-picture',
+        isPreview: true
+      });
+      label.addImg(list[0].imgUrl)
+      window.setTimeout(label.init, 500)
+    // }
+
 
     return <Row>
       <Col span={2}>答案:</Col>

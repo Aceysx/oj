@@ -13,7 +13,6 @@ class MyClassCourseBody extends Component {
     isAddModalOpen: false,
   }
   isTimeOut = paper => {
-    console.log(new Date(moment(paper.endTime).format()))
     return new Date().getTime() > new Date(moment(paper.endTime).format()).getTime()
   }
   componentDidMount = () => {
@@ -59,9 +58,6 @@ class MyClassCourseBody extends Component {
           dataIndex: 'operation',
           key: 'operation',
           render: (text, paper) => {
-            console.log(paper.title)
-            console.log(this.isTimeOut(paper))
-            console.log(paper.submissionStatus)
             return <span className="table-operation">
 
               {!this.isTimeOut(paper) && paper.submissionStatus!=='已提交'

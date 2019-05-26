@@ -21,7 +21,8 @@ class NewPaperBox extends Component {
       title: '',
       id:'',
       endTime:'',
-      quizzes: []
+      quizzes: [],
+      timeBox:''
     },
     targetKeys: []
   }
@@ -44,6 +45,12 @@ class NewPaperBox extends Component {
   }
 
   next = () => {
+    const {paper} = this.state
+    const {title,endTime,timeBox} = paper
+    if (timeBox === '' || title === '' || endTime === '') {
+      message.warning('请完善信息')
+      return
+    }
     const current = this.state.current + 1;
     this.setState({current});
   }

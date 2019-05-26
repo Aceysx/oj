@@ -86,6 +86,7 @@
         }
         var polygon = createPolygon(attrs)
         polygon.setAttribute('data-position', JSON.stringify(position))
+        if(!polygon) return
         parent.appendChild(polygon)
         var infoItem = render.infoBox(title)
         var infoBox = document.querySelector('.lbi-info-box')

@@ -56,7 +56,7 @@ export default class QuizAnswerReview extends React.Component {
       isPreview: true
     })
     label.addImg(list[0].imgUrl)
-    window.setTimeout(label.init, 500)
+    window.setTimeout(label.init, 800)
 
   }
 
@@ -115,12 +115,14 @@ export default class QuizAnswerReview extends React.Component {
         }
 
         <Divider type='horizontal'/>
-        <div id='make-picture'
-             style={{height: quiz.type === '识图题' ? '600px' : ''}}/>
+
         {
           quiz.type === '识图题'
             ?
-              setTimeout(this.getMakerQuiz, 1)
+            <div id='make-picture'
+                 style={{height: quiz.type === '识图题' ? '600px' : ''}}>
+              {setTimeout(this.getMakerQuiz,500)}
+            </div>
             : this.getChoiceQuiz()
         }
       </div>
