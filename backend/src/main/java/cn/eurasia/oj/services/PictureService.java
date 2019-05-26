@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +41,9 @@ public class PictureService {
     List<Label> labels = labelsStr.stream().map(label ->
       new Label(pictureId, label.get("fill").toString(), label.get("label").toString(), label.get("position").toString()))
       .collect(Collectors.toList());
-    picture.setLabels(labels);
+      if (!labels.isEmpty()) {
+          picture.setLabels(labels);
+      }
     pictureRepository.save(picture);
   }
 
