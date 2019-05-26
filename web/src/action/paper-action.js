@@ -61,8 +61,7 @@ export const submit = (classCourseId, paperId, submission, callback) => {
     (async () => {
       const res = await request.post(`/api/classCourses/${classCourseId}/papers/${paperId}/submission`, {submission})
       if (res.status === HTTP_CODE.CREATED) {
-        message.success('提交成功')
-        window.setTimeout(callback(), 1000)
+        callback()
       }
     })()
   }
