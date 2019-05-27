@@ -1,6 +1,5 @@
 package cn.eurasia.oj.controllers;
 
-import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.services.RoleService;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

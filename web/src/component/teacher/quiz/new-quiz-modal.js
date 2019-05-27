@@ -3,7 +3,6 @@ import {Button, Col, Form, Icon, Input, message, Modal, Radio, Row, Select, Tool
 import SingleChoiceQuiz from "./single-choice-quiz";
 import MulChoiceQuiz from "./mul-choice-quiz";
 import MakeQuiz from "./make-quiz";
-import {Link} from "react-router-dom";
 
 const {TextArea} = Input
 const RadioGroup = Radio.Group
@@ -68,10 +67,15 @@ class NewQuizModal extends React.Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
+      let {answer, options} = this.props
+      if (values.type === '识图题' && answer.length === 0) {
+        message.warning('请选择标注')
+        return
+      }
+
       if (!err && this.validateOptions()) {
-        let {answer, options} = this.props
         const quiz = Object.assign({}, values, {answer, options: JSON.stringify(options)});
         this.props.addQuiz(quiz, () => {
           message.success('添加成功')

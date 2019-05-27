@@ -1,5 +1,6 @@
 package cn.eurasia.oj.services;
 
+import cn.eurasia.oj.entities.Major;
 import cn.eurasia.oj.entities.Quiz;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
@@ -24,72 +25,84 @@ import java.util.stream.Collectors;
 @Service
 public class QuizExcelImportService {
 
-  @Autowired
-  private QuizRepository quizRepository;
-  private Workbook workbook;
-  private Sheet firstSheet;
+    @Autowired
+    private QuizRepository quizRepository;
+    @Autowired
+    private MajorService majorService;
+    private Workbook workbook;
+    private Sheet firstSheet;
 
-  public void init(MultipartFile file) throws IOException, BusinessException {
-    this.workbook = this.getWorkbook(file);
-    this.firstSheet = this.getFirstSheet(workbook);
-  }
-
-  private Sheet getFirstSheet(Workbook workbook) throws BusinessException {
-    Sheet sheet = workbook.getSheetAt(0);
-    if (Objects.isNull(sheet)) {
-      throw new BusinessException("Could not find the first sheet");
+    public void init(MultipartFile file) throws IOException, BusinessException {
+        this.workbook = this.getWorkbook(file);
+        this.firstSheet = this.getFirstSheet(workbook);
     }
-    return sheet;
-  }
 
-  private Workbook getWorkbook(MultipartFile file) throws IOException {
-    Workbook workbook;
-    String fileName = file.getOriginalFilename();
-    boolean isExcel2003 = true;
-    if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
-      isExcel2003 = false;
+    private Sheet getFirstSheet(Workbook workbook) throws BusinessException {
+        Sheet sheet = workbook.getSheetAt(0);
+        if (Objects.isNull(sheet)) {
+            throw new BusinessException("Could not find the first sheet");
+        }
+        return sheet;
     }
-    InputStream is = file.getInputStream();
 
-    if (isExcel2003) {
-      workbook = new HSSFWorkbook(is);
-    } else {
-      workbook = new XSSFWorkbook(is);
-    }
-    return workbook;
-  }
+    private Workbook getWorkbook(MultipartFile file) throws IOException {
+        Workbook workbook;
+        String fileName = file.getOriginalFilename();
+        boolean isExcel2003 = true;
+        if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            isExcel2003 = false;
+        }
+        InputStream is = file.getInputStream();
 
-  @Transactional
-  public void importExcel(User current) {
-    List<Quiz> quizzes = new ArrayList<>();
-    for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
-      Row row = firstSheet.getRow(i);
-      String chapter = row.getCell(0).getStringCellValue();
-      String description = row.getCell(1).getStringCellValue();
-      List<String> answers = Arrays.asList(row.getCell(2).getStringCellValue().split(""));
-      if (answers.isEmpty()) {
-        continue;
-      }
-      answers = answers.stream().map(item -> ((int)(item.charAt(0))) - 65 + "").collect(Collectors.toList());
-      String options = getOptions(row);
-      String type = answers.size() > 1 ? "多选题" : "单选题";
-      String answer = type.equals("多选题") ? answers.toString() : answers.get(0);
-      quizzes.add(new Quiz(description, options, answer, chapter, current, type));
+        if (isExcel2003) {
+            workbook = new HSSFWorkbook(is);
+        } else {
+            workbook = new XSSFWorkbook(is);
+        }
+        return workbook;
     }
-    quizRepository.saveAll(quizzes);
-  }
 
-  private String getOptions(Row row) {
-    int fromIndex = 3;
-    List<String> options = new ArrayList<>();
-    while (true) {
-      Cell option = row.getCell(fromIndex++);
-      if (Objects.isNull(option) || "".equals(option)) {
-        break;
-      }
-      options.add(option+"");
+    @Transactional
+    public void importExcel(User current) {
+        List<Quiz> quizzes = new ArrayList<>();
+        List<Major> majors = majorService.findAll();
+        for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
+            Row row = firstSheet.getRow(i);
+            String chapter = row.getCell(0)+"";
+            String description = row.getCell(1)+"";
+            List<String> answers = Arrays.asList((row.getCell(2)+"").split(""));
+            if (answers.isEmpty() || "".equals(answers.get(0))) {
+                continue;
+            }
+            answers = answers.stream().map(item -> ((int) (item.charAt(0))) - 65 + "").collect(Collectors.toList());
+
+            Major major = getMajors(majors, row);
+            String options = getOptions(row);
+            String type = answers.size() > 1 ? "多选题" : "单选题";
+
+            String answer = type.equals("多选题") ? answers.toString() : answers.get(0);
+            quizzes.add(new Quiz(description, options, answer, chapter, current, type,major));
+        }
+        quizRepository.saveAll(quizzes);
     }
-    options = options.stream().filter(item -> !"".equals(item)).collect(Collectors.toList());
-    return JSONObject.toJSONString(options);
-  }
+
+    private Major getMajors(List<Major> majors, Row row) {
+        String name = row.getCell(3)+"";
+        return majors.stream().filter(item -> item.getName().equals(name))
+            .findFirst().orElse(null);
+    }
+
+    private String getOptions(Row row) {
+        int fromIndex = 4;
+        List<String> options = new ArrayList<>();
+        while (true) {
+            Cell option = row.getCell(fromIndex++);
+            if (Objects.isNull(option) || "".equals(option)) {
+                break;
+            }
+            options.add(option + "");
+        }
+        options = options.stream().filter(item -> !"".equals(item)).collect(Collectors.toList());
+        return JSONObject.toJSONString(options);
+    }
 }

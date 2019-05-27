@@ -86,19 +86,23 @@
         }
         var polygon = createPolygon(attrs)
         polygon.setAttribute('data-position', JSON.stringify(position))
-        if(!polygon || parent === undefined) return
-        parent.appendChild(polygon)
-        var infoItem = render.infoBox(title)
-        var infoBox = document.querySelector('.lbi-info-box')
-        if (infoBox) {
-          infoBox.appendChild(infoItem)
+        try {
+          parent.appendChild(polygon)
+          var infoItem = render.infoBox(title)
+          var infoBox = document.querySelector('.lbi-info-box')
+          if (infoBox) {
+            infoBox.appendChild(infoItem)
+          }
+
+          // _self.labelsConfig.stack.push(infoItem)
+          var svg = document.querySelector('.lbi-svg'),
+            len = svg.children.length
+          svg.children[len - 1].setAttribute('data-name', title)
+          handleInfo()
+        }catch (e) {
+          console.log(e)
         }
 
-        // _self.labelsConfig.stack.push(infoItem)
-        var svg = document.querySelector('.lbi-svg'),
-          len = svg.children.length
-        svg.children[len - 1].setAttribute('data-name', title)
-        handleInfo()
       })
     }
   }

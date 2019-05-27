@@ -34,7 +34,7 @@ public class UserCenterService {
     public Map login(User userParam) throws BusinessException, UnsupportedEncodingException {
         Map result = new HashMap();
         User user = userRepository.findByUsername(userParam.getUsername());
-        if (Objects.isNull(user) && !user.getPassword().equals(userParam.getPassword())) {
+        if (Objects.isNull(user) || !user.getPassword().equals(userParam.getPassword())) {
             throw new BusinessException("账号或密码错误");
         }
         JSONObject jsonObject = new JSONObject(user);
@@ -57,13 +57,13 @@ public class UserCenterService {
         if (Objects.nonNull(isExist(user))) {
             throw new BusinessException(String.valueOf(isExist(user)));
         }
-        user.setPassword("123456");
         userRepository.save(user);
         return user;
     }
 
     private Object isExist(User user) {
-        User currentUser = userRepository.findByUsernameOrPhoneOrEmail(user.getUsername(), user.getPhone(), user.getEmail());
+        User currentUser = userRepository.findByUsernameOrPhoneOrEmail(user.getUsername(), user.getPhone(), user.getEmail())
+            .stream().findFirst().orElse(null);
         if (Objects.nonNull(currentUser)) {
             if (currentUser.getUsername().equals(user.getUsername())) return "用户名已存在";
             if (currentUser.getPhone().equals(user.getPhone())) return "电话号码已存在";

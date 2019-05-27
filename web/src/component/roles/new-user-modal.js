@@ -67,6 +67,18 @@ class NewUserModal extends React.Component {
           </Form.Item>
           <Form.Item
             {...formItemLayout}
+            label="密码"
+          >
+            {getFieldDecorator('password', {
+              rules: [{
+                required: true, message: '请输入密码',
+              }],
+            })(
+              <Input/>
+            )}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
             label="真实姓名"
           >
             {getFieldDecorator('name', {
