@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Checkbox, Col, Divider, Icon, Radio, Row} from 'antd'
+import {Card, Checkbox, Col, Divider, Icon, Radio, Row, Input} from 'antd'
 import {getPaper, getReviewQuiz} from '../../../action/paper-action'
 import {connect} from 'react-redux'
 import {LabelImg} from "../../common/labelimg";
@@ -25,7 +25,8 @@ class PaperReviewQuiz extends React.Component {
     const singleQuizIds = quizzes.filter(quiz => quiz.type === '单选题').map(quiz => quiz.id)
     const mulQuizIds = quizzes.filter(quiz => quiz.type === '多选题').map(quiz => quiz.id)
     const picQuizIds = quizzes.filter(quiz => quiz.type === '识图题').map(quiz => quiz.id)
-    const quizIds = singleQuizIds.concat(mulQuizIds).concat(picQuizIds)
+    const gapQuizIds = quizzes.filter(quiz => quiz.type === '填空题').map(quiz => quiz.id)
+    const quizIds = singleQuizIds.concat(mulQuizIds).concat(picQuizIds).concat(gapQuizIds)
     this.setState({quizId: quizIds[0]})
   }
 
@@ -38,6 +39,7 @@ class PaperReviewQuiz extends React.Component {
     }
     this.setDefaultQuizId(paper)
   }
+
   getQuizSider = (type, currentQuizId) => {
     const {paperReviewQuiz} = this.props
     const {paper, submission} = paperReviewQuiz
@@ -138,6 +140,20 @@ class PaperReviewQuiz extends React.Component {
                           value={answer === '-1' ? [answer] : answer}
                           disabled/>
   }
+
+  getGapFillingQuiz = (quiz, answer) => {
+       return <p style={{
+           border: '10px solid rgb(251, 251, 251)',
+               width: '98%',
+               borderRadius: 5,
+       }}
+   >{answer}</p>
+
+       return <p
+       value={(answer)}>
+   </p>
+   }
+
   getQuiz = (paper, submission) => {
     const {quizId} = this.state
     const quiz = paper.quizzes.find(quiz => quiz.id === quizId)
@@ -168,6 +184,11 @@ class PaperReviewQuiz extends React.Component {
         ? this.getMakerQuiz(quiz, answer)
         : ''
       }
+      {
+          quiz.type === '填空题' ?
+              this.getGapFillingQuiz(quiz, answer)
+              : ''
+      }
 
       <Divider/>
       <h2>正确答案：
@@ -185,6 +206,11 @@ class PaperReviewQuiz extends React.Component {
           quiz.type === '识图题' ?
             quiz.answer
             : ''
+        }
+        {
+          quiz.type === '填空题' ?
+              quiz.answer
+              : ''
         }
 
       </h2>
@@ -211,6 +237,9 @@ class PaperReviewQuiz extends React.Component {
           }
           {
             this.getQuizSider('识图题', this.state.quizId)
+          }
+          {
+            this.getQuizSider('填空题', this.state.quizId)
           }
 
         </div>

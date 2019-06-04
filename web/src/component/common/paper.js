@@ -17,7 +17,8 @@ class Paper extends React.Component {
     const singleQuizIds = quizzes.filter(quiz => quiz.type === '单选题').map(quiz => quiz.id)
     const mulQuizIds = quizzes.filter(quiz => quiz.type === '多选题').map(quiz => quiz.id)
     const picQuizIds = quizzes.filter(quiz => quiz.type === '识图题').map(quiz => quiz.id)
-    const quizIds = singleQuizIds.concat(mulQuizIds).concat(picQuizIds)
+    const gapQuizIds = quizzes.filter(quiz => quiz.type === '填空题').map(quiz => quiz.id)
+    const quizIds = singleQuizIds.concat(mulQuizIds).concat(picQuizIds).concat(gapQuizIds)
     this.setState({quizId: quizIds[0], quizIds: quizIds})
   }
 
@@ -98,6 +99,22 @@ class Paper extends React.Component {
                           disabled={preview}
                           onChange={value => radioOnChange(quiz.id.toString(), value)}/>
   }
+
+  getGapFillingQuiz = (quiz, answer, preview, onChange) => {
+        return <p style={{
+            border: '10px solid rgb(251, 251, 251)',
+                width: '98%',
+                borderRadius: 5,
+        }}><Input
+        onChange={e => onChange(quiz.id.toString(), e.target.value)}
+        value={(answer)}
+        disabled={preview}
+            >
+            </Input>
+            </p>
+    }
+
+
   getMarkQuiz = (quiz, answer, isPreview, onChange) => {
     const picture = quiz.picture
     let {url} = picture
@@ -172,6 +189,11 @@ class Paper extends React.Component {
           this.getMarkQuiz(quiz, answer, preview, onChange)
           : ''
       }
+      {
+          quiz.type === '填空题' ?
+              this.getGapFillingQuiz(quiz, answer, preview, onChange)
+              : ''
+      }
       <Divider/>
       <Button disabled={currentIdIndex <= 0}
               onClick={() => this.setState({quizId: quizIds[currentIdIndex - 1]})}>上一题</Button>
@@ -195,6 +217,9 @@ class Paper extends React.Component {
           }
           {
             this.getQuizSider('识图题', this.state.quizId)
+          }
+          {
+            this.getQuizSider('填空题', this.state.quizId)
           }
 
         </div>

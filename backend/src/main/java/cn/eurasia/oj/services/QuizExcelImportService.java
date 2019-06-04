@@ -68,20 +68,25 @@ public class QuizExcelImportService {
         List<Major> majors = majorService.findAll();
         for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
             Row row = firstSheet.getRow(i);
-            String chapter = row.getCell(0)+"";
-            String description = row.getCell(1)+"";
-            List<String> answers = Arrays.asList((row.getCell(2)+"").split(""));
+            String chapter = row.getCell(0) + "";
+            String description = row.getCell(1) + "";
+            String tkt = "";
+            List<String> answers = Arrays.asList((row.getCell(2) + "").split(""));
             if (answers.isEmpty() || "".equals(answers.get(0))) {
                 continue;
             }
-            answers = answers.stream().map(item -> ((int) (item.charAt(0))) - 65 + "").collect(Collectors.toList());
-
-            Major major = getMajors(majors, row);
             String options = getOptions(row);
-            String type = answers.size() > 1 ? "多选题" : "单选题";
+            if (options.equals("") || options.equals("[]") || options == null) {
+                tkt = row.getCell(2) + "";
+            } else {
+                answers = answers.stream().map(item -> ((item.charAt(0))) - 65 + "").collect(Collectors.toList());
+            }
+            Major major = getMajors(majors, row);
 
-            String answer = type.equals("多选题") ? answers.toString() : answers.get(0);
-            quizzes.add(new Quiz(description, options, answer, chapter, current, type,major));
+            String type = options.equals("") || options.equals("[]") || options == null ? "填空题" : (answers.size() > 1 ? "多选题" : "单选题");
+
+            String answer = type.equals("多选题") ? answers.toString() : type.equals("填空题") ? tkt : answers.get(0);
+            quizzes.add(new Quiz(description, options, answer, chapter, current, type, major));
         }
         quizRepository.saveAll(quizzes);
     }

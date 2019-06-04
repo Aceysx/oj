@@ -148,6 +148,7 @@ class QuizManagementBody extends Component {
               <Option value="单选题">单选题</Option>
               <Option value="多选题">多选题</Option>
               <Option value="识图题">识图题</Option>
+              <Option value="填空题">填空题</Option>
             </Select>
             <Divider type='vertical'/>
             <Select

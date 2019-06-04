@@ -66,24 +66,33 @@ class NewQuizModal extends React.Component {
     return false
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      let {answer, options} = this.props
-      if (values.type === '识图题' && answer.length === 0) {
-        message.warning('请选择标注')
-        return
-      }
-
-      if (!err && this.validateOptions()) {
-        const quiz = Object.assign({}, values, {answer, options: JSON.stringify(options)});
-        this.props.addQuiz(quiz, () => {
-          message.success('添加成功')
-          this.props.closeModal()
+    handleSubmit = (e) => {
+        e.preventDefault()
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            let {answer,quiz, options} = this.props
+            if (values.type === '识图题' && answer.length === 0) {
+                message.warning('请选择标注')
+                return
+            }
+            if (!err && this.validateOptions()) {
+                if (values.type === '填空题') {
+                    quiz = Object.assign({}, values, {
+                        options: JSON.stringify(options)
+                    })
+                }
+                else {
+                    quiz = Object.assign({}, values, {
+                        answer: answer,
+                        options: JSON.stringify(options)
+                    })
+                }
+                this.props.addQuiz(quiz, () => {
+                    message.success('添加成功')
+                    this.props.closeModal()
+                })
+            }
         })
-      }
-    })
-  }
+    }
   getCurrentSelectPicture = (pictures, form) => {
     return pictures.find(picture => picture.id === parseInt(form.getFieldValue('pictureId'))) || {}
   }
@@ -122,6 +131,7 @@ class NewQuizModal extends React.Component {
                 <Radio value='单选题'>单选题</Radio>
                 <Radio value='多选题'>多选题</Radio>
                 <Radio value='识图题'>识图题</Radio>
+                <Radio value='填空题'>填空题</Radio>
               </RadioGroup>
             )}
           </Form.Item>
@@ -211,6 +221,22 @@ class NewQuizModal extends React.Component {
               )}
             </Form.Item>:''
           }
+
+          {type === '填空题' ?
+          <Form.Item
+              {...formItemLayout}
+              label="填空答案"
+                  >
+                  {getFieldDecorator('answer', {
+              rules: [{
+                  required: true, message: '请输入填空答案',
+              }],
+          })(
+          <Input answer={answer}/>
+          )}
+          </Form.Item> : ''}
+
+          {type !== '填空题' ?
           <Form.Item
             {...formItemLayout}
             label={type === '识图题' ? '标注选项': "选项"}
@@ -242,13 +268,18 @@ class NewQuizModal extends React.Component {
                       radioOnChange={this.radioOnChange}/>
                 )
             )}
-            {type !== '识图题' ?
-              <Tooltip title={'添加一个选项'}>
-                <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
+
+              {type !== '识图题' ?
+                  (type !== '填空题' ?
+                  <Tooltip title={'添加一个选项'}>
+                      <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
               </Tooltip>
+              : '')
               : ''
-            }
-          </Form.Item>
+              }
+
+          </Form.Item> : ''}
+
           <Row type='flex' align='middle'>
             <Col>
               <Button type="primary"
