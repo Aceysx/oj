@@ -22,16 +22,42 @@ class Login extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-
+    const bgGround={
+      display:'flex',
+      height: '100%',
+      width:'100%',
+      padding: '0px',
+      background: `url(${require("./picture_login/背景.png")})`,
+      alignItems : 'center',
+      justifyContent : 'center',
+      backgroundSize :'cover',
+    }
+    const smallGround = {
+      background:'#FFFFFF',
+      backgroundColor:'rgba(255,255,255,0.8)',
+      width:'500px',
+      height:'330px',
+      borderRadius:'15px',
+    }
+    const username = {
+      width : '300px',
+      borderRadius:'7px',
+    }
     return (
-      <Row type='flex' justify='center' style={{marginTop:'8%'}}>
-        <Col>
-          <Form onSubmit={this.handleSubmit} className="login-form">
+      <span style={bgGround}>
+        <div style={smallGround}>
+         <img src={require('./picture_login/DRVS在线考试系统.png')}
+              style={{paddingBottom:'20px',paddingLeft:'90px',marginTop:'30px'}}/>
+          <img src={require('./picture_login/下划线.png')} style={{backgroundColor :'#DDDDDD'}}
+             />
+        <div style={{paddingLeft:'95px',paddingTop:'30px'}}>
+          <Form onSubmit={this.handleSubmit} className="login-form" >
             <Form.Item>
               {getFieldDecorator('username', {
                 rules: [{required: true, message: '请输入用户名'}],
-              })(
-                <Input style={{width: '300px'}} prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+              })
+              (
+                <Input style={username} prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)',borderRadius:'7px'}}/>}
                        placeholder="请输入用户名"/>
               )}
             </Form.Item>
@@ -44,12 +70,13 @@ class Login extends React.Component {
                        type="password" placeholder="请输入密码"/>
               )}
             </Form.Item>
-            <Button type="primary" style={{width: '300px'}} htmlType="submit" className="login-form-button">
+             <Button type="primary" style={{borderRadius:'15',width:'300px'}} htmlType="submit" className="login-form-button">
               登录
             </Button>
-          </Form>
-        </Col>
-      </Row>
+            </Form>
+      </div>
+        </div>
+      </span>
     );
   }
 }

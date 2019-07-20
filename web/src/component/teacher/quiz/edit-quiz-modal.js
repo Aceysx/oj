@@ -4,6 +4,7 @@ import SingleChoiceQuiz from "./single-choice-quiz";
 import MulChoiceQuiz from "./mul-choice-quiz";
 import MakeQuiz from "./make-quiz";
 
+
 const RadioGroup = Radio.Group
 const {Option} = Select;
 const {TextArea} = Input
@@ -197,7 +198,8 @@ class EditQuizModal extends React.Component {
               rules: [{
                 required: true, message: '请填写/勾选答案',
               }],
-            })(
+            })
+            (
               quiz.type === '单选题' ?
                 <SingleChoiceQuiz
                   options={options}
@@ -205,29 +207,31 @@ class EditQuizModal extends React.Component {
                   radioOnChange={this.radioOnChange}
                   optionOnChange={this.optionOnChange}
                   handleDeleteSelectItem={this.handleDeleteSelectItem}
-                />
-                : (quiz.type === '多选题'? <MulChoiceQuiz
-                  options={options}
-                  answer={answer}
-                  radioOnChange={this.radioOnChange}
-                  optionOnChange={this.optionOnChange}
-                  handleDeleteSelectItem={this.handleDeleteSelectItem}
-                /> :
-                (quiz.type === '填空题'?
-                  <Input answer={answer}
-                  />
-                : <MakeQuiz
-                  picture={quiz.picture}
-                  answer={answer}
-                  radioOnChange={this.radioOnChange}/>))
+                />:
+
+
+                (quiz.type === '多选题'? <MulChoiceQuiz
+                    options={options}
+                    answer={answer}
+                    radioOnChange={this.radioOnChange}
+                    optionOnChange={this.optionOnChange}
+                    handleDeleteSelectItem={this.handleDeleteSelectItem}
+                  /> :
+                  (quiz.type === '填空题'?
+                    <Input answer={answer}
+                    />
+                    : <MakeQuiz
+                      picture={quiz.picture}
+                      answer={answer}
+                      radioOnChange={this.radioOnChange}/>))
             )}
             {quiz.type !== '识图题' ?
-                (quiz.type !== '填空题' ?
-                <Tooltip title={'添加一个选项'}>
+              (quiz.type !== '填空题' ?
+                  <Tooltip title={'添加一个选项'}>
                     <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
-            </Tooltip>
-            :'')
-            : ''
+                  </Tooltip>
+                :'')
+              : ''
             }
           </Form.Item>
           <Row type='flex' align='middle'>

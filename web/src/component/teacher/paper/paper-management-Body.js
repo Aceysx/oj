@@ -6,6 +6,7 @@ import {getPapersByPage,deletePaper} from "../../../action/paper-action";
 import PreviewPaperModal from "./preview-paper-modal";
 import {Link} from "react-router-dom";
 import { deleteMajor } from '../../../action/major-action'
+import { getPictures } from '../../../action/picture-action'
 
 class PaperManagementBody extends Component {
   state = {
@@ -26,6 +27,13 @@ class PaperManagementBody extends Component {
       isEditModalOpen: false,
       isShowNewPaperBox: false,
       paper: {quizzes: []}
+    })
+  }
+
+  getPapersByPage = (pagination) => {
+    const {current} = pagination
+    this.setState({currentPage: current}, () => {
+      this.props.getPapersByPage(current)
     })
   }
 
@@ -106,7 +114,7 @@ class PaperManagementBody extends Component {
         columns={columns}
         dataSource={content}
         rowKey='id'
-        onChange={(pagination) => this.getPictures(pagination)}
+        onChange={(pagination) => this.getPapersByPage(pagination)}
         pagination={{
           defaultCurrent: currentPage,
           total: totalElements

@@ -19,7 +19,7 @@ class PictureManagementBody extends Component {
   getPictures = (pagination) => {
     const {current} = pagination
     this.setState({currentPage: current}, () => {
-      this.props.getClassCourses(current)
+      this.props.getPictures(current)
     })
   }
 

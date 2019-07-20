@@ -48,9 +48,12 @@ class OjLayout extends Component {
           <a onClick={this.logout}>退出</a>
         </Menu.Item>
       </Menu>
+
     );
     return (
       <Layout style={{height: '100%'}}>
+        {
+          this.isLogin() ?
         <Header>
           <Row>
             <Col span={4}>
@@ -102,8 +105,12 @@ class OjLayout extends Component {
             }
 
           </Row>
-        </Header>
+        </Header> : ''
+        }
         <Content style={{padding: '10px'}}>
+          {
+            this.isLogin() ?
+
           <Layout style={{padding: '24px 0', background: '#fff', height: '100%'}}>
             {
               this.isLogin() ?
@@ -118,15 +125,36 @@ class OjLayout extends Component {
                 </Sider>
                 : ''
             }
-
             <Content style={{padding: '0 15px', minHeight: 280}}>
               {this.props.children}
             </Content>
-          </Layout>
+          </Layout> :
+              <Layout style={{padding: '0px', background: '#fff', height: '100%'}}>
+                {
+                  this.isLogin() ?
+                    <Sider width={180} style={{background: '#fff'}}>
+                      <Menu
+                        mode="inline"
+                        defaultSelectedKeys={['1']}
+                        style={{height: '100%'}}
+                      >
+                        {this.getSider()}
+                      </Menu>
+                    </Sider>
+                    : ''
+                }
+                <Content style={{padding: '0px', minHeight: 280}}>
+                  {this.props.children}
+                </Content>
+              </Layout>
+          }
         </Content>
-        <Footer style={{textAlign: 'center', height: '40px', lineHeight: '5px'}}>
-          Platform ©2019
-        </Footer>
+        {
+          this.isLogin() ?
+            <Footer style={{textAlign: 'center', height: '40px', lineHeight: '5px'}}>
+              Platform ©2019
+            </Footer>: ''
+        }
       </Layout>
     )
   }

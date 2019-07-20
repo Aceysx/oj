@@ -2,7 +2,7 @@ import * as request from '../constant/fetchRequest'
 import HTTP_CODE from '../constant/httpCode'
 import {message} from 'antd'
 
-export const getPictures = (current, title='') => {
+export const getPictures = (current, title = '') => {
   return (dispatch) => {
     (async () => {
       const res =
@@ -54,6 +54,7 @@ export const editPictureLabels = (pictureId, labels, callback) => {
     })()
   }
 }
+
 export const editPicture = (picture, callback) => {
   return (dispatch) => {
     (async () => {
