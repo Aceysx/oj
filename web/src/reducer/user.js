@@ -1,6 +1,7 @@
 const init = {
   id: -1,
-  name: 'admin'
+  name: 'admin',
+  roles:[]
 }
 export default (state = init, action) => {
   switch (action.type) {

@@ -73,9 +73,11 @@ public class UserCenterService {
     }
 
     public void putUser(User user) throws BusinessException {
-        userRepository.findById(user.getId()).orElseThrow(
+        User foundUser = userRepository.findById(user.getId()).orElseThrow(
             () -> new BusinessException("无当前数据"));
-        userRepository.save(user);
+        foundUser.update(user);
+
+        userRepository.save(foundUser);
     }
 
     public Map getUserFromToken(Map token) throws Exception {

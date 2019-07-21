@@ -27,7 +27,7 @@ class Login extends React.Component {
       height: '100%',
       width:'100%',
       padding: '0px',
-      background: `url(${require("./picture_login/背景.png")})`,
+      background: `url(${require("../picture_login/背景.png")})`,
       alignItems : 'center',
       justifyContent : 'center',
       backgroundSize :'cover',
@@ -46,9 +46,9 @@ class Login extends React.Component {
     return (
       <span style={bgGround}>
         <div style={smallGround}>
-         <img src={require('./picture_login/DRVS在线考试系统.png')}
+         <img src={require('../picture_login/DRVS在线考试系统.png')}
               style={{paddingBottom:'20px',paddingLeft:'90px',marginTop:'30px'}}/>
-          <img src={require('./picture_login/下划线.png')} style={{backgroundColor :'#DDDDDD'}}
+          <img src={require('../picture_login/下划线.png')} style={{backgroundColor :'#DDDDDD'}}
              />
         <div style={{paddingLeft:'95px',paddingTop:'30px'}}>
           <Form onSubmit={this.handleSubmit} className="login-form" >
