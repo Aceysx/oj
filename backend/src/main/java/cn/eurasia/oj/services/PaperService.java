@@ -131,11 +131,13 @@ public class PaperService {
 
     public Map statistic(Long paperId) {
         Map result = new HashMap();
+        List<Map<String,Object>> stuTestInfo = paperRepository.findStuTestInfo(paperId);
         Long total = paperRepository.statisticTotalCount(paperId);
         long finishCount = reviewQuizRepository.findByPaperId(paperId)
             .stream().filter(reviewQuiz -> "已提交".equals(reviewQuiz.getSubmissionStatus()))
             .count();
         Map scoreStatistics = reviewQuizRepository.statisticScore(paperId);
+        result.put("stuTestInfo",stuTestInfo);
         result.put("total", total);
         result.put("avg", scoreStatistics.get("avg"));
         result.put("highest", scoreStatistics.get("max"));
