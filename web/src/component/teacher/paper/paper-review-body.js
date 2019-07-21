@@ -1,5 +1,5 @@
 import React from 'react'
-import {Divider, Icon, Table} from "antd";
+import {Divider, Icon} from "antd";
 import {statistic} from "../../../action/paper-action";
 import {connect} from 'react-redux'
 class PaperReviewBody extends React.Component {
@@ -11,22 +11,8 @@ class PaperReviewBody extends React.Component {
 
   render () {
     const {paperStatistics} = this.props
-    const {total,finish,avg,highest,lowest,students=[]} = paperStatistics
-    const columns = [
-      {
-        title: '用户名',
-        dataIndex: 'username'
-      },{
-        title: '邮箱',
-        dataIndex: 'email'
-      },{
-        title: '状态',
-        dataIndex: 'status'
-      },{
-        title: '分数',
-        dataIndex: 'score'
-      },
-      ]
+    const {total,finish,avg,highest,lowest} = paperStatistics
+
     return <div>
       <p>
         <a onClick={() => this.props.history.goBack()}>
@@ -39,7 +25,6 @@ class PaperReviewBody extends React.Component {
       <p>平均数：{avg}</p>
       <p>最高分：{highest}</p>
       <p>最低分：{lowest}</p>
-      <Table columns={columns} dataSource={students} bordered />
     </div>
   }
 }

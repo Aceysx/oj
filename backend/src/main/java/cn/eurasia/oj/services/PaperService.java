@@ -2,11 +2,12 @@ package cn.eurasia.oj.services;
 
 import cn.eurasia.oj.entities.*;
 import cn.eurasia.oj.exceptions.BusinessException;
-import cn.eurasia.oj.repositories.*;
+import cn.eurasia.oj.repositories.PaperRepository;
+import cn.eurasia.oj.repositories.QuizSubmissionRepository;
+import cn.eurasia.oj.repositories.ReviewQuizRepository;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
 import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,6 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
 @Service
 public class PaperService {
     @Autowired
@@ -26,10 +25,6 @@ public class PaperService {
     private QuizSubmissionRepository quizSubmissionRepository;
     @Autowired
     private ReviewQuizRepository reviewQuizRepository;
-    @Autowired
-    private ClassCourseRepository classCourseRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public Paper addPaper(CreatePaperParam createPaperParam, User current) {
         Paper paper = Paper.convertParam(createPaperParam, current);
@@ -81,7 +76,7 @@ public class PaperService {
             boolean isCorrect = count > 0;
             Object answer = submission.get(quiz.getId().toString());
             return new QuizSubmission(classCourseId, paper.getId(), quiz.getId(), Objects.isNull(answer)?"-1":answer.toString(), isCorrect, userId);
-        }).collect(toList());
+        }).collect(Collectors.toList());
         try {
             quizSubmissionRepository.saveAll(quizSubmissions);
         } catch (Exception e) {
@@ -125,7 +120,7 @@ public class PaperService {
         Paper paper = paperRepository.findById(paperId).orElseThrow(
             () -> new BusinessException("未找到")
         );
-        List<Long> quizIds = paper.getQuizzes().stream().map(Quiz::getId).collect(toList());
+        List<Long> quizIds = paper.getQuizzes().stream().map(Quiz::getId).collect(Collectors.toList());
         List<QuizSubmission> submission = quizSubmissionRepository.findByClassCourseIdAndPaperIdAndUserIdAndQuizIdIn(classCourseId, paper.getId(), userId, quizIds);
         ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourseId, paperId, userId);
         result.put("paper", paper);
@@ -146,26 +141,8 @@ public class PaperService {
         result.put("highest", scoreStatistics.get("max"));
         result.put("lowest", scoreStatistics.get("min"));
         result.put("finish", finishCount);
-        result.put("students", statisticStudentStatus(paperId));
 
         return result;
-    }
-
-    private List<Map> statisticStudentStatus(Long paperId) {
-        List<ReviewQuiz> reviewQuizs = reviewQuizRepository.findByPaperId(paperId);
-        List<User> users = userRepository.findByIdIn(reviewQuizs.stream()
-            .map(ReviewQuiz::getUserId).collect(toList()));
-        return users.stream().map(item -> {
-            Map map = new ObjectMapper().convertValue(item, Map.class);
-            ReviewQuiz review = reviewQuizs.stream().filter(reviewQuiz -> reviewQuiz.getUserId().equals(item.getId()))
-                .findFirst().orElse(new ReviewQuiz());
-            map.put("username", item.getUsername());
-            map.put("email", item.getEmail());
-            map.put("score", review.getScore());
-
-            map.put("status", review.getSubmissionStatus());
-            return map;
-        }).collect(toList());
     }
 
     public void deletePaper(Long id) throws BusinessException {
