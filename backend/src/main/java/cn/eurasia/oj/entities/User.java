@@ -54,4 +54,12 @@ public class User {
         this.setPassword("");
         return this;
     }
+
+    public void update(User user) {
+        this.username = user.getUsername();
+        this.name = user.name;
+        this.email = user.email;
+        this.roles = user.roles;
+        this.phone = user.phone;
+    }
 }

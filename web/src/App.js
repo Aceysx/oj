@@ -13,8 +13,10 @@ import WrongQuizzesBody from './component/student/wrongQuiz/wrong-quiz-body'
 import PictureManagementBody from './component/teacher/pictures/picture-management-Body'
 import MakeLabelBody from './component/teacher/pictures/make-label-body'
 import PaperReviewBody from './component/teacher/paper/paper-review-body'
+import MenusBody from './component/menus-body'
 import './style/App.css'
 import 'braft-editor/dist/index.css'
+
 import {
     BrowserRouter as Router,
     Route
@@ -26,7 +28,8 @@ class App extends Component {
       <Router>
         <OjLayout>
           <Route exact path='/login' component={Login} />
-          <Route exact path='/' component={MyClassCourseBody} />
+          <Route exact path='/' component={MenusBody} />
+          <Route exact path='/teachers' component={ClassCourseManagementBody} />
           <Route exact path='/teachers/class-courses' component={ClassCourseManagementBody} />
           <Route exact path='/teachers/majors' component={MajorManagementBody} />
           <Route exact path='/teachers/papers' component={PaperManagement} />
@@ -34,7 +37,11 @@ class App extends Component {
           <Route exact path='/teachers/quizzes' component={QuizManagementBody} />
           <Route exact path='/teachers/pictures' component={PictureManagementBody} />
           <Route exact path='/teachers/pictures/:pictureId/labels' component={MakeLabelBody} />
+
+          <Route exact path='/roles' component={UserBody} />
           <Route exact path='/roles/users' component={UserBody} />
+
+          <Route exact path='/students' component={MyClassCourseBody} />
           <Route exact path='/students/class-courses' component={MyClassCourseBody} />
           <Route exact path='/students/class-courses/:classCourseId/papers/:paperId/answer' component={PaperAnswer} />
           <Route exact path='/students/class-courses/:classCourseId/papers/:paperId/reviewQuiz' component={PaperReviewQuiz} />
