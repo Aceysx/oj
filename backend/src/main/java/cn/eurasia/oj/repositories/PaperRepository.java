@@ -21,10 +21,10 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     @Query(value = "delete from classCoursePaper where paperId = ?1", nativeQuery = true)
     void deleteClassCoursePaper(Long id);
 
-    @Query(value = "SELECT u.name, re.score, p.title as pTitle, c.title as cTitle  FROM reviewquiz re\n" +
+    @Query(value = "SELECT u.name, re.score, p.title as pTitle, c.title as cTitle  FROM reviewQuiz re\n" +
             "LEFT JOIN user as u on u.id = re.userId\n" +
             "LEFT JOIN paper as p on p.id = re.paperId\n" +
-            "LEFT JOIN classcourse as c on c.id = re.classCourseId\n" +
+            "LEFT JOIN classCourse as c on c.id = re.classCourseId\n" +
             "WHERE re.paperId = ?1", nativeQuery = true)
     List<Map<String, Object>> findStuTestInfo(Long paperId);
 }
