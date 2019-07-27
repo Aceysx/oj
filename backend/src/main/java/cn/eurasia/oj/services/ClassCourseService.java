@@ -63,6 +63,7 @@ public class ClassCourseService {
             temp.put("code", classCourse.getCode());
             temp.put("title", classCourse.getTitle());
             temp.put("endTime", classCourse.getEndTime());
+            temp.put("endTime", classCourse.getEndTime());
             classCourse.getPapers().forEach(paper -> {
                 Map tempPaper = new HashMap();
                 ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourse.getId(), paper.getId(), current.getId());
@@ -74,6 +75,7 @@ public class ClassCourseService {
                 tempPaper.put("quizzes", paper.getQuizzes());
                 tempPaper.put("submissionStatus", Objects.nonNull(reviewQuiz) ? reviewQuiz.getSubmissionStatus() : "未开始");
                 tempPaper.put("endTime", paper.getEndTime().getTime());
+                tempPaper.put("timeOut", paper.getEndTime().getTime() > new Date().getTime());
                 tempPaper.put("timeBox", paper.getTimeBox());
                 papers.add(tempPaper);
             });
