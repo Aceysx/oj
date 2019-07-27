@@ -25,7 +25,8 @@ const icons = {
 class MenusBody extends React.Component {
   render () {
     const {menu} = this.props
-    return <div style={{background: `url("${Background}")`, height: '100%'}}>
+    console.log(menu,routers)
+    return <div style={{background: `url("${Background}")`, height: '150%'}}>
       <Row type='flex' justify='center'>
         <div style={{marginTop: '5%', textAlign: 'center', color: 'white', fontSize: 30}}>
           DRVS在线考试系统
@@ -39,7 +40,7 @@ class MenusBody extends React.Component {
       </Row>
       <Row type='flex' justify='center'>
         {
-          routers[menu].map(item => {
+          (routers[menu]||[]).map(item => {
             return <div
               onClick={() => this.props.history.push(item.url)}
               style={{cursor: 'pointer',

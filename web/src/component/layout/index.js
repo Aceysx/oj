@@ -24,6 +24,7 @@ class OjLayout extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
+
     const {user} = nextProps
     if (this.props.user === user) {
       return false
@@ -38,8 +39,7 @@ class OjLayout extends Component {
       return
     }
     if (this.hasRole('管理员',user)) {
-      this.setState({menu:'roles'})
-      return
+      this.props.history.push('/roles')
     }
   }
 
