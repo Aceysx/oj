@@ -90,4 +90,9 @@ public class ClassCourseService {
         classCourseRepository.deleteClassCoursePaper(classCourse.getId());
         classCourseRepository.delete(classCourse);
     }
+
+    public ClassCourse getBy(Long classCourseId) throws BusinessException {
+        return classCourseRepository.findById(classCourseId)
+            .orElseThrow(() -> new BusinessException("不存在该课程"));
+    }
 }

@@ -12,7 +12,7 @@ import PaperReviewQuiz from './component/student/myClassCourse/paper-review-quiz
 import WrongQuizzesBody from './component/student/wrongQuiz/wrong-quiz-body'
 import PictureManagementBody from './component/teacher/pictures/picture-management-Body'
 import MakeLabelBody from './component/teacher/pictures/make-label-body'
-import PaperReviewBody from './component/teacher/paper/paper-review-body'
+import PaperReviewBody from './component/teacher/class-course/paper-review-body'
 import MenusBody from './component/menus-body'
 import './style/App.css'
 import 'braft-editor/dist/index.css'
@@ -33,7 +33,7 @@ class App extends Component {
           <Route exact path='/teachers/class-courses' component={ClassCourseManagementBody} />
           <Route exact path='/teachers/majors' component={MajorManagementBody} />
           <Route exact path='/teachers/papers' component={PaperManagement} />
-          <Route exact path='/teachers/papers/review/:paperId' component={PaperReviewBody} />
+          <Route exact path='/teachers/class-courses/:classCourseId/papers/review' component={PaperReviewBody} />
           <Route exact path='/teachers/quizzes' component={QuizManagementBody} />
           <Route exact path='/teachers/pictures' component={PictureManagementBody} />
           <Route exact path='/teachers/pictures/:pictureId/labels' component={MakeLabelBody} />

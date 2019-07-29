@@ -27,4 +27,5 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             "LEFT JOIN classCourse as c on c.id = re.classCourseId\n" +
             "WHERE re.paperId = ?1", nativeQuery = true)
     List<Map<String, Object>> findStuTestInfo(Long paperId);
+
 }

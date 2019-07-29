@@ -64,8 +64,6 @@ class PaperManagementBody extends Component {
             <Divider type='vertical'/>
             <a onClick={() => this.setState({isEditModalOpen: true, paper})}>编辑</a>
             <Divider type='vertical'/>
-            <Link to={`/teachers/papers/review/${paper.id}`}>阅卷</Link>
-            <Divider type='vertical'/>
             <a onClick={() => this.props.deletePaper(paper.id)}>删除</a>
           </div>
         }

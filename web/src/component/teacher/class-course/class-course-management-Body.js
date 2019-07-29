@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
-import {addClassCourse, deleteClassCourse,editClassCourse, getClassCourses} from '../../../action/class-course-action'
+import {addClassCourse, deleteClassCourse, editClassCourse, getClassCourses} from '../../../action/class-course-action'
 import NewClassCourseModal from "./new-class-course-modal"
 import EditClassCourseModal from './edit-class-course-modal'
 import ClassCourseBindPaperBox from "./classCourse-bind-paper-Box";
 import {getPapers} from "../../../action/paper-action";
+import {Link} from "react-router-dom";
 
 class ClassCourseManagementBody extends Component {
   state = {
@@ -66,6 +67,8 @@ class ClassCourseManagementBody extends Component {
             <a onClick={() => this.setState({isBindPaperModalOpen: true, classCourse})}>绑定试卷</a>
             <Divider type='vertical'/>
             <a onClick={() => this.props.deleteClassCourse(classCourse.id)}>删除</a>
+            <Divider type='vertical'/>
+            <Link to={`/teachers/class-courses/${classCourse.id}/papers/review`}>阅卷</Link>
           </div>
         }
       }

@@ -116,6 +116,20 @@ export const statistic = (paperId) => {
     })()
   }
 }
+export const getPapersBy = (classCourseId,callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.get(`/api/classCourses/${classCourseId}/papers`)
+      if (res.status === HTTP_CODE.OK) {
+        callback(res.body)
+        dispatch({
+          type: 'REFRESH_PAPERS',
+          data: res.body
+        })
+      }
+    })()
+  }
+}
 export const deletePaper = (id) => {
   return dispatch => {
     (async () => {
