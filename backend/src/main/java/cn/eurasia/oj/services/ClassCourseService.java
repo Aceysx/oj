@@ -92,13 +92,15 @@ public class ClassCourseService {
     public Map statistic(Long classCourseId, Long paperId) throws BusinessException {
         Map result = new HashMap();
         List<Long> ids = getBy(classCourseId).getUsers().stream().map(User::getId).collect(Collectors.toList());
-
-        List<Map<String,Object>> stuTestInfo = paperRepository.findStuTestInfo(paperId,ids);
-        Long total = paperRepository.statisticTotalCount(paperId,ids);
-        long finishCount = reviewQuizRepository.findByPaperIdAndUserIdIn(paperId,ids)
+        if (ids.isEmpty()) {
+            return result;
+        }
+        List<Map<String,Object>> stuTestInfo = paperRepository.findStuTestInfo(classCourseId,paperId,ids);
+        Long total = paperRepository.statisticTotalCount(classCourseId,paperId);
+        long finishCount = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserIdIn(classCourseId,paperId,ids)
             .stream().filter(reviewQuiz -> "已提交".equals(reviewQuiz.getSubmissionStatus()))
             .count();
-        Map scoreStatistics = reviewQuizRepository.statisticScore(paperId,ids);
+        Map scoreStatistics = reviewQuizRepository.statisticScore(classCourseId,paperId,ids);
         result.put("stuTestInfo",stuTestInfo);
         result.put("total", total);
         result.put("avg", scoreStatistics.get("avg"));

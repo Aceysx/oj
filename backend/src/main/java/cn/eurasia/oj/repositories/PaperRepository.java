@@ -14,9 +14,9 @@ import java.util.Map;
 public interface PaperRepository extends JpaRepository<Paper, Long> {
 
     @Query(value = "select count(1) from userClassCourse where classCourseId in (" +
-        "select classCourseId from classCoursePaper where paperId = ?1)",
+        "select classCourseId from classCoursePaper where classCourseId=?1 and paperId = ?2)",
         nativeQuery = true)
-    Long statisticTotalCount(Long paperId, List<Long> ids);
+    Long statisticTotalCount(Long classCourseId, Long paperId);
 
     @Transactional
     @Modifying
@@ -27,8 +27,8 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             "LEFT JOIN user as u on u.id = re.userId\n" +
             "LEFT JOIN paper as p on p.id = re.paperId\n" +
             "LEFT JOIN classCourse as c on c.id = re.classCourseId\n" +
-            "WHERE re.paperId = ?1 and re.userId in ?2", nativeQuery = true)
-    List<Map<String, Object>> findStuTestInfo(Long paperId, List<Long> ids);
+            "WHERE re.classCourseid=?1 and  re.paperId = ?2 and re.userId in ?3", nativeQuery = true)
+    List<Map<String, Object>> findStuTestInfo(Long classCourseId, Long paperId, List<Long> ids);
 
     @Query("from Paper c where c.user.id=?1")
     Page<Paper> findAllByUserId(Long id, Pageable pageable);
