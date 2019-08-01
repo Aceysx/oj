@@ -16,7 +16,7 @@ const formItemLayout = {
 
 class EditClassCourseModal extends React.Component {
   handleSubmit = (e) => {
-    const { classCourse } = this.props
+    const {classCourse} = this.props
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -30,11 +30,11 @@ class EditClassCourseModal extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const {classCourse, form} = nextProps
-    if (classCourse === this.props.classCourse ) {
+    if (classCourse === this.props.classCourse) {
       return false
     }
     const {title, code, endTime} = classCourse
-    form.setFieldsValue({title,code,endTime: moment(endTime)})
+    form.setFieldsValue({title, code, endTime: moment(endTime)})
   }
 
   resetCode = () => {
@@ -90,7 +90,8 @@ class EditClassCourseModal extends React.Component {
                 required: true, message: '请选择截止时间',
               }],
             })(
-              <DatePicker/>
+              <DatePicker
+                disabledDate={startValue => startValue.valueOf() < new Date().getTime()}/>
             )}
           </Form.Item>
           <Row type='flex' align='middle'>

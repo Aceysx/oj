@@ -21,4 +21,8 @@ public interface ClassCourseRepository extends JpaRepository<ClassCourse, Long> 
     @Modifying
     @Query(value = "delete from classCoursePaper where classCourseId = ?1", nativeQuery = true)
     void deleteClassCoursePaper(Long id);
+
+    @Query("from ClassCourse c where c.user.id=?1")
+    Page<ClassCourse> findAllByUserId(Long id, Pageable pageable);
+
 }

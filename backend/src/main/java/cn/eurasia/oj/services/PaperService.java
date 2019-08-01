@@ -31,8 +31,8 @@ public class PaperService {
         return paperRepository.save(paper);
     }
 
-    public Page<Paper> getQuizzesByPage(Pageable pageable) {
-        return paperRepository.findAll(pageable);
+    public Page<Paper> getQuizzesByPage(Long id, Pageable pageable) {
+        return paperRepository.findAllByUserId(id, pageable);
     }
 
     public void editPaper(Paper paper) throws BusinessException {
@@ -43,8 +43,8 @@ public class PaperService {
         paperRepository.save(paper);
     }
 
-    public List<Paper> findAll() {
-        return paperRepository.findAll();
+    public List<Paper> findAll(Long id) {
+        return paperRepository.findAllByUserId(id);
     }
 
     public Paper findPaper(Long paperId) throws BusinessException {
@@ -66,16 +66,16 @@ public class PaperService {
     private void dealSubmission(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {
         List<QuizSubmission> quizSubmissions = paper.getQuizzes().stream().map(quiz -> {
             Long count = submission.keySet().stream().filter(quizId -> {
-                    boolean isCurrentQuiz = quiz.getId().equals(Long.valueOf(quizId));
-                    if (quiz.getType().equals("多选题")) {
-                        return isCurrentQuiz && isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quizId));
-                    }
-                    return quiz.getId().equals(Long.valueOf(quizId))
-                        && quiz.getAnswer().equals(submission.get(quizId).toString());
+                boolean isCurrentQuiz = quiz.getId().equals(Long.valueOf(quizId));
+                if (quiz.getType().equals("多选题")) {
+                    return isCurrentQuiz && isMulQuizAnswerCorrect(quiz.getAnswer(), (List<String>) submission.get(quizId));
+                }
+                return quiz.getId().equals(Long.valueOf(quizId))
+                    && quiz.getAnswer().equals(submission.get(quizId).toString());
             }).count();
             boolean isCorrect = count > 0;
             Object answer = submission.get(quiz.getId().toString());
-            return new QuizSubmission(classCourseId, paper.getId(), quiz.getId(), Objects.isNull(answer)?"-1":answer.toString(), isCorrect, userId);
+            return new QuizSubmission(classCourseId, paper.getId(), quiz.getId(), Objects.isNull(answer) ? "-1" : answer.toString(), isCorrect, userId);
         }).collect(Collectors.toList());
         try {
             quizSubmissionRepository.saveAll(quizSubmissions);

@@ -87,7 +87,8 @@ class NewClassCourseModal extends React.Component {
                 required: true, message: '请选择截止时间',
               }],
             })(
-              <DatePicker/>
+              <DatePicker
+                disabledDate={startValue => startValue.valueOf() < new Date().getTime()}/>
             )}
           </Form.Item>
           <Row type='flex' align='middle'>

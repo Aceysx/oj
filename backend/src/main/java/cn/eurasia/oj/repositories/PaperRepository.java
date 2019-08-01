@@ -1,6 +1,8 @@
 package cn.eurasia.oj.repositories;
 
 import cn.eurasia.oj.entities.Paper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +30,9 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             "WHERE re.paperId = ?1 and re.userId in ?2", nativeQuery = true)
     List<Map<String, Object>> findStuTestInfo(Long paperId, List<Long> ids);
 
+    @Query("from Paper c where c.user.id=?1")
+    Page<Paper> findAllByUserId(Long id, Pageable pageable);
+
+    @Query("from Paper c where c.user.id=?1")
+    List<Paper> findAllByUserId(Long id);
 }

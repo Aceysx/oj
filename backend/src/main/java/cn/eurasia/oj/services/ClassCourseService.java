@@ -25,9 +25,9 @@ public class ClassCourseService {
     @Autowired
     private PaperRepository paperRepository;
 
-    public Page<ClassCourse> getClassCoursesPageable(Pageable pageable) {
+    public Page<ClassCourse> getClassCoursesPageable(Long id, Pageable pageable) {
 
-        return classCourseRepository.findAll(pageable);
+        return classCourseRepository.findAllByUserId(id,pageable);
     }
 
     public ClassCourse addClassCourse(ClassCourse classCourse, User current) {
@@ -37,7 +37,7 @@ public class ClassCourseService {
 
     public ClassCourse editClassCourse(ClassCourse classCourse) throws BusinessException {
         ClassCourse course = classCourseRepository.findById(classCourse.getId()).orElseThrow(
-            () -> new BusinessException("未找到当天班课"));
+            () -> new BusinessException("未找到当前班课"));
         course.update(classCourse);
         return classCourseRepository.save(course);
     }

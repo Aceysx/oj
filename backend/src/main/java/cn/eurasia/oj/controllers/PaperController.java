@@ -27,13 +27,14 @@ public class PaperController {
     @GetMapping("pageable")
     public ResponseEntity getPapersByPage(
         @PageableDefault(sort = {"id"},
-            direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(paperService.getQuizzesByPage(pageable));
+            direction = Sort.Direction.DESC) Pageable pageable,
+        @Auth User user) {
+        return ResponseEntity.ok(paperService.getQuizzesByPage(user.getId(),pageable));
     }
 
     @GetMapping("")
-    public ResponseEntity getPapers() {
-        return ResponseEntity.ok(paperService.findAll());
+    public ResponseEntity getPapers(@Auth User user) {
+        return ResponseEntity.ok(paperService.findAll(user.getId()));
     }
 
     @GetMapping("{paperId}")

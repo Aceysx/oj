@@ -30,8 +30,9 @@ public class ClassCourseController {
     @GetMapping("")
     public ResponseEntity getClassCourse(
         @PageableDefault(sort = {"id"},
-            direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(classCourseService.getClassCoursesPageable(pageable));
+            direction = Sort.Direction.DESC) Pageable pageable,
+        @Auth User user) {
+        return ResponseEntity.ok(classCourseService.getClassCoursesPageable(user.getId(),pageable));
     }
 
     @PostMapping("")
