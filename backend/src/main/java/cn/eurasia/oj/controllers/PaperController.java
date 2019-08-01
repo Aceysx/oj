@@ -56,10 +56,6 @@ public class PaperController {
     }
 
 
-    @GetMapping("{paperId}/statistics")
-    public ResponseEntity statistic(@PathVariable Long paperId) {
-        return ResponseEntity.ok(paperService.statistic(paperId));
-    }
 
     @DeleteMapping("{id}")
     public ResponseEntity deletePaper(@PathVariable Long id) throws BusinessException {

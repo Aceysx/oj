@@ -49,7 +49,7 @@ class OjLayout extends Component {
 
   logout = () => {
     window.localStorage.removeItem('oToken')
-    window.location.href = '/login'
+    this.props.history.push('/login')
   }
 
   to = (menu,url) => {

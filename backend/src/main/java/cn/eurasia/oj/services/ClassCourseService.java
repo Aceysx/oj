@@ -1,8 +1,11 @@
 package cn.eurasia.oj.services;
 
-import cn.eurasia.oj.entities.*;
+import cn.eurasia.oj.entities.ClassCourse;
+import cn.eurasia.oj.entities.ReviewQuiz;
+import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.ClassCourseRepository;
+import cn.eurasia.oj.repositories.PaperRepository;
 import cn.eurasia.oj.repositories.ReviewQuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,8 @@ public class ClassCourseService {
     private ClassCourseRepository classCourseRepository;
     @Autowired
     private ReviewQuizRepository reviewQuizRepository;
+    @Autowired
+    private PaperRepository paperRepository;
 
     public Page<ClassCourse> getClassCoursesPageable(Pageable pageable) {
 
@@ -84,7 +89,25 @@ public class ClassCourseService {
         });
         return new PageImpl(result, classCoursePage.getPageable(), classCoursePage.getTotalElements());
     }
+    public Map statistic(Long classCourseId, Long paperId) throws BusinessException {
+        Map result = new HashMap();
+        List<Long> ids = getBy(classCourseId).getUsers().stream().map(User::getId).collect(Collectors.toList());
 
+        List<Map<String,Object>> stuTestInfo = paperRepository.findStuTestInfo(paperId,ids);
+        Long total = paperRepository.statisticTotalCount(paperId,ids);
+        long finishCount = reviewQuizRepository.findByPaperIdAndUserIdIn(paperId,ids)
+            .stream().filter(reviewQuiz -> "已提交".equals(reviewQuiz.getSubmissionStatus()))
+            .count();
+        Map scoreStatistics = reviewQuizRepository.statisticScore(paperId,ids);
+        result.put("stuTestInfo",stuTestInfo);
+        result.put("total", total);
+        result.put("avg", scoreStatistics.get("avg"));
+        result.put("highest", scoreStatistics.get("max"));
+        result.put("lowest", scoreStatistics.get("min"));
+        result.put("finish", finishCount);
+
+        return result;
+    }
     public void deleteClassCourse(Long id) throws BusinessException {
         ClassCourse classCourse = classCourseRepository.findById(id).orElseThrow(() -> new BusinessException("未找到该课程"));
         classCourseRepository.deleteClassCoursePaper(classCourse.getId());

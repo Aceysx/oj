@@ -10,8 +10,8 @@ import java.util.Map;
 public interface ReviewQuizRepository extends JpaRepository<ReviewQuiz, Long> {
     ReviewQuiz findByClassCourseIdAndPaperIdAndUserId(Long id, Long paperId, Long userId);
 
-    @Query(value = "select round(avg(score),10) `avg`,max(score)  `max`,min(score) `min` from reviewQuiz review where review.paperId=?1",nativeQuery = true)
-    Map statisticScore(Long paperId);
+    @Query(value = "select round(avg(score),10) `avg`,max(score)  `max`,min(score) `min` from reviewQuiz review where review.paperId=?1 and review.userId in ?2",nativeQuery = true)
+    Map statisticScore(Long paperId, List<Long> ids);
 
-    List<ReviewQuiz> findByPaperId(Long paperId);
+    List<ReviewQuiz> findByPaperIdAndUserIdIn(Long paperId, List<Long> ids);
 }

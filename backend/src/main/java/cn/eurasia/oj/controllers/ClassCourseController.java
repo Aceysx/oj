@@ -102,5 +102,10 @@ public class ClassCourseController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("{classCourseId}/papers{paperId}/statistics")
+    public ResponseEntity statistic(@PathVariable Long paperId,
+                                    @PathVariable Long classCourseId) throws BusinessException {
+        return ResponseEntity.ok(classCourseService.statistic(classCourseId, paperId));
+    }
 
 }

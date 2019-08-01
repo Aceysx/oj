@@ -129,23 +129,6 @@ public class PaperService {
         return result;
     }
 
-    public Map statistic(Long paperId) {
-        Map result = new HashMap();
-        List<Map<String,Object>> stuTestInfo = paperRepository.findStuTestInfo(paperId);
-        Long total = paperRepository.statisticTotalCount(paperId);
-        long finishCount = reviewQuizRepository.findByPaperId(paperId)
-            .stream().filter(reviewQuiz -> "已提交".equals(reviewQuiz.getSubmissionStatus()))
-            .count();
-        Map scoreStatistics = reviewQuizRepository.statisticScore(paperId);
-        result.put("stuTestInfo",stuTestInfo);
-        result.put("total", total);
-        result.put("avg", scoreStatistics.get("avg"));
-        result.put("highest", scoreStatistics.get("max"));
-        result.put("lowest", scoreStatistics.get("min"));
-        result.put("finish", finishCount);
-
-        return result;
-    }
 
     public void deletePaper(Long id) throws BusinessException {
         Paper paper = paperRepository.findById(id).orElseThrow(() -> new BusinessException("没有找到该试卷"));

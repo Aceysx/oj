@@ -103,10 +103,10 @@ export const editPaper = (paper, callback) => {
     })()
   };
 }
-export const statistic = (paperId) => {
+export const statistic = (classCourseId,paperId) => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`/api/papers/${paperId}/statistics`)
+      const res = await request.get(`/api/classCourses/${classCourseId}/papers/${paperId}/statistics`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'PAPER_STATISTICS',

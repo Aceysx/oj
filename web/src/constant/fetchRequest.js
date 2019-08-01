@@ -5,7 +5,7 @@ const getTokenFromLocalStorage = () => {
 }
 const authenticationFilter = (status) => {
   if (status === 403 || status === 401) {
-    window.location.href = '/login'
+    message.error('请先登录')
   }
 }
 function errHandler (res) {
