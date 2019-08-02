@@ -74,7 +74,7 @@ class OjLayout extends Component {
 
   }
   isMenuPage = () => {
-    return ['/','/students','/teachers'].some(item => item === window.location.pathname)
+    return ['/','/students','/teachers'].some(item => item === this.props.location.pathname)
   }
 
   render() {

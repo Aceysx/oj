@@ -5,7 +5,7 @@ const getTokenFromLocalStorage = () => {
 }
 const authenticationFilter = (status) => {
   if (status === 403 || status === 401) {
-    window.location.href = '/login'
+    window.location.href = '/#/login'
   }
 }
 function errHandler (res) {

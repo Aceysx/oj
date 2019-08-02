@@ -22,3 +22,22 @@ git pull --reb
 git stash pop
 docker-compose up -d
 ```
+
+##### 部署
+
+1. 打包前端，同时将打包出来的文件放到resources下
+```aidl
+进到 web目录下执行
+npm run deploy
+``` 
+
+2. 打包后端
+```aidl
+进到 backend 目录下执行
+./gradlew (gradlew.bat 如果是windows) clean build 
+```
+
+3. 打包出来的jar包放在 backend/build/libs 下
+ - 运行：java -jar build/libs/backend.jar
+
+4. 访问 localhost:8080 即可

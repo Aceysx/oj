@@ -87,24 +87,6 @@ class MyClassCourseBody extends Component {
         title: '名称',
         dataIndex: 'title',
         key: 'title'
-      }, {
-        title: '口令',
-        dataIndex: 'code',
-        key: 'code'
-      }, {
-        title: '试卷数量',
-        dataIndex: 'papers',
-        key: 'papers',
-        render: (papers) => {
-          return <span>{papers.length}</span>
-        }
-      }, {
-        title: '截止时间',
-        dataIndex: 'endTime',
-        key: 'endTime',
-        render : (time) => {
-          return <div>{time.split('T')[0]}</div>
-        }
       }
     ]
     const {classCoursesPageable} = this.props

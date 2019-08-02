@@ -18,7 +18,7 @@ import './style/App.css'
 import 'braft-editor/dist/index.css'
 
 import {
-    BrowserRouter as Router,
+  HashRouter as Router,
     Route
 } from 'react-router-dom'
 

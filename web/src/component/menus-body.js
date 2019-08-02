@@ -25,7 +25,6 @@ const icons = {
 class MenusBody extends React.Component {
   render () {
     const {menu} = this.props
-    console.log(menu,routers)
     return <div style={{background: `url("${Background}")`, height: '150%'}}>
       <Row type='flex' justify='center'>
         <div style={{marginTop: '5%', textAlign: 'center', color: 'white', fontSize: 30}}>
