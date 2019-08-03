@@ -16,15 +16,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -102,8 +96,16 @@ public class QuizService {
         quizExcelImportService.importExcel(current);
     }
 
-    public Set<String> getChapters() {
-        return quizRepository.findChapters();
+    public List<Map> getChapters() {
+        return quizRepository.findAll()
+            .stream().map(item -> {
+                Map temp = new HashMap();
+                temp.put("chapter", item.getChapter());
+                if (Objects.nonNull(item.getMajor())) {
+                    temp.put("majorId", item.getMajor().getId());
+                }
+                return temp;
+            }).collect(Collectors.toList());
     }
 
     public void deleteQuiz(Long id) throws BusinessException {

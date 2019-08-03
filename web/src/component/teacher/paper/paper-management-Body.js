@@ -2,11 +2,8 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
 import NewPaperBox from './new-paper-box'
-import {getPapersByPage,deletePaper} from "../../../action/paper-action";
+import {deletePaper, getPapersByPage} from "../../../action/paper-action";
 import PreviewPaperModal from "./preview-paper-modal";
-import {Link} from "react-router-dom";
-import { deleteMajor } from '../../../action/major-action'
-import { getPictures } from '../../../action/picture-action'
 
 class PaperManagementBody extends Component {
   state = {

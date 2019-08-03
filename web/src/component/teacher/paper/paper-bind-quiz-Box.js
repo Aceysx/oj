@@ -59,11 +59,9 @@ class PaperBindQuizBox extends Component {
     return majors.map(major => <Option key={major.id} value={major.id}>{major.name}</Option>)
   }
 
-  getChapterList = (quizzes) => {
-    const chapters = new Set()
-    quizzes.forEach(quiz => chapters.add(quiz.chapter))
-    return Array.from(chapters).map((chapter, index) =>
-      <Option key={index} value={chapter}>{chapter}</Option>)
+  getChapterList = () => {
+    return this.props.chapters.map((item, index) =>
+      <Option key={index} value={item.chapter}>{item.chapter}</Option>)
   }
 
   render() {
@@ -93,9 +91,10 @@ class PaperBindQuizBox extends Component {
               style={{width: 120}}
               onChange={this.props.levelChangeHandle}>
         <Option value={-1}>全部</Option>
-        <Option value='简单'>简单</Option>
-        <Option value='一般'>一般</Option>
-        <Option value='困难'>困难</Option>
+        <Option value='一级'>一级</Option>
+        <Option value='二级'>二级</Option>
+        <Option value='三级'>三级</Option>
+        <Option value='四级'>四级</Option>
       </Select>
       <Divider type='vertical'/>
       <Button

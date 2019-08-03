@@ -190,10 +190,11 @@ class NewQuizModal extends React.Component {
                 required: true, message: '请选择难度',
               }],
             })(
-              <Select defaultValue='简单'>
-                <Option value='简单'>简单</Option>
-                <Option value='一般'>一般</Option>
-                <Option value='困难'>困难</Option>
+              <Select defaultValue='一级'>
+                <Option value='一级'>一级</Option>
+                <Option value='二级'>二级</Option>
+                <Option value='三级'>三级</Option>
+                <Option value='四级'>四级</Option>
               </Select>
             )}
           </Form.Item>

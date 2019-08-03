@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import routers from '../../constant/routers'
 import MenusBody from "../menus-body";
+import {getMajors} from "../../action/major-action";
 
 const {Header, Content, Sider} = Layout
 
@@ -17,10 +18,14 @@ const initMenu = () => {
   }
   return 'students'
 }
+
 class OjLayout extends Component {
 
   state = {
     menu: initMenu()
+  }
+  componentDidMount = () => {
+    this.props.getMajors()
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -30,15 +35,15 @@ class OjLayout extends Component {
       return false
     }
 
-    if (this.hasRole('学生',user)) {
-      this.setState({menu:'students'})
+    if (this.hasRole('学生', user)) {
+      this.setState({menu: 'students'})
       return
     }
-    if (this.hasRole('教师',user)) {
-      this.setState({menu:'teachers'})
+    if (this.hasRole('教师', user)) {
+      this.setState({menu: 'teachers'})
       return
     }
-    if (this.hasRole('管理员',user)) {
+    if (this.hasRole('管理员', user)) {
       this.props.history.push('/roles')
     }
   }
@@ -52,12 +57,12 @@ class OjLayout extends Component {
     this.props.history.push('/login')
   }
 
-  to = (menu,url) => {
+  to = (menu, url) => {
     this.setState({menu})
     this.props.history.push(url)
   }
 
-  hasRole = (role,currentUser) => {
+  hasRole = (role, currentUser) => {
     const user = currentUser || this.props.user
     return user.roles.map(role => role.roleName).includes(role)
   }
@@ -74,7 +79,7 @@ class OjLayout extends Component {
 
   }
   isMenuPage = () => {
-    return ['/','/students','/teachers'].some(item => item === this.props.location.pathname)
+    return ['/', '/students', '/teachers'].some(item => item === this.props.location.pathname)
   }
 
   render() {
@@ -110,19 +115,19 @@ class OjLayout extends Component {
                       >
                         {
                           this.hasRole('学生') ?
-                            <Menu.Item key="students" onClick={() => this.to('students','/students')}>
+                            <Menu.Item key="students" onClick={() => this.to('students', '/students')}>
                               学生端
                             </Menu.Item>
                             : ''
                         }
                         {this.hasRole('教师') ?
-                          <Menu.Item key="teachers" onClick={() => this.to('teachers','/teachers')}>
+                          <Menu.Item key="teachers" onClick={() => this.to('teachers', '/teachers')}>
                             教师端
                           </Menu.Item>
                           : ''
                         }
                         {this.hasRole('管理员') ?
-                          <Menu.Item key="admin" onClick={() => this.to('admin','/roles')}>
+                          <Menu.Item key="admin" onClick={() => this.to('admin', '/roles')}>
                             角色管理
                           </Menu.Item> : ''
                         }
@@ -148,36 +153,36 @@ class OjLayout extends Component {
         }
         {
           this.isMenuPage() ?
-              <MenusBody
-                menu={menu}/>
+            <MenusBody
+              menu={menu}/>
             : <Content style={{padding: '10px'}}>
-            {
-              this.isLogin() ?
-                <Layout style={{padding: '24px 0', background: '#fff', height: '100%'}}>
-                  <Content style={{padding: '0 15px', minHeight: 280}}>
-                    {this.props.children}
-                  </Content>
-                </Layout> :
-                <Layout style={{padding: '0px', background: '#fff', height: '100%'}}>
-                  {
-                    this.isLogin() ?
-                      <Sider width={180} style={{background: '#fff'}}>
-                        <Menu
-                          mode="inline"
-                          defaultSelectedKeys={['1']}
-                          style={{height: '100%'}}
-                        >
-                          {this.getSider()}
-                        </Menu>
-                      </Sider>
-                      : ''
-                  }
-                  <Content style={{padding: '0px', minHeight: 280}}>
-                    {this.props.children}
-                  </Content>
-                </Layout>
-            }
-          </Content>
+              {
+                this.isLogin() ?
+                  <Layout style={{padding: '24px 0', background: '#fff', height: '100%'}}>
+                    <Content style={{padding: '0 15px', minHeight: 280}}>
+                      {this.props.children}
+                    </Content>
+                  </Layout> :
+                  <Layout style={{padding: '0px', background: '#fff', height: '100%'}}>
+                    {
+                      this.isLogin() ?
+                        <Sider width={180} style={{background: '#fff'}}>
+                          <Menu
+                            mode="inline"
+                            defaultSelectedKeys={['1']}
+                            style={{height: '100%'}}
+                          >
+                            {this.getSider()}
+                          </Menu>
+                        </Sider>
+                        : ''
+                    }
+                    <Content style={{padding: '0px', minHeight: 280}}>
+                      {this.props.children}
+                    </Content>
+                  </Layout>
+              }
+            </Content>
         }
 
       </Layout>
@@ -186,6 +191,8 @@ class OjLayout extends Component {
 }
 
 const mapStateToProps = ({user}) => ({user})
-const mapDispatchToProps = dispatch => ({})
+const mapDispatchToProps = dispatch => ({
+  getMajors: ()=>dispatch(getMajors())
+})
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(OjLayout))

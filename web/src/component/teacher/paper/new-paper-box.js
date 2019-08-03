@@ -5,7 +5,7 @@ import Modal from "antd/es/modal/Modal";
 import PaperBindQuizBox from "./paper-bind-quiz-Box";
 import PaperBasicInfoModal from './paper-basic-info-modal'
 import {getMajors} from '../../../action/major-action'
-import {getQuizzes} from "../../../action/quiz-action";
+import {getChapters, getQuizzes} from "../../../action/quiz-action";
 import Paper from '../../common/paper'
 import {addPaper, editPaper} from "../../../action/paper-action";
 
@@ -19,21 +19,23 @@ class NewPaperBox extends Component {
     currentLevel: -1,
     paper: {
       title: '',
-      id:'',
-      endTime:'',
+      id: '',
+      endTime: '',
       quizzes: [],
-      timeBox:''
+      timeBox: ''
     },
-    targetKeys: []
+    targetKeys: [],
+    chapters:[]
   }
 
   componentDidMount = () => {
     this.props.getMajors()
     this.props.getQuizzes()
+    this.props.getChapters()
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const {paper ={title:'', quizzes: []}} = nextProps
+    const {paper = {title: '', quizzes: []}} = nextProps
     let targetKeys = []
     if (paper === this.state.paper) {
       return false
@@ -41,12 +43,12 @@ class NewPaperBox extends Component {
     if (paper) {
       targetKeys = paper.quizzes.map(quiz => quiz.id.toString())
     }
-    this.setState({paper,targetKeys});
+    this.setState({paper, targetKeys});
   }
 
   next = () => {
     const {paper} = this.state
-    const {title,endTime,timeBox} = paper
+    const {title, endTime, timeBox} = paper
     if (timeBox === '' || title === '' || endTime === '') {
       message.warning('请完善信息')
       return
@@ -60,7 +62,7 @@ class NewPaperBox extends Component {
     this.setState({current});
   }
 
-  updatePaper = (key,value) => {
+  updatePaper = (key, value) => {
     const {paper} = this.state;
     paper[key] = value
     this.setState({paper})
@@ -88,7 +90,7 @@ class NewPaperBox extends Component {
         message.success('编辑成功')
         this.props.onCancel()
       })
-    }else{
+    } else {
       this.props.addPaper(paper, () => {
         message.success('添加成功')
         this.props.onCancel()
@@ -99,7 +101,7 @@ class NewPaperBox extends Component {
 
   render() {
     const {current, targetKeys, paper, currentMajorId, currentChapter, currentLevel} = this.state
-    const {majors, quizzes} = this.props
+    const {majors, quizzes,chapters} = this.props
     const steps = [{
       title: '创建试卷',
       content: <PaperBasicInfoModal
@@ -111,18 +113,24 @@ class NewPaperBox extends Component {
         currentMajorId={currentMajorId}
         currentChapter={currentChapter}
         currentLevel={currentLevel}
-        majorChangeHandle={currentMajorId => this.setState({currentMajorId})}
+        majorChangeHandle={currentMajorId => this.setState({currentMajorId}, () => {
+          this.setState({
+            currentChapter: -1,
+            chapters: chapters.filter(item => item.majorId === currentMajorId)
+          })
+        })}
         levelChangeHandle={currentLevel => this.setState({currentLevel})}
         chapterChangeHandle={currentChapter => this.setState({currentChapter})}
         reset={this.reset}
         quizzes={quizzes}
+        chapters={this.state.chapters}
         majors={majors}
         targetKeys={targetKeys}
         updatePaperQuizzes={this.updatePaperQuizzes}
       />,
     }, {
       title: '完成',
-      content: <Paper paper={{...paper}} preview />,
+      content: <Paper paper={{...paper}} preview/>,
     }];
 
 
@@ -162,13 +170,15 @@ class NewPaperBox extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizzes, majors}) => ({
+const mapStateToProps = ({user, quizzes, majors,chapters}) => ({
   user,
+  chapters,
   majors,
   quizzes
 })
 
 const mapDispatchToProps = dispatch => ({
+  getChapters: () => dispatch(getChapters()),
   addPaper: (paper, callback) => dispatch(addPaper(paper, callback)),
   editPaper: (paper, callback) => dispatch(editPaper(paper, callback)),
   getMajors: () => dispatch(getMajors()),

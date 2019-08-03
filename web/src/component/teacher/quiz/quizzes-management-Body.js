@@ -9,50 +9,52 @@ import ImportModal from "../../common/import-modal";
 import {getPictures} from "../../../action/picture-action";
 
 const Option = Select.Option
+
 class QuizManagementBody extends Component {
   state = {
-    type:'',
-    chapter:'',
+    type: '',
+    chapter: '',
     currentPage: 1,
     isNewModalOpen: false,
     isEditModalOpen: false,
     quiz: {},
     options: ['', '', '', ''],
     answer: -1,
-    majorId: ""
+    majorId: "",
+    chapters: []
   }
 
   componentDidMount = () => {
-    this.props.getQuizzes(this.state.currentPage,'','','')
+    this.props.getQuizzes(this.state.currentPage, '', '', '')
     this.props.getMajors()
     this.props.getChapters()
   }
 
   getQuizzes = (pagination) => {
     const {current} = pagination
-    const {type,chapter,majorId} = this.state
+    const {type, chapter, majorId} = this.state
     this.setState({currentPage: current}, () => {
-      this.props.getQuizzes(current,type,chapter,majorId)
+      this.props.getQuizzes(current, type, chapter, majorId)
 
     })
   }
   getDescription = quiz => {
-    const {description, picture,answer, type} = quiz
-    if (type === '识图题' && picture!==null) {
+    const {description, picture, answer, type} = quiz
+    if (type === '识图题' && picture !== null) {
       const {labels} = picture
-      const label = labels.find(label =>label.id === parseInt(answer)) || {}
+      const label = labels.find(label => label.id === parseInt(answer)) || {}
       return `${picture.title}-${label.title}`
     }
 
     return description
   }
-  search = ()=>{
-    const {type,chapter,majorId} = this.state
+  search = () => {
+    const {type, chapter, majorId} = this.state
     this.setState({currentPage: 1}, () => {
-      this.props.getQuizzes(1,type,chapter,majorId)
-
+      this.props.getQuizzes(1, type, chapter, majorId)
     })
   }
+
   render() {
     const columns = [
       {
@@ -103,9 +105,9 @@ class QuizManagementBody extends Component {
         }
       }
     ]
-    const {quizPageable, addQuiz, majors, editQuiz, picturesPageable,chapters} = this.props
+    const {quizPageable, addQuiz, majors, editQuiz, picturesPageable, chapters} = this.props
     const {totalElements, content} = quizPageable
-    const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer,type,chapter,majorId} = this.state
+    const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer, type, chapter, majorId} = this.state
     return <div>
       <p>
         <Row>
@@ -122,46 +124,51 @@ class QuizManagementBody extends Component {
             />
           </Col>
         </Row>
-        <Row style={{marginTop:20}}>
+        <Row style={{marginTop: 20}}>
           <Col>
             搜索：
             <Select
+              placeholder="选择课程类别"
+              style={{width: 200}}
+              value={majorId}
+              onChange={majorId => this.setState({majorId}, () => {
+                this.setState({
+                  chapter: '',
+                  chapters: chapters.filter(item => item.majorId === majorId)
+                })
+              })}
+            >
+              <Option value="">全选课程类别</Option>
+              {
+                majors.map(item => <Option value={item.id}>{item.name}</Option>)
+              }
+
+            </Select>
+            <Divider type='vertical'/>
+            <Select
               placeholder="选择章节"
-              style={{width:200}}
+              style={{width: 200}}
               value={chapter}
-              onChange={chapter=>this.setState({chapter})}
+              onChange={chapter => this.setState({chapter})}
             >
               <Option value="">全选章节</Option>
               {
-                chapters.map(chapter =><Option value={chapter}>{chapter}</Option>)
+                this.state.chapters
+                  .map(item => <Option value={item.chapter}>{item.chapter}</Option>)
               }
 
             </Select>
             <Divider type='vertical'/>
             <Select
               placeholder="选择类型"
-              style={{width:200}}
+              style={{width: 200}}
               value={type}
-              onChange={type=>this.setState({type})}
+              onChange={type => this.setState({type})}
             >
               <Option value="">全选题目类型</Option>
               <Option value="单选题">单选题</Option>
               <Option value="多选题">多选题</Option>
               <Option value="识图题">识图题</Option>
-              <Option value="填空题">填空题</Option>
-            </Select>
-            <Divider type='vertical'/>
-            <Select
-              placeholder="选择课程类别"
-              style={{width:200}}
-              value={majorId}
-              onChange={majorId=>this.setState({majorId})}
-            >
-              <Option value="">全选课程类别</Option>
-              {
-                majors.map(item =><Option value={item.id}>{item.name}</Option>)
-              }
-
             </Select>
             <Divider type='vertical'/>
             <Button onClick={this.search} type='primary'>搜索</Button>
@@ -216,7 +223,7 @@ class QuizManagementBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, quizPageable, majors, picturesPageable,chapters,allClassCourses}) => ({
+const mapStateToProps = ({user, quizPageable, majors, picturesPageable, chapters, allClassCourses}) => ({
   user,
   quizPageable,
   allClassCourses,
@@ -227,12 +234,12 @@ const mapStateToProps = ({user, quizPageable, majors, picturesPageable,chapters,
 
 const mapDispatchToProps = dispatch => ({
   getChapters: () => dispatch(getChapters()),
-  getQuizzes: (current,type,chapter,majorId) => dispatch(getQuizzesByPage(current,type,chapter,majorId)),
+  getQuizzes: (current, type, chapter, majorId) => dispatch(getQuizzesByPage(current, type, chapter, majorId)),
   getMajors: () => dispatch(getMajors()),
   searchPictures: (title) => dispatch(getPictures(1, title)),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
   addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback)),
-  deleteQuiz : id => dispatch(deleteQuiz(id))
+  deleteQuiz: id => dispatch(deleteQuiz(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizManagementBody)

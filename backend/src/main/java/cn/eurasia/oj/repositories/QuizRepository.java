@@ -10,13 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long>,JpaSpecificationExecutor<Quiz> {
     Page<Quiz> findAllByIdIn(List<Long> quizIds, Pageable pageable);
-    @Query("select quiz.chapter from Quiz quiz")
-    Set<String> findChapters();
-
     @Transactional
     @Modifying
     @Query(value = "delete from paperQuiz where quizId = ?1", nativeQuery = true)
