@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface ClassCourseRepository extends JpaRepository<ClassCourse, Long> {
     Optional<ClassCourse> findByCode(String code);
 
-    @Query(value = "select c.* from classCourse c where c.id in (select classCourseId from userClassCourse u where u.userId = :id)", nativeQuery = true)
-    Page<ClassCourse> findByUserId(@Param("id") Long id, Pageable pageable);
+    @Query(value = "select * from classCourse c where c.id in (select classCourseId from userClassCourse u where u.userId = ?1)", nativeQuery = true)
+    Page<ClassCourse> findByCoursesUserId(Long id, Pageable pageable);
 
     @Transactional
     @Modifying

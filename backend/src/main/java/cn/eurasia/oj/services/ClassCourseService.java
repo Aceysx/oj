@@ -59,7 +59,8 @@ public class ClassCourseService {
 
     public Page getMyClassCourses(Pageable pageable, User current) {
         List<Map> result = new ArrayList<>();
-        Page<ClassCourse> classCoursePage = classCourseRepository.findByUserId(current.getId(), pageable);
+
+        Page<ClassCourse> classCoursePage = classCourseRepository.findByCoursesUserId(current.getId(), pageable);
         List<ClassCourse> classCourses = classCoursePage.getContent();
         classCourses.forEach(classCourse -> {
             Map temp = new HashMap();

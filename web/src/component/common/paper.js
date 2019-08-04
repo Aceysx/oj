@@ -17,7 +17,7 @@ class Paper extends React.Component {
     const singleQuizIds = quizzes.filter(quiz => quiz.type === '单选题').map(quiz => quiz.id)
     const mulQuizIds = quizzes.filter(quiz => quiz.type === '多选题').map(quiz => quiz.id)
     const picQuizIds = quizzes.filter(quiz => quiz.type === '识图题').map(quiz => quiz.id)
-    const gapQuizIds = quizzes.filter(quiz => quiz.type === '填空题').map(quiz => quiz.id)
+    const gapQuizIds = quizzes.filter(quiz => quiz.type === '判断题').map(quiz => quiz.id)
     const quizIds = singleQuizIds.concat(mulQuizIds).concat(picQuizIds).concat(gapQuizIds)
     this.setState({quizId: quizIds[0], quizIds: quizIds})
   }
@@ -64,7 +64,7 @@ class Paper extends React.Component {
                 borderRadius: '50%',
                 border: '1px solid gray'
               }}>
-              {index+1}
+              {index + 1}
             </p>
           </Col>
         })
@@ -101,18 +101,19 @@ class Paper extends React.Component {
   }
 
   getGapFillingQuiz = (quiz, answer, preview, onChange) => {
-        return <p style={{
-            border: '10px solid rgb(251, 251, 251)',
-                width: '98%',
-                borderRadius: 5,
-        }}><Input
-        onChange={e => onChange(quiz.id.toString(), e.target.value)}
-        value={(answer)}
-        disabled={preview}
-            >
-            </Input>
-            </p>
-    }
+    return <p style={{
+      border: '10px solid rgb(251, 251, 251)',
+      width: '98%',
+      borderRadius: 5,
+    }}>
+      <Radio.Group value={answer}
+                   onChange={e => onChange(quiz.id.toString(), e.target.value)}
+                   disabled={preview}>
+        <Radio value='正确'>正确</Radio>
+        <Radio value='错误'>错误</Radio>
+      </Radio.Group>
+    </p>
+  }
 
 
   getMarkQuiz = (quiz, answer, isPreview, onChange) => {
@@ -128,17 +129,14 @@ class Paper extends React.Component {
         labeled: false
       }
     ]
-    console.log(!label)
-    // if (!label) {
-      label = new LabelImg({
-        submit: labels => this.setState({labels}),
-        initData: labelPositions,
-        element: 'make-picture',
-        isPreview: true
-      });
-      label.addImg(list[0].imgUrl)
-      window.setTimeout(label.init, 500)
-    // }
+    label = new LabelImg({
+      submit: labels => this.setState({labels}),
+      initData: labelPositions,
+      element: 'make-picture',
+      isPreview: true
+    });
+    label.addImg(list[0].imgUrl)
+    window.setTimeout(label.init, 500)
 
 
     return <Row>
@@ -165,14 +163,19 @@ class Paper extends React.Component {
     this.removeMarkQuizDescription()
     return <div>
       <Row>
-        <p style={{
-          border: '10px solid #fbfbfb',
-          display: 'block',
-          width: '98%',
-          borderRadius: 5
-        }}>
-          {quiz.description}
-        </p>
+        {
+          quiz.type !== '识图题'
+            ?<p style={{
+            border: '10px solid #fbfbfb',
+            display: 'block',
+            width: '98%',
+            borderRadius: 5
+          }}>
+            {quiz.description}
+          </p>
+          :''
+        }
+
       </Row>
       {
         quiz.type === '单选题' ?
@@ -190,9 +193,9 @@ class Paper extends React.Component {
           : ''
       }
       {
-          quiz.type === '填空题' ?
-              this.getGapFillingQuiz(quiz, answer, preview, onChange)
-              : ''
+        quiz.type === '判断题' ?
+          this.getGapFillingQuiz(quiz, answer, preview, onChange)
+          : ''
       }
       <Divider/>
       <Button disabled={currentIdIndex <= 0}
@@ -219,7 +222,7 @@ class Paper extends React.Component {
             this.getQuizSider('识图题', this.state.quizId)
           }
           {
-            this.getQuizSider('填空题', this.state.quizId)
+            this.getQuizSider('判断题', this.state.quizId)
           }
 
         </div>

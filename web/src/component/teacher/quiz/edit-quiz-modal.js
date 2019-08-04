@@ -60,7 +60,7 @@ class EditQuizModal extends React.Component {
   validateOptions = () => {
     const {options, quiz} = this.props
     const validated = options.every(option => option.trim() !== '')
-    if ((validated ||quiz.type === '识图题') || (validated || quiz.type === '填空题')){
+    if ((validated ||quiz.type === '识图题') || (validated || quiz.type === '判断题')){
       return true
     }
     message.error('请填写选项，勾选答案')
@@ -72,7 +72,7 @@ class EditQuizModal extends React.Component {
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err && this.validateOptions()) {
-        if (quiz.type === '填空题'){
+        if (quiz.type === '判断题'){
             quiz = Object.assign({}, values, {
                 id: quiz.id,
                 options: JSON.stringify(options)
@@ -114,7 +114,7 @@ class EditQuizModal extends React.Component {
               <Radio value='单选题'>单选题</Radio>
               <Radio value='多选题'>多选题</Radio>
               <Radio value='识图题'>识图题</Radio>
-              <Radio value='填空题'>填空题</Radio>
+              <Radio value='判断题'>判断题</Radio>
             </RadioGroup>
           )}
         </Form.Item>
@@ -193,7 +193,7 @@ class EditQuizModal extends React.Component {
           }
           <Form.Item
             {...formItemLayout}
-            label={quiz.type === '识图题' ?'标注选项': (quiz.type === '填空题' ? '填空答案' : "选项")}
+            label={quiz.type === '识图题' ?'标注选项': (quiz.type === '判断题' ? '填空答案' : "选项")}
           >
             {getFieldDecorator('answer', {
               rules: [{
@@ -218,16 +218,18 @@ class EditQuizModal extends React.Component {
                     optionOnChange={this.optionOnChange}
                     handleDeleteSelectItem={this.handleDeleteSelectItem}
                   /> :
-                  (quiz.type === '填空题'?
-                    <Input answer={answer}
-                    />
+                  (quiz.type === '判断题'?
+                    <Radio.Group value={answer}>
+                      <Radio value='正确'>正确</Radio>
+                      <Radio value='错误'>错误</Radio>
+                    </Radio.Group>
                     : <MakeQuiz
                       picture={quiz.picture}
                       answer={answer}
                       radioOnChange={this.radioOnChange}/>))
             )}
             {quiz.type !== '识图题' ?
-              (quiz.type !== '填空题' ?
+              (quiz.type !== '判断题' ?
                   <Tooltip title={'添加一个选项'}>
                     <Icon style={{fontSize: 20}} type='plus-circle-o' onClick={this.handleAddSelectItem}/>
                   </Tooltip>

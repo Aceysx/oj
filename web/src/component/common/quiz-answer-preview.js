@@ -28,7 +28,7 @@ export default class QuizAnswerReview extends React.Component {
     let {quiz} = this.props
     let {description, userAnswer} = quiz
     return <div><h2>{description}</h2>
-      { quiz.type === '填空题' ? '' :
+      { quiz.type === '判断题' ? '' :
       ( quiz.type === '单选题'
           ? this.getSingleQuiz(quiz, userAnswer)
           : this.getMulQuiz(quiz, userAnswer)
@@ -115,7 +115,7 @@ export default class QuizAnswerReview extends React.Component {
             : ''
         }
         {
-          quiz.type === '填空题'
+          quiz.type === '判断题'
             ? answer
             : ''
         }

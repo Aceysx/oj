@@ -25,7 +25,7 @@ class PaperReviewQuiz extends React.Component {
     const singleQuizIds = quizzes.filter(quiz => quiz.type === '单选题').map(quiz => quiz.id)
     const mulQuizIds = quizzes.filter(quiz => quiz.type === '多选题').map(quiz => quiz.id)
     const picQuizIds = quizzes.filter(quiz => quiz.type === '识图题').map(quiz => quiz.id)
-    const gapQuizIds = quizzes.filter(quiz => quiz.type === '填空题').map(quiz => quiz.id)
+    const gapQuizIds = quizzes.filter(quiz => quiz.type === '判断题').map(quiz => quiz.id)
     const quizIds = singleQuizIds.concat(mulQuizIds).concat(picQuizIds).concat(gapQuizIds)
     this.setState({quizId: quizIds[0]})
   }
@@ -69,7 +69,7 @@ class PaperReviewQuiz extends React.Component {
                 borderRadius: '50%',
                 border: '1px solid gray'
               }}>
-              {index+1}
+              {index + 1}
             </p>
           </Col>
         })
@@ -142,17 +142,12 @@ class PaperReviewQuiz extends React.Component {
   }
 
   getGapFillingQuiz = (quiz, answer) => {
-       return <p style={{
-           border: '10px solid rgb(251, 251, 251)',
-               width: '98%',
-               borderRadius: 5,
-       }}
-   >{answer}</p>
+    return <Radio.Group disabled value={answer}>
+      <Radio value='正确'>正确</Radio>
+      <Radio value='错误'>错误</Radio>
+    </Radio.Group>
 
-       return <p
-       value={(answer)}>
-   </p>
-   }
+  }
 
   getQuiz = (paper, submission) => {
     const {quizId} = this.state
@@ -162,14 +157,19 @@ class PaperReviewQuiz extends React.Component {
     const answer = submission ? submission.answer : '-1'
     return <div>
       <Row>
-        <p style={{
-          border: '10px solid #fbfbfb',
-          display: 'block',
-          width: '98%',
-          borderRadius: 5
-        }}>
-          {quiz.description}
-        </p>
+        {
+          quiz.type !== '识图题'
+            ? <p style={{
+              border: '10px solid #fbfbfb',
+              display: 'block',
+              width: '98%',
+              borderRadius: 5
+            }}>
+              {quiz.description}
+            </p>
+            : ''
+        }
+
       </Row>
       {
         quiz.type === '单选题'
@@ -185,13 +185,13 @@ class PaperReviewQuiz extends React.Component {
         : ''
       }
       {
-          quiz.type === '填空题' ?
-              this.getGapFillingQuiz(quiz, answer)
-              : ''
+        quiz.type === '判断题' ?
+          this.getGapFillingQuiz(quiz, answer)
+          : ''
       }
 
       <Divider/>
-      <h2>正确答案：
+      <h2>正确答案是：
         {
           quiz.type === '多选题' ?
             JSON.parse(quiz.answer).map(answer => ++answer).sort().join('、')
@@ -199,7 +199,7 @@ class PaperReviewQuiz extends React.Component {
         }
         {
           quiz.type === '单选题' ?
-            parseInt(quiz.answer)+1
+            parseInt(quiz.answer) + 1
             : ''
         }
         {
@@ -208,9 +208,9 @@ class PaperReviewQuiz extends React.Component {
             : ''
         }
         {
-          quiz.type === '填空题' ?
-              quiz.answer
-              : ''
+          quiz.type === '判断题' ?
+            quiz.answer
+            : ''
         }
 
       </h2>
@@ -239,14 +239,14 @@ class PaperReviewQuiz extends React.Component {
             this.getQuizSider('识图题', this.state.quizId)
           }
           {
-            this.getQuizSider('填空题', this.state.quizId)
+            this.getQuizSider('判断题', this.state.quizId)
           }
 
         </div>
       </Col>
       <Col span={16} offset={1}>
         <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
-        <p style={{textAlign: 'center'}}>分数：{reviewQuiz?reviewQuiz.score:'答题时间已过'}</p>
+        <p style={{textAlign: 'center'}}>分数：{reviewQuiz ? reviewQuiz.score : '答题时间已过'}</p>
         <div id='make-picture'/>
         {this.getQuiz(paper, submission)}
       </Col>
