@@ -24,6 +24,7 @@ public class Quiz {
     private String chapter;
     private String level;
     private String type;
+    private Long belong;
     @ManyToOne
     @JoinColumn(name = "majorId")
     private Major major;
@@ -46,27 +47,20 @@ public class Quiz {
         this.user = current;
         this.level = level;
         this.type = type;
+        this.belong = user.getId();
     }
 
-    public Quiz(String description, String options, String answer, String chapter, User current, String type, Major major) {
+
+    public Quiz(String description, String options, String answer, String chapter, User current, String type, Major major, Long belong, String level) {
         this.description = description;
         this.options = options;
         this.answer = answer;
         this.chapter = chapter;
-        this.user = current;
-        this.level = "简单";
-        this.type = type;
         this.major = major;
-    }
-
-    public Quiz(String description, String answer, String chapter, User current, String type, Major major) {
-        this.description = description;
-        this.answer = answer;
-        this.chapter = chapter;
         this.user = current;
-        this.level = "简单";
+        this.level = level;
         this.type = type;
-        this.major = major;
+        this.belong = belong;
     }
 
     public static Quiz convertParam(CreateQuizParam quizParam, User current) {

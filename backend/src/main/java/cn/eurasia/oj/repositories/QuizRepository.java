@@ -21,4 +21,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Long>,JpaSpecificati
 
     void deleteByPictureId(Long id);
 
+    @Query("from Quiz c where c.user.id=?1")
+    List<Quiz> findAllByUserId(Long id);
+
 }

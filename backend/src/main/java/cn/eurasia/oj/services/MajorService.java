@@ -1,6 +1,5 @@
 package cn.eurasia.oj.services;
 
-import cn.eurasia.oj.entities.ClassCourse;
 import cn.eurasia.oj.entities.Major;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.MajorRepository;
@@ -16,12 +15,12 @@ public class MajorService {
     @Autowired
     private MajorRepository majorRepository;
 
-    public Page<Major> getMajorsByPage(Pageable pageable) {
-        return majorRepository.findAll(pageable);
+    public Page<Major> getMajorsByPage(Long userId, Pageable pageable) {
+        return majorRepository.findAllByUserId(userId,pageable);
     }
 
-    public List<Major> getMajors() {
-        return majorRepository.findAll();
+    public List<Major> getMajorsByUserId(Long id) {
+        return majorRepository.findAllByUserId(id);
     }
 
     public void addMajor(Major major) {

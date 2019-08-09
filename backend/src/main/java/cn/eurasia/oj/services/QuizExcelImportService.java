@@ -69,36 +69,38 @@ public class QuizExcelImportService {
         for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
             Row row = firstSheet.getRow(i);
             String chapter = row.getCell(0) + "";
-            String description = row.getCell(1) + "";
-            String tkt = "";
-            List<String> answers = Arrays.asList((row.getCell(2) + "").split(""));
-            if (answers.isEmpty() || "".equals(answers.get(0))) {
+            Major major = getMajors(majors, row); // major == 课程名称
+            String type = row.getCell(2) + "";
+            String level = (row.getCell(3) + "");
+            String belongStr = (row.getCell(4) + "");
+            Long belong = (long) Float.parseFloat(("".equals(belongStr) ? current.getId().toString() : belongStr));
+
+            String description = row.getCell(5) + "";
+            Cell answerCell = row.getCell(6);
+            if (Objects.isNull(answerCell) || "".equals(answerCell+"")) {
                 continue;
             }
+            answerCell.setCellType(answerCell.CELL_TYPE_STRING);
+            String answer = answerCell.getStringCellValue();
             String options = getOptions(row);
-            if (options.equals("") || options.equals("[]") || options == null) {
-                tkt = row.getCell(2) + "";
-            } else {
-                answers = answers.stream().map(item -> ((item.charAt(0))) - 65 + "").collect(Collectors.toList());
-            }
-            Major major = getMajors(majors, row);
-
-            String type = options.equals("") || options.equals("[]") || options == null ? "填空题" : (answers.size() > 1 ? "多选题" : "单选题");
-
-            String answer = type.equals("多选题") ? answers.toString() : type.equals("填空题") ? tkt : answers.get(0);
-            quizzes.add(new Quiz(description, options, answer, chapter, current, type, major));
+            quizzes.add(new Quiz(description, options,
+                "多选题".equals(type)
+                    ? "[" + answer + "]"
+                    : answer,
+                chapter, current, type, major, belong, level));
         }
+
         quizRepository.saveAll(quizzes);
     }
 
     private Major getMajors(List<Major> majors, Row row) {
-        String name = row.getCell(3)+"";
+        String name = row.getCell(1) + "";
         return majors.stream().filter(item -> item.getName().equals(name))
             .findFirst().orElse(null);
     }
 
     private String getOptions(Row row) {
-        int fromIndex = 4;
+        int fromIndex = 7;
         List<String> options = new ArrayList<>();
         while (true) {
             Cell option = row.getCell(fromIndex++);

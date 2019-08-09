@@ -122,6 +122,8 @@ class QuizManagementBody extends Component {
             <ImportModal
               refresh={this.props.getQuizzes}
             />
+            <a
+              href='http://39.98.165.4:8004/ronhe-file-system/fileSystem/xlsx/2019_08_09/1565364287550_template.xlsx'>模版下载</a>
           </Col>
         </Row>
         <Row style={{marginTop: 20}}>

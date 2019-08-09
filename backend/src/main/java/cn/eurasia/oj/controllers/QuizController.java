@@ -31,14 +31,15 @@ public class QuizController {
             direction = Sort.Direction.DESC) Pageable pageable,
         @RequestParam(name = "type") String type,
         @RequestParam(name = "majorId") String majorId,
-        @RequestParam(name = "chapter") String chapter
+        @RequestParam(name = "chapter") String chapter,
+        @Auth User user
         ) {
-        return ResponseEntity.ok(quizService.getQuizzesByPage(pageable,type,chapter,majorId));
+        return ResponseEntity.ok(quizService.getQuizzesByPage(user.getId(),pageable,type,chapter,majorId));
     }
 
     @GetMapping("chapters")
-    public ResponseEntity getChapters() {
-        return ResponseEntity.ok(quizService.getChapters());
+    public ResponseEntity getChapters(@Auth User user) {
+        return ResponseEntity.ok(quizService.getChaptersUserId(user.getId()));
     }
 
     @GetMapping("wrong/pageable")
@@ -50,8 +51,8 @@ public class QuizController {
     }
 
     @GetMapping("")
-    public ResponseEntity getQuizzes() {
-        return ResponseEntity.ok(quizService.getQuizzes());
+    public ResponseEntity getQuizzes(@Auth User user) {
+        return ResponseEntity.ok(quizService.getQuizzes(user.getId()));
     }
 
     @PostMapping("")

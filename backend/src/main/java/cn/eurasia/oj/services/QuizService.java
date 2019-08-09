@@ -33,10 +33,8 @@ public class QuizService {
     private QuizExcelImportService quizExcelImportService;
     @Autowired
     private PictureRepository pictureRepository;
-    @Autowired
-    private PaperService paperService;
 
-    public Page<Quiz> getQuizzesByPage(Pageable pageable, String type, String chapter, String majorId) {
+    public Page<Quiz> getQuizzesByPage(Long userId, Pageable pageable, String type, String chapter, String majorId) {
         Specification<Quiz> specification = (Specification<Quiz>) (root, query, criteriaBuilder) -> {
             List<Predicate> pre = new ArrayList();
             if (!"".equals(type)) {
@@ -48,6 +46,9 @@ public class QuizService {
             if (!"".equals(majorId)) {
                 pre.add(criteriaBuilder.equal(root.get("major").get("id"), Long.parseLong(majorId)));
             }
+            pre.add(criteriaBuilder.or(criteriaBuilder.equal(root.get("belong"), -1),
+                criteriaBuilder.equal(root.get("belong"), userId)
+            ));
             return criteriaBuilder.and(pre.toArray(new Predicate[pre.size()]));
         };
         return quizRepository.findAll(specification, pageable);
@@ -74,8 +75,8 @@ public class QuizService {
         return quizRepository.save(quiz);
     }
 
-    public List<Quiz> getQuizzes() {
-        return quizRepository.findAll();
+    public List<Quiz> getQuizzes(Long id) {
+        return quizRepository.findAllByUserId(id);
     }
 
     public Page getWrongQuizzesByPage(Pageable pageable, User user) {
@@ -96,8 +97,8 @@ public class QuizService {
         quizExcelImportService.importExcel(current);
     }
 
-    public List<Map> getChapters() {
-        return quizRepository.findAll()
+    public List<Map> getChaptersUserId(Long id) {
+        return quizRepository.findAllByUserId(id)
             .stream().map(item -> {
                 Map temp = new HashMap();
                 temp.put("chapter", item.getChapter());
