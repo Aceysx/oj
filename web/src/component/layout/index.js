@@ -25,7 +25,9 @@ class OjLayout extends Component {
     menu: initMenu()
   }
   componentDidMount = () => {
-    this.props.getMajors()
+    window.localStorage.getItem('oToken')
+      ? this.props.getMajors()
+      : ''
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -192,7 +194,7 @@ class OjLayout extends Component {
 
 const mapStateToProps = ({user}) => ({user})
 const mapDispatchToProps = dispatch => ({
-  getMajors: ()=>dispatch(getMajors())
+  getMajors: () => dispatch(getMajors())
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(OjLayout))
