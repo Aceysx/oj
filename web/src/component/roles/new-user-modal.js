@@ -95,7 +95,8 @@ class NewUserModal extends React.Component {
           >
             {getFieldDecorator('phone', {
               rules: [{
-                required: true, message: '请输入手机号',
+                required: true, message: '只能输入数字',
+                pattern: /^[0-9]+$/
               }],
             })(
               <Input/>
@@ -107,7 +108,8 @@ class NewUserModal extends React.Component {
           >
             {getFieldDecorator('email', {
               rules: [{
-                required: true, message: '请输入邮箱',
+                required: true, message: '邮箱格式不正确',
+                pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/,
               }],
             })(
               <Input/>

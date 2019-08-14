@@ -43,7 +43,6 @@ class PaperReviewQuiz extends React.Component {
   getQuizSider = (type, currentQuizId) => {
     const {paperReviewQuiz} = this.props
     const {paper, submission} = paperReviewQuiz
-
     const quizzes = paper.quizzes.filter(quiz => quiz.type === type)
     if (quizzes.length === 0) {
       return
@@ -83,13 +82,15 @@ class PaperReviewQuiz extends React.Component {
       let {options} = quiz
       options = JSON.parse(options)
       return options.map((option, index) => {
-          return <p><Radio key={index} value={index}>{option}</Radio></p>
+          return <p><Radio key={index} value={index} style={{fontWeight: 'bolder',color:'#3241da'}}
+          >{option}</Radio></p>
         }
       )
     }
+
     return <RadioGroup
       value={parseInt(answer)}
-      disabled>
+    >
       {getOptions(quiz)}
     </RadioGroup>
   }
