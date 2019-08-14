@@ -15,6 +15,16 @@ const formItemLayout = {
   },
 };
 
+const Name =  (rule, value, callback) => {
+  if (value) {
+    if (!/[\u4E00-\u9FA5]/g.test(value)){
+      callback(new Error('只可输中文!'));
+    }
+  }
+  callback();
+};
+
+
 class NewUserModal extends React.Component {
 
   state = {
@@ -60,7 +70,11 @@ class NewUserModal extends React.Component {
             {getFieldDecorator('username', {
               rules: [{
                 required: true, message: '请输入用户名',
-              }],
+              },{
+                min:3,
+                message:'用户名最少为3位'
+              }
+              ],
             })(
               <Input/>
             )}
@@ -72,19 +86,20 @@ class NewUserModal extends React.Component {
             {getFieldDecorator('password', {
               rules: [{
                 required: true, message: '请输入密码',
+              },{
+                min:6,
+                message:'密码最少为6位'
               }],
             })(
               <Input/>
             )}
           </Form.Item>
-          <Form.Item
-            {...formItemLayout}
-            label="真实姓名"
-          >
+          <Form.Item{...formItemLayout} label="真实姓名">
             {getFieldDecorator('name', {
-              rules: [{
-                required: true, message: '请输入用户真实姓名',
-              }],
+              rules: [
+                {required: true},
+                {validator:Name,trigger:'blur'}
+                ],
             })(
               <Input/>
             )}
@@ -97,6 +112,9 @@ class NewUserModal extends React.Component {
               rules: [{
                 required: true, message: '只能输入数字',
                 pattern: /^[0-9]+$/
+              },{
+                min:11,
+                message:'请输入正确手机号'
               }],
             })(
               <Input/>
