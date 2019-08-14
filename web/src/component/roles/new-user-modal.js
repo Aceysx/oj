@@ -17,12 +17,21 @@ const formItemLayout = {
 
 const Name =  (rule, value, callback) => {
   if (value) {
-    if (!/[\u4E00-\u9FA5]/g.test(value)){
-      callback(new Error('只可输中文!'));
+    if (!/^[\u4e00-\u9fa5]+$/.test(value)){
+      callback(new Error('只可输中文!'))
     }
   }
-  callback();
-};
+  callback()
+}
+
+const Phone = (rule,value,callback) => {
+  if(value) {
+    if (!/^[0-9]+$/.test(value)){
+      callback(new Error('只可输入数字!'))
+    }
+  }
+  callback()
+}
 
 
 class NewUserModal extends React.Component {
@@ -97,9 +106,9 @@ class NewUserModal extends React.Component {
           <Form.Item{...formItemLayout} label="真实姓名">
             {getFieldDecorator('name', {
               rules: [
-                {required: true},
+                {required: true,message:'姓名不能为空'},
                 {validator:Name,trigger:'blur'}
-                ],
+              ],
             })(
               <Input/>
             )}
@@ -109,13 +118,11 @@ class NewUserModal extends React.Component {
             label="手机号"
           >
             {getFieldDecorator('phone', {
-              rules: [{
-                required: true, message: '只能输入数字',
-                pattern: /^[0-9]+$/
-              },{
-                min:11,
-                message:'请输入正确手机号'
-              }],
+              rules: [
+                {required: true, message: '手机号不能为空'},
+                {validator: Phone,trigger: 'blur'},
+                {min:11,max:11,
+                 message:'手机号为11位'}],
             })(
               <Input/>
             )}
@@ -150,10 +157,10 @@ class NewUserModal extends React.Component {
                 {
                   this.state.roleList.map(item => <Option key={item.id.toString()}>{item.roleName}</Option>)
                 }
-            </Select>
+              </Select>
             )}
           </Form.Item>
-          
+
           <Row type='flex' align='middle'>
             <Col>
               <Button type="primary"

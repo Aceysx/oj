@@ -16,6 +16,24 @@ const formItemLayout = {
   },
 }
 
+const Name =  (rule, value, callback) => {
+  if (value) {
+    if (!/^[\u4e00-\u9fa5]+$/.test(value)){
+      callback(new Error('只可输中文!'))
+    }
+  }
+  callback()
+}
+
+const Phone = (rule,value,callback) => {
+  if(value) {
+    if (!/^[0-9]+$/.test(value)){
+      callback(new Error('只可输入数字!'))
+    }
+  }
+  callback()
+}
+
 class EditUserModal extends React.Component {
 
   state = {
@@ -67,22 +85,24 @@ class EditUserModal extends React.Component {
             {...formItemLayout}
             label="用户名"
           >
-            {getFieldDecorator('username', {
-              rules: [{
-                required: true, message: '请输入用户名',
-              }],
-            })(
-              <Input/>
-            )}
+          {getFieldDecorator('username', {
+            rules: [{
+              required: true, message: '请输入用户名',
+            },{
+              min:3,
+              message:'用户名最少为3位'
+            }
+            ],
+          })(
+            <Input/>
+          )}
           </Form.Item>
-          <Form.Item
-            {...formItemLayout}
-            label="真实姓名"
-          >
+          <Form.Item{...formItemLayout} label="真实姓名">
             {getFieldDecorator('name', {
-              rules: [{
-                required: true, message: '请输入用户真实姓名',
-              }],
+              rules: [
+                {required: true,message:'姓名不能为空'},
+                {validator:Name,trigger:'blur'}
+              ],
             })(
               <Input/>
             )}
@@ -92,9 +112,11 @@ class EditUserModal extends React.Component {
             label="手机号"
           >
             {getFieldDecorator('phone', {
-              rules: [{
-                required: true, message: '请输入手机号',
-              }],
+              rules: [
+                {required: true, message: '手机号不能为空'},
+                {validator: Phone,trigger: 'blur'},
+                {min:11,max:11,
+                  message:'手机号为11位'}],
             })(
               <Input/>
             )}
@@ -105,7 +127,8 @@ class EditUserModal extends React.Component {
           >
             {getFieldDecorator('email', {
               rules: [{
-                required: true, message: '请输入邮箱',
+                required: true, message: '邮箱格式不正确',
+                pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/,
               }],
             })(
               <Input/>
