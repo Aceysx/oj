@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Checkbox, Col, Divider, Icon, Radio, Row, Input} from 'antd'
+import {Card, Checkbox, Col, Divider, Icon, Radio, Row, Input,Button} from 'antd'
 import {getPaper, getReviewQuiz} from '../../../action/paper-action'
 import {connect} from 'react-redux'
 import {LabelImg} from "../../common/labelimg";
@@ -129,7 +129,7 @@ class PaperReviewQuiz extends React.Component {
       return JSON.parse(quiz.options).map((option, index) => {
         return {
           label:
-            <span style={{display: 'inline-block', marginBottom: 5}}>
+            <span style={{display: 'inline-block', marginBottom: 5,fontWeight: 'bolder',color:'#3241da'}}>
               {option}
             </span>,
           value: `${index}`
@@ -139,13 +139,13 @@ class PaperReviewQuiz extends React.Component {
 
     return <CheckboxGroup options={getMulOptions()}
                           value={answer === '-1' ? [answer] : answer}
-                          disabled/>
+                          />
   }
 
   getGapFillingQuiz = (quiz, answer) => {
-    return <Radio.Group disabled value={answer}>
-      <Radio value='正确'>正确</Radio>
-      <Radio value='错误'>错误</Radio>
+    return <Radio.Group  value={answer} >
+      <Radio value='正确' style={{fontWeight: 'bolder',color:'#3241da'}}>正确</Radio>
+      <Radio value='错误' style={{fontWeight: 'bolder',color:'#3241da'}}>错误</Radio>
     </Radio.Group>
 
   }
@@ -217,6 +217,7 @@ class PaperReviewQuiz extends React.Component {
       </h2>
     </div>;
   }
+
 
   render() {
     const {paperReviewQuiz} = this.props
