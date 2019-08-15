@@ -82,7 +82,7 @@ class PaperReviewQuiz extends React.Component {
       let {options} = quiz
       options = JSON.parse(options)
       return options.map((option, index) => {
-          return <p><Radio key={index} value={index} style={{fontWeight: 'bolder',color:'#3241da'}}
+          return <p><Radio key={index} value={index} style={{fontWeight: 'bolder'}}
           >{option}</Radio></p>
         }
       )
@@ -129,7 +129,7 @@ class PaperReviewQuiz extends React.Component {
       return JSON.parse(quiz.options).map((option, index) => {
         return {
           label:
-            <span style={{display: 'inline-block', marginBottom: 5,fontWeight: 'bolder',color:'#3241da'}}>
+            <span style={{display: 'inline-block', marginBottom: 5,fontWeight: 'bolder'}}>
               {option}
             </span>,
           value: `${index}`
@@ -144,8 +144,8 @@ class PaperReviewQuiz extends React.Component {
 
   getGapFillingQuiz = (quiz, answer) => {
     return <Radio.Group  value={answer} >
-      <Radio value='正确' style={{fontWeight: 'bolder',color:'#3241da'}}>正确</Radio>
-      <Radio value='错误' style={{fontWeight: 'bolder',color:'#3241da'}}>错误</Radio>
+      <Radio value='正确' style={{fontWeight: 'bolder'}}>正确</Radio>
+      <Radio value='错误' style={{fontWeight: 'bolder'}}>错误</Radio>
     </Radio.Group>
 
   }
@@ -163,6 +163,7 @@ class PaperReviewQuiz extends React.Component {
             ? <p style={{
               border: '10px solid #fbfbfb',
               display: 'block',
+              fontWeight:'bolder',
               width: '98%',
               borderRadius: 5
             }}>
