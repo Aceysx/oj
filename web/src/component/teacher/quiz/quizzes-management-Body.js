@@ -190,7 +190,7 @@ class QuizManagementBody extends Component {
         closeModal={() => this.setState({
           isNewModalOpen: false,
           options: ['', '', '', ''],
-          answer: ''
+          answer: -1
         })}
         addQuiz={addQuiz}
       />

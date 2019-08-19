@@ -41,7 +41,7 @@ export default class QuizAnswerReview extends React.Component {
     const {quiz} = this.props
     const picture = quiz.picture
     let {url} = picture
-    const labels = [...quiz.picture.labels]
+    const labels = [this.getCurrMakerLabel(quiz)]
     const labelPositions = labels.map(label => {
       return {...label, position: JSON.parse(label.position)}
     })
@@ -84,6 +84,9 @@ export default class QuizAnswerReview extends React.Component {
                           value={userAnswer}
                           disabled/>
   }
+  getCurrMakerLabel = quiz => {
+    return quiz.picture.labels.find(item => item.id === parseInt(quiz.answer)) || {}
+  }
 
   render() {
     let {visible, quiz, handleCancel} = this.props
@@ -111,7 +114,7 @@ export default class QuizAnswerReview extends React.Component {
         }
         {
           quiz.type === '识图题'
-            ? answer
+            ? this.getCurrMakerLabel(quiz).title
             : ''
         }
         {

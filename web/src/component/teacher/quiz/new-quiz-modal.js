@@ -88,6 +88,8 @@ class NewQuizModal extends React.Component {
         }
         this.props.addQuiz(quiz, () => {
           message.success('添加成功')
+          this.props.form.resetFields()
+          this.props.form.setFieldsValue({type:quiz.type})
           this.props.closeModal()
         })
       }

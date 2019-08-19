@@ -115,11 +115,13 @@ class Paper extends React.Component {
     </p>
   }
 
-
+  getCurrMakerLabel = quiz => {
+    return quiz.picture.labels.find(item => item.id === parseInt(quiz.answer)) || {}
+  }
   getMarkQuiz = (quiz, answer, isPreview, onChange) => {
     const picture = quiz.picture
     let {url} = picture
-    const labels = [...quiz.picture.labels]
+    const labels = [this.getCurrMakerLabel(quiz)]
     const labelPositions = labels.map(label => {
       return {...label, position: JSON.parse(label.position)}
     })
@@ -158,7 +160,7 @@ class Paper extends React.Component {
     const {quizId, quizIds} = this.state
     const quiz = paper.quizzes.find(quiz => quiz.id === quizId)
     if (!quiz) return
-    const answer = quiz.answer === null ? answers[quiz.id.toString()] : quiz.answer
+    const answer = !preview ? answers[quiz.id.toString()] : quiz.answer
     let currentIdIndex = quizIds.indexOf(quizId)
     this.removeMarkQuizDescription()
     return <div>

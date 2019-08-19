@@ -51,7 +51,6 @@ public class PaperService {
         Paper paper = paperRepository.findById(paperId).orElseThrow(
             () -> new BusinessException("未找到")
         );
-        paper.removeQuizzesAnswer();
         return paper;
     }
 

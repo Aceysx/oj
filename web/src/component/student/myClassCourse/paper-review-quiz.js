@@ -98,7 +98,7 @@ class PaperReviewQuiz extends React.Component {
   getMakerQuiz = (quiz) => {
     const picture = quiz.picture
     let {url} = picture
-    const labels = [...quiz.picture.labels]
+    const labels = [this.getCurrMakerLabel(quiz)]
     const labelPositions = labels.map(label => {
       return {...label, position: JSON.parse(label.position)}
     })
@@ -149,6 +149,9 @@ class PaperReviewQuiz extends React.Component {
     </Radio.Group>
 
   }
+  getCurrMakerLabel = quiz => {
+    return quiz.picture.labels.find(item => item.id === parseInt(quiz.answer)) || {}
+  }
 
   getQuiz = (paper, submission) => {
     const {quizId} = this.state
@@ -183,7 +186,7 @@ class PaperReviewQuiz extends React.Component {
         : ''
       }
       {quiz.type === '识图题'
-        ? this.getMakerQuiz(quiz, answer)
+        ? this.getMakerQuiz(quiz)
         : ''
       }
       {
@@ -206,7 +209,7 @@ class PaperReviewQuiz extends React.Component {
         }
         {
           quiz.type === '识图题' ?
-            quiz.answer
+            this.getCurrMakerLabel(quiz).title
             : ''
         }
         {
