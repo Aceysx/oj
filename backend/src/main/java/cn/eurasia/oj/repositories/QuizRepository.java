@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long>,JpaSpecificationExecutor<Quiz> {
     Page<Quiz> findAllByIdIn(List<Long> quizIds, Pageable pageable);
@@ -21,7 +20,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Long>,JpaSpecificati
 
     void deleteByPictureId(Long id);
 
-    @Query("from Quiz c where c.user.id=?1")
+    @Query("from Quiz c where c.user.id=?1 or c.belong=-1")
     List<Quiz> findAllByUserId(Long id);
 
 }
