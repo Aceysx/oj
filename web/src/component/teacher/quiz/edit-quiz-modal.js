@@ -26,7 +26,7 @@ class EditQuizModal extends React.Component {
       return false
     }
     let {chapter, description, major, level, type} = quiz
-    form.setFieldsValue({chapter, description, type, major:major? major.id: '',
+    form.setFieldsValue({chapter, description, type, major:major? major.name: '',
       level, answer})
   }
 

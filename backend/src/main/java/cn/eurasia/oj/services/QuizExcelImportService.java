@@ -65,11 +65,11 @@ public class QuizExcelImportService {
     @Transactional
     public void importExcel(User current) {
         List<Quiz> quizzes = new ArrayList<>();
-        List<Major> majors = majorService.findAll();
+        List<Major> majors = majorService.getMajorsByUserId(current.getId());
         for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
             Row row = firstSheet.getRow(i);
             String chapter = row.getCell(0) + "";
-            Major major = getMajors(majors, row); // major == 课程名称
+            Major major = getMajors(majors, row,current.getId()); // major == 课程名称
             String type = row.getCell(2) + "";
             String level = (row.getCell(3) + "");
             String belongStr = (row.getCell(4) + "");
@@ -93,10 +93,10 @@ public class QuizExcelImportService {
         quizRepository.saveAll(quizzes);
     }
 
-    private Major getMajors(List<Major> majors, Row row) {
+    private Major getMajors(List<Major> majors, Row row,Long userId) {
         String name = row.getCell(1) + "";
         return majors.stream().filter(item -> item.getName().equals(name))
-            .findFirst().orElse(null);
+            .findFirst().orElseGet(()-> majorService.addMajor(new Major(name,userId)));
     }
 
     private String getOptions(Row row) {

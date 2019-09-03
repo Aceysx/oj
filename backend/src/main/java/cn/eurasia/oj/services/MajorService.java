@@ -23,8 +23,8 @@ public class MajorService {
         return majorRepository.findAllByUserId(id);
     }
 
-    public void addMajor(Major major) {
-        majorRepository.save(major);
+    public Major addMajor(Major major) {
+        return majorRepository.save(major);
     }
 
     public void putMajor(Major major) throws BusinessException {

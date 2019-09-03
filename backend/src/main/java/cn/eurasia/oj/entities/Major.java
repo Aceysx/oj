@@ -20,9 +20,15 @@ public class Major {
     private String name;
     private Long userId;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date createTime;
+    private Date createTime = new Date();
+
 
   public Major(Long majorId) {
     this.id = majorId;
   }
+
+    public Major(String name, Long userId) {
+        this.name = name;
+        this.userId = userId;
+    }
 }
