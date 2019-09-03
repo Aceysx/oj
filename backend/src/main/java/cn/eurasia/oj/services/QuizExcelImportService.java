@@ -65,7 +65,7 @@ public class QuizExcelImportService {
     @Transactional
     public void importExcel(User current) {
         List<Quiz> quizzes = new ArrayList<>();
-        List<Major> majors = majorService.getMajorsByUserId(current.getId());
+        List<Major> majors = majorService.findAll();
         for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
             Row row = firstSheet.getRow(i);
             String chapter = row.getCell(0) + "";

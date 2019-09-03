@@ -29,8 +29,8 @@ public class MajorController {
     }
 
     @GetMapping("")
-    public ResponseEntity getMajors(@Auth User user) {
-        return ResponseEntity.ok(majorService.getMajorsByUserId(user.getId()));
+    public ResponseEntity getMajors() {
+        return ResponseEntity.ok(majorService.findAll());
     }
 
     @PostMapping("")
