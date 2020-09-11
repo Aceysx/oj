@@ -70,13 +70,13 @@ public class QuizExcelImportService {
             Row row = firstSheet.getRow(i);
             String chapter = row.getCell(0) + "";
             Major major = getMajors(majors, row,current.getId()); // major == 课程名称
-            String type = row.getCell(2) + "";
-            String level = (row.getCell(3) + "");
-            String belongStr = (row.getCell(4) + "");
+            String type = row.getCell(4) + "";
+            String level = (row.getCell(5) + "");
+            String belongStr = (row.getCell(6) + "");
             Long belong = (long) Float.parseFloat(("".equals(belongStr) ? current.getId().toString() : belongStr));
 
-            String description = row.getCell(5) + "";
-            Cell answerCell = row.getCell(6);
+            String description = row.getCell(1) + "";
+            Cell answerCell = row.getCell(2);
             if (Objects.isNull(answerCell) || "".equals(answerCell+"")) {
                 continue;
             }
@@ -94,7 +94,7 @@ public class QuizExcelImportService {
     }
 
     private Major getMajors(List<Major> majors, Row row,Long userId) {
-        String name = row.getCell(1) + "";
+        String name = row.getCell(3) + "";
         return majors.stream().filter(item -> item.getName().equals(name))
             .findFirst().orElseGet(()-> majorService.addMajor(new Major(name,userId)));
     }
