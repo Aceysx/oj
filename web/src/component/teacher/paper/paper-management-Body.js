@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table} from 'antd'
 import NewPaperBox from './new-paper-box'
+import AutoGeneratePaper from './paper-auto-generate-paper'
 import {deletePaper, getPapersByPage} from "../../../action/paper-action";
 import PreviewPaperModal from "./preview-paper-modal";
 
@@ -11,7 +12,8 @@ class PaperManagementBody extends Component {
     isPreviewModalOpen: false,
     isEditModalOpen: false,
     currentPage: 1,
-    paper: {quizzes: []}
+    paper: {quizzes: []},
+    isAutoGenerateTestPaper:false
   }
 
   componentDidMount = () => {
@@ -23,7 +25,8 @@ class PaperManagementBody extends Component {
       isPreviewModalOpen: false,
       isEditModalOpen: false,
       isShowNewPaperBox: false,
-      paper: {quizzes: []}
+      paper: {quizzes: []},
+      isAutoGenerateTestPaper:false
     })
   }
 
@@ -71,7 +74,7 @@ class PaperManagementBody extends Component {
     const {
       currentPage, isShowNewPaperBox,
       isPreviewModalOpen, paper,
-      isEditModalOpen
+      isEditModalOpen,isAutoGenerateTestPaper
     } = this.state
 
     return <div>
@@ -79,7 +82,14 @@ class PaperManagementBody extends Component {
         type="primary"
         onClick={() => this.setState({isShowNewPaperBox: true})}>
         添加试卷
-      </Button></p>
+      </Button>
+        <Divider type='vertical'/>
+        <Button
+        type="primary"
+        onClick={() => this.setState({isAutoGenerateTestPaper: true})}>
+        自动生成试卷
+      </Button>
+        </p>
       {
         isShowNewPaperBox ?
           <NewPaperBox
@@ -102,7 +112,14 @@ class PaperManagementBody extends Component {
             paper={paper}
             onCancel={this.cancel}/>
           : ''
-      }
+      }{
+        isAutoGenerateTestPaper ?
+          <AutoGeneratePaper
+            visible={isAutoGenerateTestPaper}
+            paper={paper}
+            onCancel={this.cancel}/>
+          : ''
+    }
 
       <Table
         bordered

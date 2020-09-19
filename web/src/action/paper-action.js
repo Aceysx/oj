@@ -56,6 +56,19 @@ export const addPaper = (paper, callback) => {
     })()
   }
 }
+
+export const addAutoPaper = (paper, callback) => {
+  return (dispatch) => {
+    (async () => {
+      const res = await request.post(`/api/papers/addAutoPaper`, paper)
+      if (res.status === HTTP_CODE.CREATED) {
+        dispatch(getPapersByPage())
+        callback()
+      }
+    })()
+  }
+}
+
 export const submit = (classCourseId, paperId, submission, callback) => {
   return () => {
     (async () => {

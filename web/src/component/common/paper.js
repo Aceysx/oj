@@ -56,9 +56,9 @@ class Paper extends React.Component {
               onClick={() => this.setState({quizId: quiz.id})}
               className={className}
               style={{
-                width: 30,
-                height: 30,
-                lineHeight: '25px',
+                width: 50,
+                height: 50,
+                lineHeight: '50px',
                 cursor: 'pointer',
                 textAlign: 'center',
                 borderRadius: '50%',
@@ -212,7 +212,7 @@ class Paper extends React.Component {
   render() {
     const {paper} = this.props
     return <Row>
-      <Col span={5}>
+      <Col span={8}>
         <div>
           {
             this.getQuizSider('单选题', this.state.quizId)
@@ -229,7 +229,7 @@ class Paper extends React.Component {
 
         </div>
       </Col>
-      <Col span={16} offset={1}>
+      <Col span={13} offset={1}>
         <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
         <div id='make-picture'/>
         {this.getQuiz()}

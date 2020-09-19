@@ -1,5 +1,6 @@
 package cn.eurasia.oj.entities;
 
+import cn.eurasia.oj.requestParams.CreatePaperAutoGenerateParam;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -42,6 +43,10 @@ public class Paper {
     }
 
     public static Paper convertParam(CreatePaperParam createPaperParam, User current) {
+        return new Paper(createPaperParam.getTitle(), createPaperParam.getQuizzes(), current, createPaperParam.getEndTime(), createPaperParam.getTimeBox());
+    }
+
+    public static Paper convertParam(CreatePaperAutoGenerateParam createPaperParam, User current) {
         return new Paper(createPaperParam.getTitle(), createPaperParam.getQuizzes(), current, createPaperParam.getEndTime(), createPaperParam.getTimeBox());
     }
 

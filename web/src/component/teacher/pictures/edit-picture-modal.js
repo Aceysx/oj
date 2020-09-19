@@ -13,7 +13,8 @@ const formItemLayout = {
     sm: {span: 16},
   },
 }
-const ROOT_PATH = 'http://39.98.165.4:8004/ronhe-file-system/'
+// const ROOT_PATH = 'http://39.98.165.4:8004/ronhe-file-system/'
+const ROOT_PATH = 'http://116.62.230.75:8000/file-server/'
 function beforeUpload(file) {
   const isJPG = file.type.includes('image')
   if (!isJPG) {
@@ -125,7 +126,8 @@ class EditPictureModal extends React.Component {
             listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
-            action="http://39.98.165.4:8004/ronhe-file-system/file/upload"
+            // action="http://39.98.165.4:8004/ronhe-file-system/file/upload"
+            action="http://116.62.230.75:8000/file-server/file/upload"
             beforeUpload={beforeUpload}
             onChange={this.handleChange}
           >

@@ -3,16 +3,21 @@ package cn.eurasia.oj.services;
 import cn.eurasia.oj.entities.*;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.PaperRepository;
+import cn.eurasia.oj.repositories.QuizRepository;
 import cn.eurasia.oj.repositories.QuizSubmissionRepository;
 import cn.eurasia.oj.repositories.ReviewQuizRepository;
+import cn.eurasia.oj.requestParams.CreatePaperAutoGenerateParam;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
 import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,10 +31,61 @@ public class PaperService {
     @Autowired
     private ReviewQuizRepository reviewQuizRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
     public Paper addPaper(CreatePaperParam createPaperParam, User current) {
         Paper paper = Paper.convertParam(createPaperParam, current);
         return paperRepository.save(paper);
     }
+
+    public Paper addAutoPaper(CreatePaperAutoGenerateParam createPaperAutoGenerateParam, User current) {
+        Paper paper = Paper.convertParam(createPaperAutoGenerateParam, current);
+		return paperRepository.save(paper);
+    }
+
+	public List<Quiz> findQuizzesByAttribute(String majorId, String chapter, String level,String type, Long quizNumber) {
+		StringBuffer buffer = new StringBuffer("Select * From Quiz");
+		StringBuilder whereSql = new StringBuilder(" WHERE 1 = 1");//拼接where条件
+		if (!StringUtils.equals("-1", majorId)) {
+			whereSql.append(" AND majorId=:majorId");
+		}
+
+		if (!StringUtils.equals("-1", chapter)) {
+			whereSql.append(" AND chapter=:chapter");
+		}
+
+		if (!StringUtils.equals("-1", level)) {
+			whereSql.append(" AND level=:level");
+		}
+
+		if (StringUtils.isNotBlank(type)) {
+			whereSql.append(" AND type=:type");
+		}
+
+		whereSql.append(" Order By Rand() Limit :quizNumber");
+
+		StringBuffer append = buffer.append(whereSql);
+
+		Query query = entityManager.createNativeQuery(append.toString(),Quiz.class);
+		if (!StringUtils.equals("-1",majorId)){
+			query.setParameter("majorId",majorId);
+		}
+		if (!StringUtils.equals("-1", chapter)) {
+			query.setParameter("chapter", chapter);
+		}
+		if(!StringUtils.equals("-1", level)) {
+			query.setParameter("level", level);
+		}
+		if(StringUtils.isNotBlank(type)) {
+			query.setParameter("type", type);
+		}
+		query.setParameter("quizNumber", quizNumber);
+
+		List resultList = query.getResultList();
+		return resultList;
+
+	}
 
     public Page<Paper> getQuizzesByPage(Long id, Pageable pageable) {
         return paperRepository.findAllByUserId(id, pageable);
@@ -143,5 +199,6 @@ public class PaperService {
         reviewQuiz = new ReviewQuiz(classCourseId, paperId, id, 0D, "已开始");
         reviewQuizRepository.save(reviewQuiz);
     }
+
 
 }

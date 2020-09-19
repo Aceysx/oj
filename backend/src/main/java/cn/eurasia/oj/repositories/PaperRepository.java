@@ -35,4 +35,5 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
 
     @Query("from Paper c where c.user.id=?1")
     List<Paper> findAllByUserId(Long id);
+
 }

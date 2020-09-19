@@ -71,6 +71,17 @@ class EditQuizModal extends React.Component {
     let {answer, options, quiz} = this.props
     e.preventDefault()
     this.props.form.validateFieldsAndScroll((err, values) => {
+      //  add by    修改题目传入的major为字符串而非Long类型导致的异常问题
+      if (values) {
+        const majorValue = values.major;
+        if (typeof(majorValue) == 'string') {
+          values.major = quiz.major.id
+        } else {
+          values.major = majorValue
+        }
+
+      }
+      //  end by    修改题目传入的major为字符串而非Long类型导致的异常问题
       if (!err && this.validateOptions()) {
         if (quiz.type === '判断题'){
             quiz = Object.assign({}, values, {

@@ -60,9 +60,9 @@ class PaperReviewQuiz extends React.Component {
               onClick={() => this.setState({quizId: quiz.id})}
               className={className}
               style={{
-                width: 30,
-                height: 30,
-                lineHeight: '25px',
+                width: 50,
+                height: 50,
+                lineHeight: '50px',
                 cursor: 'pointer',
                 textAlign: 'center',
                 borderRadius: '50%',
@@ -233,7 +233,7 @@ class PaperReviewQuiz extends React.Component {
           <Icon type="arrow-left"/> 返回
         </a>
       </p>
-      <Col span={5}>
+      <Col span={8}>
         <div>
           {
             this.getQuizSider('单选题', this.state.quizId)
@@ -250,7 +250,7 @@ class PaperReviewQuiz extends React.Component {
 
         </div>
       </Col>
-      <Col span={16} offset={1}>
+      <Col span={13} offset={1}>
         <h1 style={{textAlign: 'center'}}>{paper.title}</h1>
         <p style={{textAlign: 'center'}}>分数：{reviewQuiz ? reviewQuiz.score : '答题时间已过'}</p>
         <div id='make-picture'/>

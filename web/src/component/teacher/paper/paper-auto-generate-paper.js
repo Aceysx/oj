@@ -2,27 +2,33 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, message, Steps} from 'antd'
 import Modal from "antd/es/modal/Modal";
-import PaperBindQuizBox from "./paper-bind-quiz-Box";
+import PaperBindQuizAttributeBox from "./paper-bind-quiz-attribute-box";
 import PaperBasicInfoModal from './paper-basic-info-modal'
 import {getMajors} from '../../../action/major-action'
-import {getChapters, getQuizzes} from "../../../action/quiz-action";
+import {getChapters} from "../../../action/quiz-action";
 import Paper from '../../common/paper'
-import {addPaper, editPaper} from "../../../action/paper-action";
+import {addAutoPaper} from "../../../action/paper-action";
 
 const Step = Steps.Step
 
-class NewPaperBox extends Component {
+class AutoGeneratePaper extends Component {
   state = {
     current: 0,
     currentMajorId: -1,
     currentChapter: -1,
     currentLevel: -1,
+    currentQuizType: "",
     paper: {
       title: '',
       id: '',
       endTime: '',
       quizzes: [],
-      timeBox: ''
+      timeBox: '',
+      quizNumber: 0,
+      currentMajorId: -1,
+      currentChapter: -1,
+      currentLevel: -1,
+      currentQuizType: "",
     },
     targetKeys: [],
     chapters:[]
@@ -30,7 +36,6 @@ class NewPaperBox extends Component {
 
   componentDidMount = () => {
     this.props.getMajors()
-    this.props.getQuizzes()
     this.props.getChapters()
   }
 
@@ -48,16 +53,20 @@ class NewPaperBox extends Component {
 
   next = () => {
     const {paper} = this.state
-    const {title, endTime, timeBox} = paper
-    if (timeBox === '' || title === '' || endTime === '') {
+    const {title, endTime, timeBox,quizNumber} = paper
+    if (timeBox === '' || title === '' || endTime === '' || timeBox===undefined || title===undefined || endTime===undefined) {
       message.warning('请完善信息')
       return
     }
-    if (timeBox < 1) {
-      message.warning('答卷时间不得少于1min')
-      return
-    }
     const current = this.state.current + 1;
+
+    if (current===2){
+      if (quizNumber<=0||quizNumber===''||quizNumber===undefined){
+        message.warning('题目数量不合法，请重新输入')
+        return
+      }
+    }
+
     this.setState({current});
   }
 
@@ -72,21 +81,6 @@ class NewPaperBox extends Component {
     this.setState({paper})
   }
 
-  reset = () => {
-    this.setState({
-      currentMajorId: -1,
-      currentChapter: -1,
-      currentLevel: -1
-    })
-  }
-
-  updatePaperQuizzes = (targetKeys) => {
-    let {quizzes} = this.props
-    let {paper} = this.state
-    paper.quizzes = quizzes.filter(quiz => targetKeys.includes(quiz.id.toString()))
-
-    this.setState({targetKeys, paper})
-  }
   operPaper = () => {
     const {paper} = this.state
     if (paper.id) {
@@ -95,7 +89,7 @@ class NewPaperBox extends Component {
         this.props.onCancel()
       })
     } else {
-      this.props.addPaper(paper, () => {
+      this.props.addAutoPaper(paper, () => {
         message.success('添加成功')
         this.props.onCancel()
       })
@@ -104,7 +98,7 @@ class NewPaperBox extends Component {
   }
 
   render() {
-    const {current, targetKeys, paper, currentMajorId, currentChapter, currentLevel} = this.state
+    const {current, targetKeys, paper, currentMajorId, currentChapter, currentLevel,currentQuizType} = this.state
     const {majors, quizzes,chapters} = this.props
     const steps = [{
       title: '创建试卷',
@@ -112,11 +106,14 @@ class NewPaperBox extends Component {
         paper={paper}
         updatePaper={this.updatePaper}/>,
     }, {
-      title: '绑定试题',
-      content: <PaperBindQuizBox
+      title: '选择题目属性',
+      content: <PaperBindQuizAttributeBox
+        paper={paper}
+        updatePaper={this.updatePaper}
         currentMajorId={currentMajorId}
         currentChapter={currentChapter}
         currentLevel={currentLevel}
+        currentQuizType={currentQuizType}
         majorChangeHandle={currentMajorId => this.setState({currentMajorId}, () => {
           this.setState({
             currentChapter: -1,
@@ -125,12 +122,11 @@ class NewPaperBox extends Component {
         })}
         levelChangeHandle={currentLevel => this.setState({currentLevel})}
         chapterChangeHandle={currentChapter => this.setState({currentChapter})}
-        reset={this.reset}
+        quizTypeChangeHandle={currentQuizType => this.setState({currentQuizType})}
         quizzes={quizzes}
         chapters={this.state.chapters}
         majors={majors}
         targetKeys={targetKeys}
-        updatePaperQuizzes={this.updatePaperQuizzes}
       />,
     }, {
       title: '完成',
@@ -183,10 +179,8 @@ const mapStateToProps = ({user, quizzes, majors,chapters}) => ({
 
 const mapDispatchToProps = dispatch => ({
   getChapters: () => dispatch(getChapters()),
-  addPaper: (paper, callback) => dispatch(addPaper(paper, callback)),
-  editPaper: (paper, callback) => dispatch(editPaper(paper, callback)),
+  addAutoPaper: (paper, callback) => dispatch(addAutoPaper(paper, callback)),
   getMajors: () => dispatch(getMajors()),
-  getQuizzes: () => dispatch(getQuizzes())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewPaperBox)
+export default connect(mapStateToProps, mapDispatchToProps)(AutoGeneratePaper)
