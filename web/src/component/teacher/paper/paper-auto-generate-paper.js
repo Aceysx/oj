@@ -58,6 +58,10 @@ class AutoGeneratePaper extends Component {
       message.warning('请完善信息')
       return
     }
+    if (timeBox < 1) {
+      message.warning('答卷时间不得少于1min')
+      return
+    }
     const current = this.state.current + 1;
 
     if (current===2){
