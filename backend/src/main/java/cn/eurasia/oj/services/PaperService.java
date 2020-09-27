@@ -45,7 +45,7 @@ public class PaperService {
     }
 
 	public List<Quiz> findQuizzesByAttribute(String majorId, String chapter, String level,String type, Long quizNumber) {
-		StringBuffer buffer = new StringBuffer("Select * From Quiz");
+		StringBuffer buffer = new StringBuffer("Select * From quiz");
 		StringBuilder whereSql = new StringBuilder(" WHERE 1 = 1");//拼接where条件
 		if (!StringUtils.equals("-1", majorId)) {
 			whereSql.append(" AND majorId=:majorId");
