@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {message, Modal, Tag, Transfer} from 'antd'
+import {Divider, message, Modal, Tag, Transfer} from 'antd'
 
 class ClassCourseBindPaperBox extends Component {
   state = {
@@ -26,7 +26,9 @@ class ClassCourseBindPaperBox extends Component {
         key: paper.id.toString(),
         title: paper.title,
         description: <span>
-          <Tag color="#2db7f5">创建者</Tag>{paper.user.username}
+          <span><Tag color="#2db7f5">创建者</Tag>{paper.user.username}</span>
+          <Divider type={'vertical'}/>
+          <span><Tag color="#1d1af5">截止时间</Tag>{paper.endTime}</span>
           </span>,
       };
     })
@@ -66,7 +68,7 @@ class ClassCourseBindPaperBox extends Component {
 
     return <Modal
       title='绑定试卷'
-      width='70%'
+      width='90%'
       okText='确定'
       cancelText='取消'
       visible={visible}

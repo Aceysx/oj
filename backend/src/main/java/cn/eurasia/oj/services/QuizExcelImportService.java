@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class QuizExcelImportService {
@@ -38,7 +40,7 @@ public class QuizExcelImportService {
     }
 
     private Sheet getFirstSheet(Workbook workbook) throws BusinessException {
-        Sheet sheet = workbook.getSheetAt(0);
+        Sheet sheet = workbook.getSheetAt(1);
         if (Objects.isNull(sheet)) {
             throw new BusinessException("Could not find the first sheet");
         }
@@ -62,26 +64,24 @@ public class QuizExcelImportService {
         return workbook;
     }
 
-    @Transactional
     public void importExcel(User current) {
         List<Quiz> quizzes = new ArrayList<>();
         List<Major> majors = majorService.findAll();
         for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
             Row row = firstSheet.getRow(i);
             String chapter = row.getCell(0) + "";
-            Major major = getMajors(majors, row,current.getId()); // major == 课程名称
+            Major major = getMajors(majors, row, current.getId()); // major == 课程名称
             String type = row.getCell(4) + "";
-            String level = (row.getCell(5) + "");
-            String belongStr = (row.getCell(6) + "");
-            Long belong = (long) Float.parseFloat(("".equals(belongStr) ? current.getId().toString() : belongStr));
+            String level = Objects.isNull(row.getCell(5)) ? "一级" : row.getCell(5).toString();
+            Long belong = Objects.isNull(row.getCell(6)) ? current.getId() : Long.parseLong(row.getCell(6).toString());
 
             String description = row.getCell(1) + "";
+
             Cell answerCell = row.getCell(2);
-            if (Objects.isNull(answerCell) || "".equals(answerCell+"")) {
+            if (Objects.isNull(answerCell) || "".equals(answerCell + "")) {
                 continue;
             }
-            answerCell.setCellType(answerCell.CELL_TYPE_STRING);
-            String answer = answerCell.getStringCellValue();
+            String answer = formatAnswers(answerCell.getStringCellValue());
             String options = getOptions(row);
             quizzes.add(new Quiz(description, options,
                 "多选题".equals(type)
@@ -93,10 +93,29 @@ public class QuizExcelImportService {
         quizRepository.saveAll(quizzes);
     }
 
-    private Major getMajors(List<Major> majors, Row row,Long userId) {
+    public String formatAnswers(String answers) {
+        return Stream.of(answers.split(",")).map(answer -> letterToNumber(answer))
+            .map(Objects::toString)
+            .collect(Collectors.joining(","));
+    }
+
+    public int letterToNumber(String letter) {
+        int length = letter.length();
+        int num = 0;
+        int number = 0;
+        for (int i = 0; i < length; i++) {
+            char ch = letter.charAt(length - i - 1);
+            num = ch - 'A' + 1;
+            num *= Math.pow(26, i);
+            number += num;
+        }
+        return number - 1;
+    }
+
+    private Major getMajors(List<Major> majors, Row row, Long userId) {
         String name = row.getCell(3) + "";
         return majors.stream().filter(item -> item.getName().equals(name))
-            .findFirst().orElseGet(()-> majorService.addMajor(new Major(name,userId)));
+            .findFirst().orElseGet(() -> majorService.addMajor(new Major(name, userId)));
     }
 
     private String getOptions(Row row) {
