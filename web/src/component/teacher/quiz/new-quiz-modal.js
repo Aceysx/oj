@@ -57,13 +57,17 @@ class NewQuizModal extends React.Component {
     this.props.updateOptions(options)
   }
 
-  validateOptions = () => {
+  validateOptions = (type) => {
     const {answer} = this.props
-    if ('' !== answer) {
-      return true
+    if (type === '多选题' && answer.length === 0) {
+      message.error('请填写选项，勾选答案')
+      return false
     }
-    message.error('请填写选项，勾选答案')
-    return false
+    if ('' === answer) {
+      message.error('请填写选项，勾选答案')
+      return false
+    }
+    return true;
   }
 
   handleSubmit = (e) => {
@@ -74,24 +78,22 @@ class NewQuizModal extends React.Component {
         message.warning('请选择标注')
         return
       }
-      if (!err && this.validateOptions()) {
+      if (!err && this.validateOptions(values.type)) {
         if (values.type === '判断题') {
           quiz = Object.assign({}, values, {
             options: JSON.stringify(options)
           })
-        }
-        else {
+        } else {
           quiz = Object.assign({}, values, {
             answer: answer,
             options: JSON.stringify(options)
           })
         }
-        this.props.addQuiz(quiz, () => {
-          message.success('添加成功')
-          this.props.form.resetFields()
-          this.props.form.setFieldsValue({type:quiz.type})
-          this.props.closeModal()
-        })
+        this.props.addQuiz(quiz)
+        message.success('添加成功')
+        this.props.closeModal()
+        this.props.form.resetFields()
+        this.props.form.setFieldsValue({type: quiz.type})
       }
     })
   }

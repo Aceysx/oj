@@ -66,7 +66,7 @@ class PaperReviewBody extends React.Component {
                   <Divider/>
                   <p>总人数：{total}</p>
                   <p>已提交：{finish}</p>
-                  <p>平均数：{avg}</p>
+                  <p>平均数：{avg.toFixed(2)}</p>
                   <p>最高分：{highest}</p>
                   <p>最低分：{lowest}</p>
                 </TabPane>

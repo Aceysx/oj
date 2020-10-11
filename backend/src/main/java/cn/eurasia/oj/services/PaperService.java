@@ -3,7 +3,6 @@ package cn.eurasia.oj.services;
 import cn.eurasia.oj.entities.*;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.PaperRepository;
-import cn.eurasia.oj.repositories.QuizRepository;
 import cn.eurasia.oj.repositories.QuizSubmissionRepository;
 import cn.eurasia.oj.repositories.ReviewQuizRepository;
 import cn.eurasia.oj.requestParams.CreatePaperAutoGenerateParam;
@@ -19,7 +18,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,51 +43,51 @@ public class PaperService {
 
     public Paper addAutoPaper(CreatePaperAutoGenerateParam createPaperAutoGenerateParam, User current) {
         Paper paper = Paper.convertParam(createPaperAutoGenerateParam, current);
-		return paperRepository.save(paper);
+        return paperRepository.save(paper);
     }
 
-	public List<Quiz> findQuizzesByAttribute(String majorId, String chapter, String level,String type, Long quizNumber) {
-		StringBuffer buffer = new StringBuffer("Select * From quiz");
-		StringBuilder whereSql = new StringBuilder(" WHERE 1 = 1");//拼接where条件
-		if (!StringUtils.equals("-1", majorId)) {
-			whereSql.append(" AND majorId=:majorId");
-		}
+    public List<Quiz> findQuizzesByAttribute(String majorId, String chapter, String level, String type, Long quizNumber) {
+        StringBuffer buffer = new StringBuffer("Select * From quiz");
+        StringBuilder whereSql = new StringBuilder(" WHERE 1 = 1");//拼接where条件
+        if (!StringUtils.equals("-1", majorId)) {
+            whereSql.append(" AND majorId=:majorId");
+        }
 
-		if (!StringUtils.equals("-1", chapter)) {
-			whereSql.append(" AND chapter=:chapter");
-		}
+        if (!StringUtils.equals("-1", chapter)) {
+            whereSql.append(" AND chapter=:chapter");
+        }
 
-		if (!StringUtils.equals("-1", level)) {
-			whereSql.append(" AND level=:level");
-		}
+        if (!StringUtils.equals("-1", level)) {
+            whereSql.append(" AND level=:level");
+        }
 
-		if (StringUtils.isNotBlank(type)) {
-			whereSql.append(" AND type=:type");
-		}
+        if (StringUtils.isNotBlank(type)) {
+            whereSql.append(" AND type=:type");
+        }
 
-		whereSql.append(" Order By Rand() Limit :quizNumber");
+        whereSql.append(" Order By Rand() Limit :quizNumber");
 
-		StringBuffer append = buffer.append(whereSql);
+        StringBuffer append = buffer.append(whereSql);
 
-		Query query = entityManager.createNativeQuery(append.toString(),Quiz.class);
-		if (!StringUtils.equals("-1",majorId)){
-			query.setParameter("majorId",majorId);
-		}
-		if (!StringUtils.equals("-1", chapter)) {
-			query.setParameter("chapter", chapter);
-		}
-		if(!StringUtils.equals("-1", level)) {
-			query.setParameter("level", level);
-		}
-		if(StringUtils.isNotBlank(type)) {
-			query.setParameter("type", type);
-		}
-		query.setParameter("quizNumber", quizNumber);
+        Query query = entityManager.createNativeQuery(append.toString(), Quiz.class);
+        if (!StringUtils.equals("-1", majorId)) {
+            query.setParameter("majorId", majorId);
+        }
+        if (!StringUtils.equals("-1", chapter)) {
+            query.setParameter("chapter", chapter);
+        }
+        if (!StringUtils.equals("-1", level)) {
+            query.setParameter("level", level);
+        }
+        if (StringUtils.isNotBlank(type)) {
+            query.setParameter("type", type);
+        }
+        query.setParameter("quizNumber", quizNumber);
 
-		List resultList = query.getResultList();
-		return resultList;
+        List resultList = query.getResultList();
+        return resultList;
 
-	}
+    }
 
     public Page<Paper> getQuizzesByPage(Long id, Pageable pageable) {
         return paperRepository.findAllByUserId(id, pageable);
@@ -141,9 +143,9 @@ public class PaperService {
     }
 
     private boolean isMulQuizAnswerCorrect(String answer, List<String> userAnswer) {
-        List<String> correct = JSONObject.parseObject(answer, List.class);
+        List<Integer> correct = JSONObject.parseObject(answer, List.class);
         return correct.size() == userAnswer.size() &&
-            correct.stream().filter(userAnswer::contains).count() == correct.size();
+            correct.stream().filter(item -> userAnswer.contains(item.toString())).count() == correct.size();
     }
 
     private void dealReviewQuiz(Long classCourseId, Map<String, Object> submission, Paper paper, Long userId) {

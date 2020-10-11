@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -81,7 +82,7 @@ public class QuizExcelImportService {
             if (Objects.isNull(answerCell) || "".equals(answerCell + "")) {
                 continue;
             }
-            String answer = formatAnswers(answerCell.getStringCellValue());
+            String answer = formatAnswers(answerCell.getStringCellValue().trim());
             String options = getOptions(row);
             quizzes.add(new Quiz(description, options,
                 "多选题".equals(type)
@@ -94,7 +95,7 @@ public class QuizExcelImportService {
     }
 
     public String formatAnswers(String answers) {
-        return Stream.of(answers.split(",")).map(answer -> letterToNumber(answer))
+        return Stream.of(answers.split(",")).map(this::letterToNumber)
             .map(Objects::toString)
             .collect(Collectors.joining(","));
     }

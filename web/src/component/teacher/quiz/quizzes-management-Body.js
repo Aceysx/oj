@@ -19,7 +19,7 @@ class QuizManagementBody extends Component {
     isEditModalOpen: false,
     quiz: {},
     options: ['', '', '', ''],
-    answer: -1,
+    answer: '',
     majorId: "",
     chapters: []
   }
@@ -108,6 +108,7 @@ class QuizManagementBody extends Component {
     const {quizPageable, addQuiz, majors, editQuiz, picturesPageable, chapters} = this.props
     const {totalElements, content} = quizPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, quiz, options, answer, type, chapter, majorId} = this.state
+    console.log(answer, 'answer')
     return <div>
       <p>
         <Row>
@@ -191,7 +192,8 @@ class QuizManagementBody extends Component {
         closeModal={() => this.setState({
           isNewModalOpen: false,
           options: ['', '', '', ''],
-          answer: -1
+          answer: '',
+          type: ''
         })}
         addQuiz={addQuiz}
       />
@@ -242,7 +244,7 @@ const mapDispatchToProps = dispatch => ({
   getMajors: () => dispatch(getMajors()),
   searchPictures: (title) => dispatch(getPictures(1, title)),
   editQuiz: (quiz, callback) => dispatch(editQuiz(quiz, callback)),
-  addQuiz: (quiz, callback) => dispatch(addQuiz(quiz, callback)),
+  addQuiz: (quiz) => dispatch(addQuiz(quiz)),
   deleteQuiz: id => dispatch(deleteQuiz(id))
 })
 
