@@ -22,7 +22,7 @@ public class ReviewQuiz {
     private Double score;
     private Long userId;
     private Date createTime;
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startTime;
     private String submissionStatus;
 

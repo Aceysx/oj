@@ -21,7 +21,6 @@ public class Label {
   private String fill;
   private String title;
   private String position;
-  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date createTime;
 
   public Label(Long pictureId, String fill, String title, String position) {

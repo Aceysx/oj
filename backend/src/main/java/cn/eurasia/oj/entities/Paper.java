@@ -27,7 +27,7 @@ public class Paper {
     private List<Quiz> quizzes;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createTime;
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date endTime;
     private Long timeBox;
     @ManyToOne
