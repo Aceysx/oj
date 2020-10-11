@@ -12,9 +12,7 @@ class MyClassCourseBody extends Component {
     currentPage: 1,
     isAddModalOpen: false,
   }
-  isTimeOut = paper => {
-    return new Date().getTime() > new Date(moment(paper.endTime).format()).getTime()
-  }
+
   componentDidMount = () => {
     this.props.getMyClassCourses(this.state.currentPage)
   }
@@ -60,7 +58,7 @@ class MyClassCourseBody extends Component {
           render: (text, paper) => {
             return <span className="table-operation">
 
-              {!this.isTimeOut(paper) && paper.submissionStatus!=='已提交'
+              {!paper.timeOut && paper.submissionStatus!=='已提交'
                 ? <a onClick={()=>this.startAnswer(paper,classCourse.id)}>答题</a>
                 :<Link to={`/students/class-courses/${classCourse.id}/papers/${paper.id}/reviewQuiz`}>查看</Link>
               }

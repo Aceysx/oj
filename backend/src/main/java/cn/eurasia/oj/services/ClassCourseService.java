@@ -27,7 +27,7 @@ public class ClassCourseService {
 
     public Page<ClassCourse> getClassCoursesPageable(Long id, Pageable pageable) {
 
-        return classCourseRepository.findAllByUserId(id,pageable);
+        return classCourseRepository.findAllByUserId(id, pageable);
     }
 
     public ClassCourse addClassCourse(ClassCourse classCourse, User current) {
@@ -69,7 +69,6 @@ public class ClassCourseService {
             temp.put("code", classCourse.getCode());
             temp.put("title", classCourse.getTitle());
             temp.put("endTime", classCourse.getEndTime());
-            temp.put("endTime", classCourse.getEndTime());
             classCourse.getPapers().forEach(paper -> {
                 Map tempPaper = new HashMap();
                 ReviewQuiz reviewQuiz = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserId(classCourse.getId(), paper.getId(), current.getId());
@@ -81,7 +80,7 @@ public class ClassCourseService {
                 tempPaper.put("quizzes", paper.getQuizzes());
                 tempPaper.put("submissionStatus", Objects.nonNull(reviewQuiz) ? reviewQuiz.getSubmissionStatus() : "未开始");
                 tempPaper.put("endTime", paper.getEndTime().getTime());
-                tempPaper.put("timeOut", paper.getEndTime().getTime() > new Date().getTime());
+                tempPaper.put("timeOut", new Date().getTime() > paper.getEndTime().getTime());
                 tempPaper.put("timeBox", paper.getTimeBox());
                 papers.add(tempPaper);
             });
@@ -90,19 +89,20 @@ public class ClassCourseService {
         });
         return new PageImpl(result, classCoursePage.getPageable(), classCoursePage.getTotalElements());
     }
+
     public Map statistic(Long classCourseId, Long paperId) throws BusinessException {
         Map result = new HashMap();
         List<Long> ids = getBy(classCourseId).getUsers().stream().map(User::getId).collect(Collectors.toList());
         if (ids.isEmpty()) {
             return result;
         }
-        List<Map<String,Object>> stuTestInfo = paperRepository.findStuTestInfo(classCourseId,paperId,ids);
-        Long total = paperRepository.statisticTotalCount(classCourseId,paperId);
-        long finishCount = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserIdIn(classCourseId,paperId,ids)
+        List<Map<String, Object>> stuTestInfo = paperRepository.findStuTestInfo(classCourseId, paperId, ids);
+        Long total = paperRepository.statisticTotalCount(classCourseId, paperId);
+        long finishCount = reviewQuizRepository.findByClassCourseIdAndPaperIdAndUserIdIn(classCourseId, paperId, ids)
             .stream().filter(reviewQuiz -> "已提交".equals(reviewQuiz.getSubmissionStatus()))
             .count();
-        Map scoreStatistics = reviewQuizRepository.statisticScore(classCourseId,paperId,ids);
-        result.put("stuTestInfo",stuTestInfo);
+        Map scoreStatistics = reviewQuizRepository.statisticScore(classCourseId, paperId, ids);
+        result.put("stuTestInfo", stuTestInfo);
         result.put("total", total);
         result.put("avg", scoreStatistics.get("avg"));
         result.put("highest", scoreStatistics.get("max"));
@@ -111,6 +111,7 @@ public class ClassCourseService {
 
         return result;
     }
+
     public void deleteClassCourse(Long id) throws BusinessException {
         ClassCourse classCourse = classCourseRepository.findById(id).orElseThrow(() -> new BusinessException("未找到该课程"));
         classCourseRepository.deleteClassCoursePaper(classCourse.getId());
