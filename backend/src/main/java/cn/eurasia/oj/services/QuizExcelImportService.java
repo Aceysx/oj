@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -70,16 +69,28 @@ public class QuizExcelImportService {
         List<Major> majors = majorService.findAll();
         for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
             Row row = firstSheet.getRow(i);
-            String chapter = row.getCell(0) + "";
+            String chapter = null;
+            String type = null;
+            String description = null;
+            if (!(Objects.isNull(row.getCell(0))
+                || "".equals(row.getCell(0).toString().trim()))) {
+                chapter = row.getCell(0).toString();
+            }
+
             Major major = getMajors(majors, row, current.getId()); // major == 课程名称
-            String type = row.getCell(4) + "";
+            if (!(Objects.isNull(row.getCell(4))
+                || "".equals(row.getCell(4).toString().trim()))) {
+                type = row.getCell(4).toString();
+            }
             String level = Objects.isNull(row.getCell(5)) ? "一级" : row.getCell(5).toString();
             Long belong = Objects.isNull(row.getCell(6)) ? current.getId() : Long.parseLong(row.getCell(6).toString());
-
-            String description = row.getCell(1) + "";
+            if (!(Objects.isNull(row.getCell(1))
+                || "".equals(row.getCell(1).toString().trim()))) {
+                description = row.getCell(1).toString();
+            }
 
             Cell answerCell = row.getCell(2);
-            if (Objects.isNull(answerCell) || "".equals(answerCell + "")) {
+            if (Objects.isNull(answerCell) || "".equals(answerCell.toString().trim())) {
                 continue;
             }
             String answer = formatAnswers(answerCell.getStringCellValue().trim());
@@ -114,6 +125,9 @@ public class QuizExcelImportService {
     }
 
     private Major getMajors(List<Major> majors, Row row, Long userId) {
+        if (Objects.isNull(row.getCell(3)) || "".equals(row.getCell(3).toString().trim())) {
+            return null;
+        }
         String name = row.getCell(3) + "";
         return majors.stream().filter(item -> item.getName().equals(name))
             .findFirst().orElseGet(() -> majorService.addMajor(new Major(name, userId)));
@@ -124,7 +138,7 @@ public class QuizExcelImportService {
         List<String> options = new ArrayList<>();
         while (true) {
             Cell option = row.getCell(fromIndex++);
-            if (Objects.isNull(option) || "".equals(option)) {
+            if (Objects.isNull(option) || "".equals(option.toString().trim())) {
                 break;
             }
             options.add(option + "");
