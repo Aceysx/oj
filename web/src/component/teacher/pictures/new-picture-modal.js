@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button, Col, Form, Icon, Input, message, Modal, Row, Upload} from 'antd'
 
-const { TextArea } = Input
+const {TextArea} = Input
 
 const formItemLayout = {
   labelCol: {
@@ -14,7 +14,8 @@ const formItemLayout = {
   },
 }
 // const ROOT_PATH = 'http://39.98.165.4:8004/ronhe-file-system/'
-const ROOT_PATH = 'http://116.62.230.75:8000/file-server/'
+const ROOT_PATH = 'http://localhost:3001/'
+
 function beforeUpload(file) {
   const isJPG = file.type.includes('image')
   if (!isJPG) {
@@ -29,7 +30,7 @@ function beforeUpload(file) {
 
 
 class NewPictureModal extends React.Component {
-  state ={
+  state = {
     imageUrl: ''
   }
 
@@ -44,7 +45,7 @@ class NewPictureModal extends React.Component {
     }
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.addPicture({...values,url:imageUrl}, () => {
+        this.props.addPicture({...values, url: imageUrl}, () => {
           message.success('添加成功')
           this.props.closeModal()
         })
@@ -53,12 +54,12 @@ class NewPictureModal extends React.Component {
   }
   handleChange = (info) => {
     if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
+      this.setState({loading: true});
       return;
     }
     if (info.file.status === 'done') {
       this.setState({
-        imageUrl:ROOT_PATH+info.file.response.path,
+        imageUrl: ROOT_PATH + info.file.response.name,
         loading: false
       })
     }
@@ -69,7 +70,7 @@ class NewPictureModal extends React.Component {
     const {getFieldDecorator} = form
     const uploadButton = (
       <div>
-        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        <Icon type={this.state.loading ? 'loading' : 'plus'}/>
         <div className="ant-upload-text">上传</div>
       </div>
     );
@@ -99,8 +100,7 @@ class NewPictureModal extends React.Component {
             label="图片描述"
           >
             {getFieldDecorator('description')(
-              <TextArea  autosize={{ minRows: 2, maxRows: 6 }} />
-
+              <TextArea autosize={{minRows: 2, maxRows: 6}}/>
             )}
           </Form.Item>
           <Form.Item
@@ -116,16 +116,15 @@ class NewPictureModal extends React.Component {
             )}
           </Form.Item>
           <Upload
-            name="file"
+            name="picture"
             listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
-            // action="http://39.98.165.4:8004/ronhe-file-system/file/upload"
-            action="http://116.62.230.75:8000/file-server/file/upload"
+            action="http://localhost:3001/upload"
             beforeUpload={beforeUpload}
             onChange={this.handleChange}
           >
-            {imageUrl ? <img width={200} src={imageUrl} alt="avatar" /> : uploadButton}
+            {imageUrl ? <img width={200} src={imageUrl} alt="avatar"/> : uploadButton}
           </Upload>
           <Row type='flex' align='middle'>
             <Col>

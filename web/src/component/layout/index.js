@@ -57,6 +57,7 @@ class OjLayout extends Component {
   logout = () => {
     window.localStorage.removeItem('oToken')
     this.props.history.push('/login')
+    this.props.logout()
   }
 
   to = (menu, url) => {
@@ -194,7 +195,11 @@ class OjLayout extends Component {
 
 const mapStateToProps = ({user}) => ({user})
 const mapDispatchToProps = dispatch => ({
-  getMajors: () => dispatch(getMajors())
+  getMajors: () => dispatch(getMajors()),
+  logout: () => dispatch({
+    type: 'INIT_USER',
+    user: {}
+  }),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(OjLayout))

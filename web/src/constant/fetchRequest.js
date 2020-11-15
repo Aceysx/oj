@@ -22,7 +22,7 @@ export const get = async (url) => {
       credentials: 'include',
       headers: new Headers({
         'Accept': 'application/json;charset=utf-8',
-	      'id': 21,
+	      'id': 46,
         token: getTokenFromLocalStorage()
       })
     })
@@ -46,7 +46,7 @@ export const del = async (url) => {
       method: HTTP_METHOD.DELETE,
       credentials: 'include',
 	    headers: new Headers({
-      'id': 21,
+      'id': 46,
       token: getTokenFromLocalStorage()
 	    })
     })
@@ -70,7 +70,7 @@ export const post = async (url, data) => {
       headers: new Headers({
         'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json',
-	      'id': 21,
+	      'id': 46,
         token: getTokenFromLocalStorage()
       }),
       body: JSON.stringify(data)
@@ -90,6 +90,34 @@ export const post = async (url, data) => {
   }
 }
 
+export const initUser = async (url, data) => {
+  try {
+    const res = await fetch(url, {
+      method: HTTP_METHOD.POST,
+      credentials: 'include',
+      headers: new Headers({
+        'Content-Type': 'application/json;charset=utf-8',
+        'Accept': 'application/json',
+	      'id': 46,
+        token: getTokenFromLocalStorage()
+      }),
+      body: JSON.stringify(data)
+    })
+    const status = res.status
+    authenticationFilter(status)
+
+    if (!res.ok) {
+      return {status: 401}
+    }
+
+    const body = await res.json()
+
+    return Object.assign({}, {body}, {status})
+  } catch (ex) {
+    return {status: 201}
+  }
+}
+
 export const update = async (url, data) => {
   try {
     const res = await fetch(url, {
@@ -98,7 +126,7 @@ export const update = async (url, data) => {
       headers: new Headers({
         'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json',
-        'id': 21,
+        'id': 46,
         token: getTokenFromLocalStorage()
       }),
       body: JSON.stringify(data)
