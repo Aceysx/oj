@@ -5,7 +5,7 @@ import cn.eurasia.oj.entities.Major;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.services.MajorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -17,15 +17,15 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/api/majors")
+@RequiredArgsConstructor
 public class MajorController {
-    @Autowired
-    private MajorService majorService;
+    private final MajorService majorService;
 
     @GetMapping("pageable")
     public ResponseEntity getMajorsByPage(
         @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
         @Auth User user) {
-        return ResponseEntity.ok(majorService.getMajorsByPage(user.getId(),pageable));
+        return ResponseEntity.ok(majorService.getMajorsByPage(user.getId(), pageable));
     }
 
     @GetMapping("")
@@ -34,7 +34,7 @@ public class MajorController {
     }
 
     @PostMapping("")
-    public ResponseEntity addMajor(@RequestBody Major major,@Auth User user) {
+    public ResponseEntity addMajor(@RequestBody Major major, @Auth User user) {
         major.setUserId(user.getId());
         majorService.addMajor(major);
         return ResponseEntity.created(URI.create("/api/majors/" + major.getId())).build();

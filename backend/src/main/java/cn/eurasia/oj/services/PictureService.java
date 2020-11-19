@@ -6,6 +6,7 @@ import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.PictureRepository;
 import cn.eurasia.oj.requestParams.CreatePictureParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +17,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PictureService {
-  @Autowired
-  private PictureRepository pictureRepository;
-  @Autowired
-  private QuizService quizService;
+  private final PictureRepository pictureRepository;
+  private final QuizService quizService;
 
   public Picture addPicture(Picture picture, User current) {
     picture.setUserId(current.getId());

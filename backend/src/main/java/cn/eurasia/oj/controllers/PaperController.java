@@ -7,9 +7,8 @@ import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.requestParams.CreatePaperAutoGenerateParam;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
-import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
 import cn.eurasia.oj.services.PaperService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,17 +21,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/papers")
+@RequiredArgsConstructor
 public class PaperController {
-
-    @Autowired
-    private PaperService paperService;
+    private final PaperService paperService;
 
     @GetMapping("pageable")
     public ResponseEntity getPapersByPage(
         @PageableDefault(sort = {"id"},
             direction = Sort.Direction.DESC) Pageable pageable,
         @Auth User user) {
-        return ResponseEntity.ok(paperService.getQuizzesByPage(user.getId(),pageable));
+        return ResponseEntity.ok(paperService.getQuizzesByPage(user.getId(), pageable));
     }
 
     @GetMapping("")
@@ -55,8 +53,8 @@ public class PaperController {
 
     @PostMapping("addAutoPaper")
     public ResponseEntity addAutoPaper(@RequestBody CreatePaperAutoGenerateParam param,
-                                   @Auth User current) {
-        List<Quiz> randomQuizzes = paperService.findQuizzesByAttribute(param.getCurrentMajorId(),param.getCurrentChapter(),param.getCurrentLevel(),param.getCurrentQuizType(),param.getQuizNumber());//获取随机数目的题目
+                                       @Auth User current) {
+        List<Quiz> randomQuizzes = paperService.findQuizzesByAttribute(param.getCurrentMajorId(), param.getCurrentChapter(), param.getCurrentLevel(), param.getCurrentQuizType(), param.getQuizNumber());//获取随机数目的题目
         param.setQuizzes(randomQuizzes);//将其添加到quizzes参数中
         Paper paper = paperService.addAutoPaper(param, current);//将其保存在数据库中
         return ResponseEntity.created(URI.create("/api/papers/" + paper.getId())).build();
@@ -67,7 +65,6 @@ public class PaperController {
         paperService.editPaper(paper);
         return ResponseEntity.noContent().build();
     }
-
 
 
     @DeleteMapping("{id}")

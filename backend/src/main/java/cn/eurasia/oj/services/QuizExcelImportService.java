@@ -6,6 +6,7 @@ import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.QuizRepository;
 import com.alibaba.fastjson.JSONObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -25,12 +26,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class QuizExcelImportService {
-
-    @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private MajorService majorService;
+    private final QuizRepository quizRepository;
+    private final MajorService majorService;
     private Workbook workbook;
     private Sheet firstSheet;
 

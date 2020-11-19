@@ -7,6 +7,7 @@ import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
 import cn.eurasia.oj.services.ClassCourseService;
 import cn.eurasia.oj.services.PaperService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,12 +21,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/classCourses")
+@RequiredArgsConstructor
 public class ClassCourseController {
 
-    @Autowired
-    private PaperService paperService;
-    @Autowired
-    private ClassCourseService classCourseService;
+    private final PaperService paperService;
+    private final ClassCourseService classCourseService;
 
     @GetMapping("")
     public ResponseEntity getClassCourse(

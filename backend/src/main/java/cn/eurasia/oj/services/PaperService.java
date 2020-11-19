@@ -9,6 +9,7 @@ import cn.eurasia.oj.requestParams.CreatePaperAutoGenerateParam;
 import cn.eurasia.oj.requestParams.CreatePaperParam;
 import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
 import com.alibaba.fastjson.JSONObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,16 +26,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PaperService {
-    @Autowired
-    private PaperRepository paperRepository;
-    @Autowired
-    private QuizSubmissionRepository quizSubmissionRepository;
-    @Autowired
-    private ReviewQuizRepository reviewQuizRepository;
-
-    @Autowired
-    private EntityManager entityManager;
+    private final PaperRepository paperRepository;
+    private final QuizSubmissionRepository quizSubmissionRepository;
+    private final ReviewQuizRepository reviewQuizRepository;
+    private final EntityManager entityManager;
 
     public Paper addPaper(CreatePaperParam createPaperParam, User current) {
         Paper paper = Paper.convertParam(createPaperParam, current);

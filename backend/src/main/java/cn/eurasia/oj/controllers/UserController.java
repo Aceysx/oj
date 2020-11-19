@@ -4,7 +4,7 @@ import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.services.RoleService;
 import cn.eurasia.oj.services.UserCenterService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,12 +21,10 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/users")
+@RequiredArgsConstructor
 public class UserController {
-
-    @Autowired
-    private UserCenterService userCenterService;
-    @Autowired
-    private RoleService roleService;
+    private final UserCenterService userCenterService;
+    private final RoleService roleService;
 
     @GetMapping("{userId}")
     public ResponseEntity getUserById(@PathVariable Long userId) throws BusinessException {
@@ -85,6 +83,7 @@ public class UserController {
         }
         throw new BusinessException("Wrong format. Only support .xls or .xlsx");
     }
+
     public Boolean validateExcelFormat(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         return fileName.endsWith(".xls") || fileName.endsWith(".xlsx");

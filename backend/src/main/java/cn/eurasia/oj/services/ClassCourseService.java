@@ -7,7 +7,7 @@ import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.ClassCourseRepository;
 import cn.eurasia.oj.repositories.PaperRepository;
 import cn.eurasia.oj.repositories.ReviewQuizRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,13 +17,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ClassCourseService {
-    @Autowired
-    private ClassCourseRepository classCourseRepository;
-    @Autowired
-    private ReviewQuizRepository reviewQuizRepository;
-    @Autowired
-    private PaperRepository paperRepository;
+    private final ClassCourseRepository classCourseRepository;
+    private final ReviewQuizRepository reviewQuizRepository;
+    private final PaperRepository paperRepository;
 
     public Page<ClassCourse> getClassCoursesPageable(Long id, Pageable pageable) {
 

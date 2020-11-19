@@ -8,6 +8,7 @@ import cn.eurasia.oj.repositories.QuizRepository;
 import cn.eurasia.oj.repositories.QuizSubmissionRepository;
 import cn.eurasia.oj.requestParams.CreateQuizParam;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,17 +23,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class QuizService {
-    @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private MajorRepository majorRepository;
-    @Autowired
-    private QuizSubmissionRepository quizSubmissionRepository;
-    @Autowired
-    private QuizExcelImportService quizExcelImportService;
-    @Autowired
-    private PictureRepository pictureRepository;
+    private final QuizRepository quizRepository;
+    private final MajorRepository majorRepository;
+    private final QuizSubmissionRepository quizSubmissionRepository;
+    private final QuizExcelImportService quizExcelImportService;
+    private final PictureRepository pictureRepository;
 
     public Page<Quiz> getQuizzesByPage(Long userId, Pageable pageable, String type, String chapter, String majorId) {
         Specification<Quiz> specification = (Specification<Quiz>) (root, query, criteriaBuilder) -> {

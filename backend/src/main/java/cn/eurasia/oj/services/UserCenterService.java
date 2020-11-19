@@ -4,6 +4,7 @@ import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.UserRepository;
 import cn.eurasia.oj.utils.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,11 +22,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserCenterService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserExcelImportService userExcelImportService;
+    private final UserRepository userRepository;
+    private final UserExcelImportService userExcelImportService;
 
     public User getUser(Long userId) throws BusinessException {
         return userRepository.findById(userId).orElseThrow(() -> new BusinessException("找不到"));

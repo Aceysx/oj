@@ -5,12 +5,12 @@ import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.RoleRepository;
 import cn.eurasia.oj.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,12 +25,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserExcelImportService {
-
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private Workbook workbook;
     private Sheet firstSheet;
 
@@ -82,13 +80,13 @@ public class UserExcelImportService {
     }
 
     private User parse(Row row, List<Role> roles) {
-        String username = row.getCell(0)+"";
-        String password = row.getCell(1)+"";
-        String name = row.getCell(2)+"";
+        String username = row.getCell(0) + "";
+        String password = row.getCell(1) + "";
+        String name = row.getCell(2) + "";
         String phone = new DecimalFormat("0").format(row.getCell(3).getNumericCellValue());
-        String email = row.getCell(4)+"";
+        String email = row.getCell(4) + "";
         List<String> userRolesStr = Arrays.asList(row.getCell(5).getStringCellValue().split(","));
         List<Role> userRoles = roles.stream().filter(role -> userRolesStr.contains(role.getRoleName())).collect(Collectors.toList());
-        return User.build(username, password, name, phone, email,userRoles);
+        return User.build(username, password, name, phone, email, userRoles);
     }
 }

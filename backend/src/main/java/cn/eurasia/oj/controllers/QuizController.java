@@ -6,6 +6,7 @@ import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.requestParams.CreateQuizParam;
 import cn.eurasia.oj.services.QuizService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,10 +21,9 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/api/quizzes")
+@RequiredArgsConstructor
 public class QuizController {
-
-    @Autowired
-    private QuizService quizService;
+    private final QuizService quizService;
 
     @GetMapping("pageable")
     public ResponseEntity getQuizzesByPage(
