@@ -30,7 +30,7 @@ public class PaperController {
         @PageableDefault(sort = {"id"},
             direction = Sort.Direction.DESC) Pageable pageable,
         @Auth User user) {
-        return ResponseEntity.ok(paperService.getQuizzesByPage(user.getId(), pageable));
+        return ResponseEntity.ok(paperService.getQuizzesByPage(pageable));
     }
 
     @GetMapping("")

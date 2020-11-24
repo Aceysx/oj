@@ -11,8 +11,7 @@ import quizPageable from './quizPageable'
 import quizzes from './quizzes'
 import paperPageable from './paperPageable'
 import papers from './papers'
-import roles from './role'
-import rolePageable from './rolePageable'
+import roles from './roles'
 import paper from './paper'
 import paperReviewQuiz from './reviewQuiz'
 import paperStatistics from './paper-statistics'
@@ -33,7 +32,6 @@ export default combineReducers({
   papers,
   paperPageable,
   roles,
-  rolePageable,
   paper,
   paperReviewQuiz
 })

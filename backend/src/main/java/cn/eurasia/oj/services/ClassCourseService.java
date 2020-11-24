@@ -23,9 +23,9 @@ public class ClassCourseService {
     private final ReviewQuizRepository reviewQuizRepository;
     private final PaperRepository paperRepository;
 
-    public Page<ClassCourse> getClassCoursesPageable(Long id, Pageable pageable) {
+    public Page<ClassCourse> getClassCoursesPageable(Pageable pageable) {
 
-        return classCourseRepository.findAllByUserId(id, pageable);
+        return classCourseRepository.findAll(pageable);
     }
 
     public ClassCourse addClassCourse(ClassCourse classCourse, User current) {

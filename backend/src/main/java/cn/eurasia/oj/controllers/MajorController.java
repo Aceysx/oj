@@ -1,5 +1,6 @@
 package cn.eurasia.oj.controllers;
 
+import cn.eurasia.oj.annotations.Access;
 import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.Major;
 import cn.eurasia.oj.entities.User;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+import static cn.eurasia.oj.entities.RoleEnum.*;
+
 @RestController
 @RequestMapping(value = "/api/majors")
 @RequiredArgsConstructor
@@ -25,10 +28,11 @@ public class MajorController {
     public ResponseEntity getMajorsByPage(
         @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
         @Auth User user) {
-        return ResponseEntity.ok(majorService.getMajorsByPage(user.getId(), pageable));
+        return ResponseEntity.ok(majorService.getMajorsByPage(pageable));
     }
 
     @GetMapping("")
+    @Access(roles = LOGIN)
     public ResponseEntity getMajors() {
         return ResponseEntity.ok(majorService.findAll());
     }
@@ -47,6 +51,7 @@ public class MajorController {
     }
 
     @DeleteMapping("{id}")
+    @Access(roles = {ADMIN, TEACHER})
     public ResponseEntity deleteMajor(@PathVariable Long id) throws BusinessException {
         majorService.deleteMajor(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

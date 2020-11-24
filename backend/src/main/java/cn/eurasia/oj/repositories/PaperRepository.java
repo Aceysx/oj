@@ -30,8 +30,7 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             "WHERE re.classCourseid=?1 and  re.paperId = ?2 and re.userId in ?3", nativeQuery = true)
     List<Map<String, Object>> findStuTestInfo(Long classCourseId, Long paperId, List<Long> ids);
 
-    @Query("from Paper c where c.user.id=?1")
-    Page<Paper> findAllByUserId(Long id, Pageable pageable);
+    Page<Paper> findAll(Pageable pageable);
 
     @Query("from Paper c where c.user.id=?1")
     List<Paper> findAllByUserId(Long id);

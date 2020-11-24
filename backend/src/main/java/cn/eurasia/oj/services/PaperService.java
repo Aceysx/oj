@@ -86,8 +86,8 @@ public class PaperService {
 
     }
 
-    public Page<Paper> getQuizzesByPage(Long id, Pageable pageable) {
-        return paperRepository.findAllByUserId(id, pageable);
+    public Page<Paper> getQuizzesByPage(Pageable pageable) {
+        return paperRepository.findAll(pageable);
     }
 
     public void editPaper(Paper paper) throws BusinessException {

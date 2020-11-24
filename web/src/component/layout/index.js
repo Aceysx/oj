@@ -7,7 +7,11 @@ import MenusBody from "../menus-body";
 import {getMajors} from "../../action/major-action";
 
 const {Header, Content, Sider} = Layout
-
+const ROLE = {
+  STUDENT: "STUDENT",
+  TEACHER: "TEACHER",
+  ADMIN: "ADMIN",
+}
 const initMenu = () => {
   const {pathname} = window.location
   if (pathname.includes('roles')) {
@@ -25,9 +29,9 @@ class OjLayout extends Component {
     menu: initMenu()
   }
   componentDidMount = () => {
-    window.localStorage.getItem('oToken')
-      ? this.props.getMajors()
-      : ''
+    // window.localStorage.getItem('oToken')
+    //   ? this.props.getMajors()
+    //   : ''
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -37,15 +41,15 @@ class OjLayout extends Component {
       return false
     }
 
-    if (this.hasRole('学生', user)) {
+    if (this.hasRole(ROLE.STUDENT, user)) {
       this.setState({menu: 'students'})
       return
     }
-    if (this.hasRole('教师', user)) {
+    if (this.hasRole(ROLE.TEACHER, user)) {
       this.setState({menu: 'teachers'})
       return
     }
-    if (this.hasRole('管理员', user)) {
+    if (this.hasRole(ROLE.ADMIN, user)) {
       this.props.history.push('/roles')
     }
   }
@@ -67,7 +71,7 @@ class OjLayout extends Component {
 
   hasRole = (role, currentUser) => {
     const user = currentUser || this.props.user
-    return user.roles.map(role => role.roleName).includes(role)
+    return user.roles.map(role => role.key).includes(role)
   }
 
   getSider = () => {
@@ -117,19 +121,19 @@ class OjLayout extends Component {
                         style={{lineHeight: '64px'}}
                       >
                         {
-                          this.hasRole('学生') ?
+                          this.hasRole(ROLE.STUDENT) ?
                             <Menu.Item key="students" onClick={() => this.to('students', '/students')}>
                               学生端
                             </Menu.Item>
                             : ''
                         }
-                        {this.hasRole('教师') ?
+                        {this.hasRole(ROLE.TEACHER) ?
                           <Menu.Item key="teachers" onClick={() => this.to('teachers', '/teachers')}>
                             教师端
                           </Menu.Item>
                           : ''
                         }
-                        {this.hasRole('管理员') ?
+                        {this.hasRole(ROLE.ADMIN) ?
                           <Menu.Item key="admin" onClick={() => this.to('admin', '/roles')}>
                             角色管理
                           </Menu.Item> : ''
@@ -198,7 +202,7 @@ const mapDispatchToProps = dispatch => ({
   getMajors: () => dispatch(getMajors()),
   logout: () => dispatch({
     type: 'INIT_USER',
-    user: {}
+    user: {roles: []}
   }),
 })
 

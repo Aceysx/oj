@@ -1,9 +1,8 @@
 package cn.eurasia.oj.services;
 
-import cn.eurasia.oj.entities.Role;
+import cn.eurasia.oj.entities.model.RoleModel;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
-import cn.eurasia.oj.repositories.RoleRepository;
 import cn.eurasia.oj.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -22,13 +21,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 @Service
 @RequiredArgsConstructor
 public class UserExcelImportService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private Workbook workbook;
     private Sheet firstSheet;
 
@@ -66,7 +66,7 @@ public class UserExcelImportService {
     @Transactional
     public void importExcel() throws BusinessException {
         try {
-            List<Role> roles = roleRepository.findAll();
+            List<RoleModel> roles = roleService.getAllRole();
             List<User> users = new ArrayList<>();
             for (int i = 1; i < firstSheet.getLastRowNum(); ++i) {
                 Row row = firstSheet.getRow(i);
@@ -76,17 +76,18 @@ public class UserExcelImportService {
         } catch (Exception e) {
             throw new BusinessException("格数错误 或 用户名存在重复");
         }
-
     }
 
-    private User parse(Row row, List<Role> roles) {
+    private User parse(Row row, List<RoleModel> roles) {
         String username = row.getCell(0) + "";
         String password = row.getCell(1) + "";
         String name = row.getCell(2) + "";
         String phone = new DecimalFormat("0").format(row.getCell(3).getNumericCellValue());
         String email = row.getCell(4) + "";
         List<String> userRolesStr = Arrays.asList(row.getCell(5).getStringCellValue().split(","));
-        List<Role> userRoles = roles.stream().filter(role -> userRolesStr.contains(role.getRoleName())).collect(Collectors.toList());
-        return User.build(username, password, name, phone, email, userRoles);
+
+        String keys = roles.stream().filter(role -> userRolesStr.contains(role.getName())).map(RoleModel::getKey)
+            .collect(joining(","));
+        return User.build(username, password, name, phone, email, keys);
     }
 }

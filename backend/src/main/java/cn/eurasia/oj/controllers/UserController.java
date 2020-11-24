@@ -1,5 +1,7 @@
 package cn.eurasia.oj.controllers;
 
+import cn.eurasia.oj.annotations.Access;
+import cn.eurasia.oj.entities.RoleEnum;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.services.RoleService;
@@ -27,6 +29,7 @@ public class UserController {
     private final RoleService roleService;
 
     @GetMapping("{userId}")
+    @Access(roles = RoleEnum.ADMIN)
     public ResponseEntity getUserById(@PathVariable Long userId) throws BusinessException {
         return ResponseEntity.ok(userCenterService.getUser(userId));
     }
@@ -57,13 +60,12 @@ public class UserController {
     }
 
     @GetMapping("roles")
-    public ResponseEntity getAllRole(@PageableDefault(sort = {"id"},
-        direction = Sort.Direction.DESC) Pageable pageable) {
-
-        return ResponseEntity.ok(roleService.getAllRole(pageable));
+    public ResponseEntity getAllRole() {
+        return ResponseEntity.ok(roleService.getAllRole());
     }
 
     @PostMapping("")
+    @Access(roles = RoleEnum.ADMIN)
     public ResponseEntity addUser(@RequestBody User user) throws BusinessException {
         User data = userCenterService.addUser(user);
         return ResponseEntity.created(URI.create("/api/users" + user.getId())).body(data);

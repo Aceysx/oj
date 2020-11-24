@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MajorRepository extends JpaRepository<Major, Long> {
-    Page<Major> findAllByUserId(Long userId, Pageable pageable);
-
-    List<Major> findAllByUserId(Long id);
+    Page<Major> findAll(Pageable pageable);
 
 }

@@ -21,7 +21,6 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
     @Override
     public User resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
       String token = webRequest.getHeader("token");
-      Map map = JwtUtil.convertUser(JwtUtil.parseTokenToMap(token));
-      return new User(Long.valueOf(map.get("id").toString()));
+      return JwtUtil.convertUser(JwtUtil.parseTokenToMap(token));
     }
 }

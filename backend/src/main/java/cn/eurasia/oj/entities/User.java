@@ -26,10 +26,7 @@ public class User {
     private String name;
     private String phone;
     private String email;
-    @ManyToMany
-    @JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "userId"),
-        inverseJoinColumns = @JoinColumn(name = "roleId"))
-    private List<Role> roles;
+    private String roles;
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createTime;
@@ -38,7 +35,7 @@ public class User {
         this.id = id;
     }
 
-    public static User build(String username, String password, String name, String phone, String email, List<Role> userRoles) {
+    public static User build(String username, String password, String name, String phone, String email, String userRoles) {
         return User.builder()
             .username(username)
             .name(name)
@@ -61,5 +58,9 @@ public class User {
         this.email = user.email;
         this.roles = user.roles;
         this.phone = user.phone;
+    }
+
+    public void init() {
+        this.available = true;
     }
 }

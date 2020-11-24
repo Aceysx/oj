@@ -1,5 +1,5 @@
 import React from 'react'
-import {Row, Button, Col, Form, Input, Modal, Select} from 'antd'
+import {Button, Col, Form, Input, Modal, Row, Select} from 'antd'
 import {message} from "antd/lib/index";
 import moment from 'moment'
 
@@ -16,18 +16,18 @@ const formItemLayout = {
   },
 }
 
-const Name =  (rule, value, callback) => {
+const Name = (rule, value, callback) => {
   if (value) {
-    if (!/^[\u4e00-\u9fa5]+$/.test(value)){
+    if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
       callback(new Error('只可输中文!'))
     }
   }
   callback()
 }
 
-const Phone = (rule,value,callback) => {
-  if(value) {
-    if (!/^[0-9]+$/.test(value)){
+const Phone = (rule, value, callback) => {
+  if (value) {
+    if (!/^[0-9]+$/.test(value)) {
       callback(new Error('只可输入数字!'))
     }
   }
@@ -39,7 +39,6 @@ class EditUserModal extends React.Component {
   state = {
     id: -1,
     roles: [],
-    roleList: []
   }
 
   handleSubmit = (e) => {
@@ -47,9 +46,7 @@ class EditUserModal extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values['id'] = this.state.id
-        values.roles = values.roles.map(role => {
-            return {id:role}
-        });
+        values.roles = values.roles.join(',')
         this.props.putUser(values, () => {
           message.success('更新成功')
           this.props.closeModal()
@@ -59,14 +56,15 @@ class EditUserModal extends React.Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const {user, form, roleList} = nextProps
-    if (user === this.props.user ) {
+    const {user, form} = nextProps
+    if (user === this.props.user) {
       return false
     }
     const {id, username, createTime, available, name, phone, email, roles} = user
-    const roleIds = roles.map(item => item.id.toString())
-    form.setFieldsValue({username, createTime: moment(createTime), available, name, phone, email, roles: roleIds})
-    this.setState({id: id, roles : roleIds, roleList: roleList})
+    let roleKeys = roles.map(role => role.key);
+
+    form.setFieldsValue({username, createTime: moment(createTime), available, name, phone, email, roles: roleKeys})
+    this.setState({id, roles: roleKeys})
   }
 
   render() {
@@ -81,27 +79,27 @@ class EditUserModal extends React.Component {
         onCancel={() => closeModal()}
       >
         <Form onSubmit={this.handleSubmit}>
-        <Form.Item
+          <Form.Item
             {...formItemLayout}
             label="用户名"
           >
-          {getFieldDecorator('username', {
-            rules: [{
-              required: true, message: '请输入用户名',
-            },{
-              min:3,
-              message:'用户名最少为3位'
-            }
-            ],
-          })(
-            <Input/>
-          )}
+            {getFieldDecorator('username', {
+              rules: [{
+                required: true, message: '请输入用户名',
+              }, {
+                min: 3,
+                message: '用户名最少为3位'
+              }
+              ],
+            })(
+              <Input/>
+            )}
           </Form.Item>
           <Form.Item{...formItemLayout} label="真实姓名">
             {getFieldDecorator('name', {
               rules: [
-                {required: true,message:'姓名不能为空'},
-                {validator:Name,trigger:'blur'}
+                {required: true, message: '姓名不能为空'},
+                {validator: Name, trigger: 'blur'}
               ],
             })(
               <Input/>
@@ -114,9 +112,11 @@ class EditUserModal extends React.Component {
             {getFieldDecorator('phone', {
               rules: [
                 {required: true, message: '手机号不能为空'},
-                {validator: Phone,trigger: 'blur'},
-                {min:11,max:11,
-                  message:'手机号为11位'}],
+                {validator: Phone, trigger: 'blur'},
+                {
+                  min: 11, max: 11,
+                  message: '手机号为11位'
+                }],
             })(
               <Input/>
             )}
@@ -135,26 +135,26 @@ class EditUserModal extends React.Component {
             )}
           </Form.Item>
 
-            <Form.Item
-                {...formItemLayout}
-                label="用户角色"
-            >
-                {getFieldDecorator('roles', {
-                    rules: [{
-                        required: true, message: '请选择用户角色',
-                    }],
-                })(
-                    <Select
-                      mode="multiple"
-                      placeholder="请选择用户角色"
-                      defaultVale={this.state.roles}
-                    >
-                      {
-                        this.state.roleList.map(item => <Option key={item.id.toString()}>{item.roleName}</Option>)
-                      }
-                    </Select>
-                )}
-            </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label="用户角色"
+          >
+            {getFieldDecorator('roles', {
+              rules: [{
+                required: true, message: '请选择用户角色',
+              }],
+            })(
+              <Select
+                mode="multiple"
+                placeholder="请选择用户角色"
+                defaultVale={this.state.roles}
+              >
+                {
+                  this.props.roles.map(role => <Option key={role.key}>{role.name}</Option>)
+                }
+              </Select>
+            )}
+          </Form.Item>
 
           <Row type='flex' align='center'>
             <Col>

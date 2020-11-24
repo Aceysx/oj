@@ -46,10 +46,10 @@ export const getUsersByPage = (current) => {
   }
 }
 
-export const getRolePageable = () => {
+export const getRoles = () => {
   return (dispatch) => {
     (async () => {
-      const res = await request.get(`../api/users/roles?page=0`)
+      const res = await request.get(`../api/users/roles`)
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'REFRESH_ROLE_PAGEABLE',

@@ -8,7 +8,6 @@ import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
 import cn.eurasia.oj.services.ClassCourseService;
 import cn.eurasia.oj.services.PaperService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -32,7 +31,7 @@ public class ClassCourseController {
         @PageableDefault(sort = {"id"},
             direction = Sort.Direction.DESC) Pageable pageable,
         @Auth User user) {
-        return ResponseEntity.ok(classCourseService.getClassCoursesPageable(user.getId(),pageable));
+        return ResponseEntity.ok(classCourseService.getClassCoursesPageable(pageable));
     }
 
     @PostMapping("")

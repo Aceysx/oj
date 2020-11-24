@@ -1,5 +1,5 @@
 import React from 'react'
-import {Row, Button, Col, Form, Input, Modal, Select} from 'antd'
+import {Button, Col, Form, Input, Modal, Row, Select} from 'antd'
 import {message} from "antd/lib/index"
 
 const Option = Select.Option;
@@ -15,18 +15,18 @@ const formItemLayout = {
   },
 };
 
-const Name =  (rule, value, callback) => {
+const Name = (rule, value, callback) => {
   if (value) {
-    if (!/^[\u4e00-\u9fa5]+$/.test(value)){
+    if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
       callback(new Error('只可输中文!'))
     }
   }
   callback()
 }
 
-const Phone = (rule,value,callback) => {
-  if(value) {
-    if (!/^[0-9]+$/.test(value)){
+const Phone = (rule, value, callback) => {
+  if (value) {
+    if (!/^[0-9]+$/.test(value)) {
       callback(new Error('只可输入数字!'))
     }
   }
@@ -36,17 +36,11 @@ const Phone = (rule,value,callback) => {
 
 class NewUserModal extends React.Component {
 
-  state = {
-    roleList: []
-  }
-
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values.roles = values.roles.map(role => {
-          return {id:role}
-        });
+        values.roles = values.roles.join(",");
         this.props.addUser(values, () => {
           message.success('添加成功');
           this.props.closeModal()
@@ -54,11 +48,6 @@ class NewUserModal extends React.Component {
       }
     })
   };
-
-  componentWillReceiveProps = (nextProps) => {
-    const {roleList} = nextProps
-    this.setState({roleList: roleList})
-  }
 
   render() {
     const {isNewModalOpen, closeModal, form} = this.props;
@@ -79,9 +68,9 @@ class NewUserModal extends React.Component {
             {getFieldDecorator('username', {
               rules: [{
                 required: true, message: '请输入用户名',
-              },{
-                min:3,
-                message:'用户名最少为3位'
+              }, {
+                min: 3,
+                message: '用户名最少为3位'
               }
               ],
             })(
@@ -95,9 +84,9 @@ class NewUserModal extends React.Component {
             {getFieldDecorator('password', {
               rules: [{
                 required: true, message: '请输入密码',
-              },{
-                min:6,
-                message:'密码最少为6位'
+              }, {
+                min: 6,
+                message: '密码最少为6位'
               }],
             })(
               <Input/>
@@ -106,8 +95,8 @@ class NewUserModal extends React.Component {
           <Form.Item{...formItemLayout} label="真实姓名">
             {getFieldDecorator('name', {
               rules: [
-                {required: true,message:'姓名不能为空'},
-                {validator:Name,trigger:'blur'}
+                {required: true, message: '姓名不能为空'},
+                {validator: Name, trigger: 'blur'}
               ],
             })(
               <Input/>
@@ -120,9 +109,11 @@ class NewUserModal extends React.Component {
             {getFieldDecorator('phone', {
               rules: [
                 {required: true, message: '手机号不能为空'},
-                {validator: Phone,trigger: 'blur'},
-                {min:11,max:11,
-                 message:'手机号为11位'}],
+                {validator: Phone, trigger: 'blur'},
+                {
+                  min: 11, max: 11,
+                  message: '手机号为11位'
+                }],
             })(
               <Input/>
             )}
@@ -155,7 +146,7 @@ class NewUserModal extends React.Component {
                 placeholder="请选择用户角色"
               >
                 {
-                  this.state.roleList.map(item => <Option key={item.id.toString()}>{item.roleName}</Option>)
+                  this.props.roles.map(item => <Option key={item.key}>{item.name}</Option>)
                 }
               </Select>
             )}

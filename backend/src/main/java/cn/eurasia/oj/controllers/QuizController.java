@@ -7,7 +7,6 @@ import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.requestParams.CreateQuizParam;
 import cn.eurasia.oj.services.QuizService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -33,13 +32,13 @@ public class QuizController {
         @RequestParam(name = "majorId") String majorId,
         @RequestParam(name = "chapter") String chapter,
         @Auth User user
-        ) {
-        return ResponseEntity.ok(quizService.getQuizzesByPage(user.getId(),pageable,type,chapter,majorId));
+    ) {
+        return ResponseEntity.ok(quizService.getQuizzesByPage(pageable, type, chapter, majorId));
     }
 
     @GetMapping("chapters")
     public ResponseEntity getChapters(@Auth User user) {
-        return ResponseEntity.ok(quizService.getChaptersUserId(user.getId()));
+        return ResponseEntity.ok(quizService.getChaptersUserId());
     }
 
     @GetMapping("wrong/pageable")
@@ -52,7 +51,7 @@ public class QuizController {
 
     @GetMapping("")
     public ResponseEntity getQuizzes(@Auth User user) {
-        return ResponseEntity.ok(quizService.getQuizzes(user.getId()));
+        return ResponseEntity.ok(quizService.getQuizzes());
     }
 
     @PostMapping("")

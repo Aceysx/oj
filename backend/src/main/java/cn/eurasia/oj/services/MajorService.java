@@ -16,12 +16,8 @@ import java.util.List;
 public class MajorService {
     private final MajorRepository majorRepository;
 
-    public Page<Major> getMajorsByPage(Long userId, Pageable pageable) {
-        return majorRepository.findAllByUserId(userId,pageable);
-    }
-
-    public List<Major> getMajorsByUserId(Long id) {
-        return majorRepository.findAllByUserId(id);
+    public Page<Major> getMajorsByPage( Pageable pageable) {
+        return majorRepository.findAll(pageable);
     }
 
     public Major addMajor(Major major) {

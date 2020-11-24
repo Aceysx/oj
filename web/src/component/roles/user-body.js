@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Divider, Table, Col} from 'antd'
-import {getUsersByPage, addUser, putUser, getRolePageable} from '../../action/user'
+import {getUsersByPage, addUser, putUser, getRoles} from '../../action/user'
 import NewUserModal from './new-user-modal'
 import EditUserModal from './edit-user-modal'
 import ImportModal from '../common/import-modal'
@@ -73,7 +73,7 @@ class UserBody extends Component {
       }
     ]
 
-    const {userPageable, rolePageable} = this.props
+    const {userPageable, roles} = this.props
     const {totalElements, content} = userPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, user} = this.state
 
@@ -98,14 +98,14 @@ class UserBody extends Component {
       <NewUserModal
         isNewModalOpen={isNewModalOpen}
         closeModal={() => this.setState({isNewModalOpen: false})}
-        roleList={rolePageable.content}
+        roles={roles}
         addUser={this.props.addUser}
       />
       <EditUserModal
         isEditModalOpen={isEditModalOpen}
         closeModal={() => this.setState({isEditModalOpen: false})}
         user={user}
-        roleList={rolePageable.content}
+        roles={roles}
         putUser={this.props.putUser}
       />
       <Table
@@ -123,17 +123,17 @@ class UserBody extends Component {
   }
 }
 
-const mapStateToProps = ({user, userPageable, rolePageable}) => ({
+const mapStateToProps = ({user, userPageable, roles}) => ({
   user,
   userPageable,
-  rolePageable
+  roles
 })
 
 const mapDispatchToProps = dispatch => ({
   getUsers: (current) => dispatch(getUsersByPage(current)),
   addUser: (user, callback) => dispatch(addUser(user, callback)),
   putUser: (user, callback) => dispatch(putUser(user, callback)),
-  getRoles: () => dispatch(getRolePageable())
+  getRoles: () => dispatch(getRoles())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserBody)

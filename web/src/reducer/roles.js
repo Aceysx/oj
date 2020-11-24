@@ -1,12 +1,8 @@
-const init = {
-  id: -1,
-  name: 'admin',
-  roles: []
-}
+const init = []
 export default (state = init, action) => {
   switch (action.type) {
-    case 'INIT_USER':
-      return action.user
+    case 'REFRESH_ROLE_PAGEABLE':
+      return action.data
     default:
       return state
   }
