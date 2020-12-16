@@ -4,7 +4,6 @@ import cn.eurasia.oj.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Value;
 
 import java.util.Date;
 import java.util.List;
@@ -26,16 +25,16 @@ public class UserModel {
 
     public static UserModel build(User user) {
         List<RoleModel> roles = Stream.of(user.getRoles().split(","))
-            .map(RoleModel::build).collect(Collectors.toList());
+                .map(RoleModel::build).collect(Collectors.toList());
         return new UserModel(
-            user.getId(),
-            user.getUsername(),
-            user.getAvailable(),
-            user.getName(),
-            user.getPhone(),
-            user.getEmail(),
-            roles,
-            user.getCreateTime()
+                user.getId(),
+                user.getUsername(),
+                user.getAvailable(),
+                user.getName(),
+                user.getPhone(),
+                user.getEmail(),
+                roles,
+                user.getCreateTime()
         );
     }
 }

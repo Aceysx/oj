@@ -35,14 +35,14 @@ public class UserController {
     }
 
     @PostMapping("init")
-    public ResponseEntity initUser(@RequestBody Map token) {
+    public ResponseEntity initUser(@RequestBody Map token) throws BusinessException {
         if (Objects.isNull(token.get("token"))) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            throw new BusinessException("请登录");
         }
         try {
             return ResponseEntity.ok(userCenterService.getUserFromToken(token));
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            throw new BusinessException("请登录");
         }
     }
 
@@ -56,7 +56,7 @@ public class UserController {
         @PageableDefault(sort = {"id"},
             direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(userCenterService.getUsersByPage(pageable));
+        return ResponseEntity.ok(PageVo.build(userCenterService.getUsersByPage(pageable)));
     }
 
     @GetMapping("roles")

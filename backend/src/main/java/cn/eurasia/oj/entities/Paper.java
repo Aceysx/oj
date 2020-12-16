@@ -1,7 +1,7 @@
 package cn.eurasia.oj.entities;
 
-import cn.eurasia.oj.requestParams.CreatePaperAutoGenerateParam;
-import cn.eurasia.oj.requestParams.CreatePaperParam;
+import cn.eurasia.oj.controllers.requestParams.CreatePaperAutoGenerateParam;
+import cn.eurasia.oj.controllers.requestParams.CreatePaperParam;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

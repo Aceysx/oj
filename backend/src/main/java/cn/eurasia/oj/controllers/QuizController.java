@@ -4,7 +4,7 @@ import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.Quiz;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
-import cn.eurasia.oj.requestParams.CreateQuizParam;
+import cn.eurasia.oj.controllers.requestParams.CreateQuizParam;
 import cn.eurasia.oj.services.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

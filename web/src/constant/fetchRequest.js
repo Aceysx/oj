@@ -1,5 +1,6 @@
 import HTTP_METHOD from './httpMethod'
-import { message } from 'antd'
+import {message} from 'antd'
+
 const getTokenFromLocalStorage = () => {
   return window.localStorage.getItem('oToken')
 }
@@ -8,13 +9,15 @@ const authenticationFilter = (status) => {
     window.location.href = '/#/login'
   }
 }
-function errHandler (res) {
+
+function errHandler(res) {
   res.json().then(res => {
     message.error(res.message)
-  }
+    }
   )
   return {status: res.status}
 }
+
 export const get = async (url) => {
   try {
     const res = await fetch(url, {
@@ -22,7 +25,7 @@ export const get = async (url) => {
       credentials: 'include',
       headers: new Headers({
         'Accept': 'application/json;charset=utf-8',
-	      'id': 46,
+        'id': 46,
         token: getTokenFromLocalStorage()
       })
     })
@@ -45,10 +48,10 @@ export const del = async (url) => {
     const res = await fetch(url, {
       method: HTTP_METHOD.DELETE,
       credentials: 'include',
-	    headers: new Headers({
-      'id': 46,
-      token: getTokenFromLocalStorage()
-	    })
+      headers: new Headers({
+        'id': 46,
+        token: getTokenFromLocalStorage()
+      })
     })
     const status = res.status
     authenticationFilter(status)
@@ -70,7 +73,7 @@ export const post = async (url, data) => {
       headers: new Headers({
         'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json',
-	      'id': 46,
+        'id': 46,
         token: getTokenFromLocalStorage()
       }),
       body: JSON.stringify(data)
@@ -98,7 +101,7 @@ export const initUser = async (url, data) => {
       headers: new Headers({
         'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json',
-	      'id': 46,
+        'id': 46,
         token: getTokenFromLocalStorage()
       }),
       body: JSON.stringify(data)

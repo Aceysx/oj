@@ -102,9 +102,9 @@ public class ClassCourseService {
         Map scoreStatistics = reviewQuizRepository.statisticScore(classCourseId, paperId, ids);
         result.put("stuTestInfo", stuTestInfo);
         result.put("total", total);
-        result.put("avg", scoreStatistics.get("avg"));
-        result.put("highest", scoreStatistics.get("max"));
-        result.put("lowest", scoreStatistics.get("min"));
+        result.put("avg", Optional.of(scoreStatistics.get("avg")).orElse(0));
+        result.put("highest", Optional.of(scoreStatistics.get("max")).orElse(0));
+        result.put("lowest", Optional.of(scoreStatistics.get("min")).orElse(0));
         result.put("finish", finishCount);
 
         return result;

@@ -1,6 +1,6 @@
 package cn.eurasia.oj.entities;
 
-import cn.eurasia.oj.requestParams.CreatePictureParam;
+import cn.eurasia.oj.controllers.requestParams.CreatePictureParam;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

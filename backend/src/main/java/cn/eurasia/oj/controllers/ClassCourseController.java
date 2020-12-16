@@ -4,7 +4,7 @@ import cn.eurasia.oj.annotations.Auth;
 import cn.eurasia.oj.entities.ClassCourse;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
-import cn.eurasia.oj.requestParams.CreatePaperSubmissionParam;
+import cn.eurasia.oj.controllers.requestParams.CreatePaperSubmissionParam;
 import cn.eurasia.oj.services.ClassCourseService;
 import cn.eurasia.oj.services.PaperService;
 import lombok.RequiredArgsConstructor;

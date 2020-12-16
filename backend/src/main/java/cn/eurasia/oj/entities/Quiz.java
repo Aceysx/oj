@@ -1,6 +1,6 @@
 package cn.eurasia.oj.entities;
 
-import cn.eurasia.oj.requestParams.CreateQuizParam;
+import cn.eurasia.oj.controllers.requestParams.CreateQuizParam;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
