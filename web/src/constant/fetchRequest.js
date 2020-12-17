@@ -104,10 +104,9 @@ export const initUser = async (url, data) => {
       body: JSON.stringify(data)
     })
     const status = res.status
-    authenticationFilter(status)
-
     if (!res.ok) {
-      return {status: 401}
+      window.location.href = '/#/login'
+      return {status}
     }
 
     const body = await res.json()

@@ -4,7 +4,7 @@ export const initUser = () => {
   const token = window.localStorage.getItem('oToken')
   return (dispatch) => {
     (async () => {
-      const res = await request.post(`/api/users/init`, {token})
+      const res = await request.initUser(`/api/users/init`, {token})
       if (res.status === HTTP_CODE.OK) {
         dispatch({
           type: 'INIT_USER',

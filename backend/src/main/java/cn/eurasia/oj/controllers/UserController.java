@@ -25,70 +25,70 @@ import java.util.Objects;
 @RequestMapping(value = "/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserCenterService userCenterService;
-    private final RoleService roleService;
+  private final UserCenterService userCenterService;
+  private final RoleService roleService;
 
-    @GetMapping("{userId}")
-    @Access(roles = RoleEnum.ADMIN)
-    public ResponseEntity getUserById(@PathVariable Long userId) throws BusinessException {
-        return ResponseEntity.ok(userCenterService.getUser(userId));
+  @GetMapping("{userId}")
+  @Access(roles = RoleEnum.ADMIN)
+  public ResponseEntity getUserById(@PathVariable Long userId) throws BusinessException {
+    return ResponseEntity.ok(userCenterService.getUser(userId));
+  }
+
+  @PostMapping("init")
+  public ResponseEntity initUser(@RequestBody Map token) throws BusinessException {
+    if (Objects.isNull(token.get("token"))) {
+      throw new BusinessException("认证不通过,请重新登陆");
     }
-
-    @PostMapping("init")
-    public ResponseEntity initUser(@RequestBody Map token) {
-        if (Objects.isNull(token.get("token"))) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        }
-        try {
-            return ResponseEntity.ok(userCenterService.getUserFromToken(token));
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        }
+    try {
+      return ResponseEntity.ok(userCenterService.getUserFromToken(token));
+    } catch (Exception e) {
+      throw new BusinessException("认证不通过,请重新登陆");
     }
+  }
 
-    @PostMapping("login")
-    public ResponseEntity login(@RequestBody User user) throws BusinessException, UnsupportedEncodingException {
-        return new ResponseEntity(userCenterService.login(user), HttpStatus.CREATED);
+  @PostMapping("login")
+  public ResponseEntity login(@RequestBody User user) throws BusinessException, UnsupportedEncodingException {
+    return new ResponseEntity(userCenterService.login(user), HttpStatus.CREATED);
+  }
+
+  @GetMapping("pageable")
+  public ResponseEntity getUsersByPage(
+      @PageableDefault(sort = {"id"},
+          direction = Sort.Direction.DESC) Pageable pageable) {
+
+    return ResponseEntity.ok(userCenterService.getUsersByPage(pageable));
+  }
+
+  @GetMapping("roles")
+  public ResponseEntity getAllRole() {
+    return ResponseEntity.ok(roleService.getAllRole());
+  }
+
+  @PostMapping("")
+  @Access(roles = RoleEnum.ADMIN)
+  public ResponseEntity addUser(@RequestBody User user) throws BusinessException {
+    User data = userCenterService.addUser(user);
+    return ResponseEntity.created(URI.create("/api/users" + user.getId())).body(data);
+  }
+
+  @PutMapping("")
+  public ResponseEntity putUser(@RequestBody User user) throws BusinessException {
+    userCenterService.putUser(user);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("excel")
+  public ResponseEntity excelImport(@RequestParam("file") MultipartFile file) throws BusinessException, IOException {
+    if (validateExcelFormat(file)) {
+      userCenterService.excelImport(file);
+      return new ResponseEntity(HttpStatus.CREATED);
     }
+    throw new BusinessException("Wrong format. Only support .xls or .xlsx");
+  }
 
-    @GetMapping("pageable")
-    public ResponseEntity getUsersByPage(
-        @PageableDefault(sort = {"id"},
-            direction = Sort.Direction.DESC) Pageable pageable) {
-
-        return ResponseEntity.ok(userCenterService.getUsersByPage(pageable));
-    }
-
-    @GetMapping("roles")
-    public ResponseEntity getAllRole() {
-        return ResponseEntity.ok(roleService.getAllRole());
-    }
-
-    @PostMapping("")
-    @Access(roles = RoleEnum.ADMIN)
-    public ResponseEntity addUser(@RequestBody User user) throws BusinessException {
-        User data = userCenterService.addUser(user);
-        return ResponseEntity.created(URI.create("/api/users" + user.getId())).body(data);
-    }
-
-    @PutMapping("")
-    public ResponseEntity putUser(@RequestBody User user) throws BusinessException {
-        userCenterService.putUser(user);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("excel")
-    public ResponseEntity excelImport(@RequestParam("file") MultipartFile file) throws BusinessException, IOException {
-        if (validateExcelFormat(file)) {
-            userCenterService.excelImport(file);
-            return new ResponseEntity(HttpStatus.CREATED);
-        }
-        throw new BusinessException("Wrong format. Only support .xls or .xlsx");
-    }
-
-    public Boolean validateExcelFormat(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        return fileName.endsWith(".xls") || fileName.endsWith(".xlsx");
-    }
+  public Boolean validateExcelFormat(MultipartFile file) {
+    String fileName = file.getOriginalFilename();
+    return fileName.endsWith(".xls") || fileName.endsWith(".xlsx");
+  }
 
 }
