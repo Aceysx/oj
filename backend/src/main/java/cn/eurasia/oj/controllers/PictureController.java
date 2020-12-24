@@ -1,11 +1,11 @@
 package cn.eurasia.oj.controllers;
 
 import cn.eurasia.oj.annotations.Auth;
+import cn.eurasia.oj.controllers.requestParams.CreatePictureParam;
 import cn.eurasia.oj.entities.Picture;
 import cn.eurasia.oj.entities.User;
 import cn.eurasia.oj.exceptions.BusinessException;
 import cn.eurasia.oj.repositories.PictureRepository;
-import cn.eurasia.oj.controllers.requestParams.CreatePictureParam;
 import cn.eurasia.oj.services.PictureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ResourceLoader;
@@ -24,53 +24,53 @@ import java.util.Map;
 @RequestMapping(value = "/api/pictures")
 @RequiredArgsConstructor
 public class PictureController {
-    private final PictureService pictureService;
-    private final PictureRepository pictureRepository;
-    private final ResourceLoader resourceLoader;
+  private final PictureService pictureService;
+  private final PictureRepository pictureRepository;
+  private final ResourceLoader resourceLoader;
 
-    @GetMapping("pageable")
-    public ResponseEntity getPictures(
-        @RequestParam String title,
-        @PageableDefault(sort = {"id"},
-            direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(pictureService.getPictures(pageable, title));
-    }
+  @GetMapping("pageable")
+  public ResponseEntity getPictures(
+      @RequestParam(defaultValue = "") String title,
+      @PageableDefault(sort = {"id"},
+          direction = Sort.Direction.DESC) Pageable pageable) {
+    return ResponseEntity.ok(PageVo.build(pictureService.getPictures(pageable, title)));
+  }
 
-    @GetMapping("{pictureId}")
-    public ResponseEntity getPicture(@PathVariable Long pictureId) {
-        return ResponseEntity.ok(pictureRepository.findById(pictureId).get());
-    }
+  @GetMapping("{pictureId}")
+  public ResponseEntity getPicture(@PathVariable Long pictureId) {
+    return ResponseEntity.ok(pictureRepository.findById(pictureId).get());
+  }
 
-    @PostMapping("")
-    public ResponseEntity addPicture(@RequestBody Picture picture,
-                                     @Auth User current) {
+  @PostMapping("")
+  public ResponseEntity addPicture(@RequestBody Picture picture,
+                                   @Auth User current) {
 
-        picture = pictureService.addPicture(picture, current);
-        return ResponseEntity.created(URI.create("/api/pictures/" + picture.getId())).build();
-    }
+    picture = pictureService.addPicture(picture, current);
+    return ResponseEntity.created(URI.create("/api/pictures/" + picture.getId())).build();
+  }
 
-    @PutMapping("{pictureId}/labels")
-    public ResponseEntity editPictureLabels(@RequestBody List<Map> labels,
-                                            @PathVariable Long pictureId,
-                                            @Auth User current) throws BusinessException {
+  @PutMapping("{pictureId}/labels")
+  public ResponseEntity editPictureLabels(@RequestBody List<Map> labels,
+                                          @PathVariable Long pictureId,
+                                          @Auth User current) throws BusinessException {
 
-        pictureService.editPictureLabels(pictureId, current, labels);
-        return ResponseEntity.created(URI.create("/api/pictures")).build();
-    }
+    pictureService.editPictureLabels(pictureId, current, labels);
+    return ResponseEntity.created(URI.create("/api/pictures")).build();
+  }
 
-    @PutMapping("{pictureId}")
-    public ResponseEntity editPictureLabel(
-        @RequestBody CreatePictureParam createPictureParam,
-        @Auth User current) throws BusinessException {
+  @PutMapping("{pictureId}")
+  public ResponseEntity editPictureLabel(
+      @RequestBody CreatePictureParam createPictureParam,
+      @Auth User current) throws BusinessException {
 
-        pictureService.editPicture(createPictureParam, current);
-        return ResponseEntity.created(URI.create("/api/pictures")).build();
-    }
+    pictureService.editPicture(createPictureParam, current);
+    return ResponseEntity.created(URI.create("/api/pictures")).build();
+  }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity deletePicture(@PathVariable Long id) throws BusinessException {
-        pictureService.deletePicture(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
+  @DeleteMapping("{id}")
+  public ResponseEntity deletePicture(@PathVariable Long id) throws BusinessException {
+    pictureService.deletePicture(id);
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
 
 }

@@ -2,21 +2,13 @@ import {PlusOutlined} from '@ant-design/icons'
 import {Button, message} from 'antd'
 import React, {useEffect, useRef, useState} from 'react'
 import ProTable from '@ant-design/pro-table'
-import CreateForm from './components/CreateForm'
-import {addUser, queryUsers, updateRule, updateUser} from './service'
+import {addUser, queryPictures, updateRule, updateUser} from './service'
 import {DownOutlined} from '@ant-design/icons/lib/icons'
 import {connect} from 'umi'
 import Model from '@/pages/role/list/model'
-import ProForm, {ProFormSelect, ProFormText} from '@ant-design/pro-form'
-import UpdateForm from '@/pages/role/list/components/UpdateForm'
 
 const NONE_FUNCTION = () => {
 }
-
-/**
- * 更新节点
- * @param fields
- */
 
 const handleUpdate = async (fields) => {
   const hide = message.loading('正在配置')
@@ -37,7 +29,7 @@ const handleUpdate = async (fields) => {
   }
 }
 
-const RoleList = (props) => {
+const PictureList = (props) => {
   const {roles = []} = props.roleCenter
 
   const [createModalVisible, handleModalVisible] = useState(false)
@@ -83,29 +75,30 @@ const RoleList = (props) => {
 
   const columns = [
     {
-      title: '用户名',
-      dataIndex: 'username',
-      key: 'username'
+      title: '名称',
+      dataIndex: 'title',
+      key: 'title'
+    },
+    {
+      title: '章节',
+      dataIndex: 'chapter',
+      key: 'chapter',
+      renderFormItem: NONE_FUNCTION
     },
     {
       title: '添加时间',
       dataIndex: 'createTime',
-      key: 'createTime'
+      key: 'createTime',
+      renderFormItem: NONE_FUNCTION
     },
     {
-      title: '真实姓名',
-      dataIndex: 'name',
-      key: 'name'
-    },
-    {
-      title: '手机号',
-      dataIndex: 'phone',
-      key: 'phone'
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
-      key: 'email'
+      title: '标注个数',
+      dataIndex: 'labels',
+      key: 'labels',
+      renderFormItem: NONE_FUNCTION,
+      render: (labels, record) => {
+        return <span>{labels.length}</span>
+      }
     },
     {
       title: '操作',
@@ -130,39 +123,22 @@ const RoleList = (props) => {
   return (
     <div>
       <ProTable
-        headerTitle='用户列表'
+        headerTitle='图片列表'
         actionRef={actionRef}
         toolbar={{multipleLine: false}}
         rowKey='key'
-        search={false}
         toolBarRender={() => [
-          <Button key='out'>
-            导入数据
-            <DownOutlined />
-          </Button>,
           <Button type='primary' onClick={() => handleModalVisible(true)}>
-            <PlusOutlined /> 新建
+            <PlusOutlined /> 添加图片
           </Button>
         ]}
         request={(params, sorter, filter) =>
-          queryUsers({...params, sorter, filter})}
+          queryPictures({...params, sorter, filter})}
         columns={columns}
       />
-
-      <CreateForm onCancel={() => handleModalVisible(false)}
-        modalVisible={createModalVisible}
-        handleAdd={handleAdd}
-        rolesMenu={rolesMenu} />
-
-      <UpdateForm onCancel={() => handleUpdateModalVisible(false)}
-        modalVisible={updateModalVisible}
-        updateUser={handleUpdate}
-        current={current}
-        rolesMenu={rolesMenu} />
-
     </div>
   )
 }
 export default connect(({roleCenter}) => ({
   roleCenter
-}))(RoleList)
+}))(PictureList)

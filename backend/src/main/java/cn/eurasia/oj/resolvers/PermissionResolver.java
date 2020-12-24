@@ -16,23 +16,24 @@ import java.util.Arrays;
 public class PermissionResolver extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-            System.out.println("cat cast handler to HandlerMethod.class");
-            return true;
-        }
-        HandlerMethod method = (HandlerMethod) handler;
-        Access access = method.getMethodAnnotation(Access.class);
-        if (access == null) {
-            return true;
-        }
-        RoleEnum[] needRoles = access.roles();
-        String token = request.getHeader("token");
-        User user = JwtUtil.convertUser(JwtUtil.parseTokenToMap(token));
-
-        if (StringUtils.isEmpty(user) || !hasRole(user, needRoles)) {
-            throw new BusinessException("no permission with :" + request.getRequestURI());
-        }
         return true;
+//        if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
+//            System.out.println("cat cast handler to HandlerMethod.class");
+//            return true;
+//        }
+//        HandlerMethod method = (HandlerMethod) handler;
+//        Access access = method.getMethodAnnotation(Access.class);
+//        if (access == null) {
+//            return true;
+//        }
+//        RoleEnum[] needRoles = access.roles();
+//        String token = request.getHeader("token");
+//        User user = JwtUtil.convertUser(JwtUtil.parseTokenToMap(token));
+//
+//        if (StringUtils.isEmpty(user) || !hasRole(user, needRoles)) {
+//            throw new BusinessException("no permission with :" + request.getRequestURI());
+//        }
+//        return true;
     }
 
     private boolean hasRole(User user, RoleEnum[] roles) {

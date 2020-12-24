@@ -2,24 +2,24 @@ import {fetchRoles} from './service'
 
 const Model = {
   type: {
-    FETCH_ROLES: 'roleCenter/fetchRoles'
+    FETCH_ROLES: 'pictureCenter/fetchRoles'
   },
-  namespace: 'roleCenter',
+  namespace: 'pictureCenter',
   state: {
-    roles: []
+    pictures: []
   },
   effects: {
     * fetchRoles (_, {call, put}) {
       const response = yield call(fetchRoles)
       yield put({
-        type: 'roles',
+        type: 'pictures',
         payload: response
       })
     }
   },
   reducers: {
-    roles (state, action) {
-      return {...state, roles: action.payload || []}
+    pictures (state, action) {
+      return {...state, pictures: action.payload || []}
     }
   }
 }

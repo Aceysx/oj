@@ -1,7 +1,7 @@
 import request from 'umi-request'
 
-export async function queryUsers (params) {
-  return request('/api/users/pageable', {
+export async function queryPictures (params) {
+  return request('/api/pictures/pageable', {
     params
   })
 }
