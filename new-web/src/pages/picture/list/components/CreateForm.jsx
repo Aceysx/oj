@@ -1,19 +1,47 @@
-import React from 'react'
-import { Modal } from 'antd'
-import ProForm, {ProFormSelect, ProFormText} from '@ant-design/pro-form'
+import React, {useState} from 'react'
+import {message, Modal, Upload} from 'antd'
+import ProForm, {ProFormSelect, ProFormText, ProFormTextArea} from '@ant-design/pro-form'
+import {LoadingOutlined, UploadOutlined} from '@ant-design/icons'
+const ROOT_PATH = 'http://39.98.165.4:8004/ronhe-file-system/'
+// const ROOT_PATH = 'http://localhost:3001/'
 
 const CreateForm = (props) => {
-  const { modalVisible, onCancel, handleAdd, rolesMenu } = props
+  const [imageUrl, handleImageUrl] = useState('')
+  const [loading, handleLoading] = useState(false)
+  const {modalVisible, onCancel, handleAdd, rolesMenu} = props
+
+  const beforeUpload = (file) => {
+    const isJPG = file.type.includes('image')
+    if (!isJPG) {
+      message.error('You can only upload JPG file!')
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!')
+    }
+    return isJPG && isLt2M
+  }
+
+  const handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      handleLoading(true)
+      return
+    }
+    if (info.file.status === 'done') {
+      handleImageUrl(ROOT_PATH + info.file.response.name)
+      handleLoading(false)
+    }
+  }
   return (
     <Modal
       destroyOnClose
-      title='新建用户'
+      title='新建图片'
       visible={modalVisible}
       onCancel={() => onCancel()}
       footer={null}
     >
       <ProForm
-        name='validate_user_create'
+        name='validate_picture_create'
         onValuesChange={(_, values) => {
           console.log(values)
         }}
@@ -21,52 +49,35 @@ const CreateForm = (props) => {
       >
         <ProFormText width='m' name='username' rules={[{
           required: true,
-          message: '请输入用户名!'
-        }]} label='用户名' />
-        <ProFormText.Password width='m'
-          name='password'
-          rules={[{
-            required: true,
-            message: '请输入密码!'
-          }]} label='密码' />
-        <ProFormText width='m' name='name' label='真实姓名' />
-        <ProFormText
-          name='phone'
+          message: '请输入图片名称!'
+        }]} label='图片名称' />
+        <ProFormTextArea
+          name='description'
           width='m'
-          label='手机号'
-          placeholder='请输入手机号'
-          rules={[
-            {
-              required: true,
-              message: '请输入手机号!'
-            },
-            {
-              pattern: /^1\d{10}$/,
-              message: '不合法的手机号格式!'
-            }
-          ]}
-        /><ProFormText
-          name='email'
-          width='m'
-          label='邮箱'
-          placeholder='请输入邮箱'
-          rules={[
-            {
-              required: true,
-              message: '请输入邮箱!'
-            }
-          ]}
-      />
+          label='描述'
+        />
         <ProFormSelect
-          name='roles'
-          label='角色'
+          name='chapter'
+          label='所属章节'
           width='m'
           valueEnum={rolesMenu}
-          fieldProps={{
-            mode: 'multiple'
-          }}
-          rules={[{required: true, message: '请选择角色'}]}
+          rules={[{required: true, message: '请选择章节'}]}
         />
+        <Upload
+          name='picture'
+          listType='picture-card'
+          className='avatar-uploader'
+          showUploadList={false}
+          action='http://116.62.230.75:8000/file-server/file/upload'
+          beforeUpload={beforeUpload}
+          onChange={handleChange}
+        >
+          {imageUrl ? <img width={200} src={imageUrl} alt='avatar' /> : <div>
+
+            {loading ? <LoadingOutlined /> : <UploadOutlined />}
+            <div className='ant-upload-text'>上传图片</div>
+          </div>}
+        </Upload>
       </ProForm>
     </Modal>
   )

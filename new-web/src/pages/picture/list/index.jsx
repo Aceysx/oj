@@ -6,6 +6,8 @@ import {addUser, queryPictures, updateRule, updateUser} from './service'
 import {DownOutlined} from '@ant-design/icons/lib/icons'
 import {connect} from 'umi'
 import Model from '@/pages/role/list/model'
+import CreateForm from '@/pages/role/list/components/CreateForm'
+import UpdateForm from '@/pages/role/list/components/UpdateForm'
 
 const NONE_FUNCTION = () => {
 }
@@ -136,6 +138,17 @@ const PictureList = (props) => {
           queryPictures({...params, sorter, filter})}
         columns={columns}
       />
+
+      <CreateForm onCancel={() => handleModalVisible(false)}
+        modalVisible={createModalVisible}
+        handleAdd={handleAdd}
+        rolesMenu={rolesMenu} />
+
+      <UpdateForm onCancel={() => handleUpdateModalVisible(false)}
+        modalVisible={updateModalVisible}
+        updateUser={handleUpdate}
+        current={current}
+        rolesMenu={rolesMenu} />
     </div>
   )
 }
