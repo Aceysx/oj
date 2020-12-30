@@ -4,7 +4,7 @@ const init = [
     title: 'example',
     code: 'aaaaaa',
     endTime: '2222',
-    papers: []
+    classCoursePapers: []
   }
 ]
 export default (state = init, action) => {

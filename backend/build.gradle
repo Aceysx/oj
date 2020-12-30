@@ -60,6 +60,7 @@ dependencies {
     compile('com.alibaba:fastjson:1.2.44')
     compile('org.flywaydb:flyway-core')
     compileOnly 'org.projectlombok:lombok:1.18.0'
+    compile group: 'io.vavr', name: 'vavr', version: '0.10.3'
 
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-lang3:3.7'
