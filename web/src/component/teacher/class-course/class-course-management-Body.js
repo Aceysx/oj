@@ -47,8 +47,8 @@ class ClassCourseManagementBody extends Component {
         key: 'code'
       }, {
         title: '试卷数量',
-        dataIndex: 'papers',
-        key: 'papers',
+        dataIndex: 'classCoursePapers',
+        key: 'classCoursePapers',
         render: (papers) => {
           return <span>{papers.length}</span>
         }
@@ -74,6 +74,7 @@ class ClassCourseManagementBody extends Component {
       }
     ]
     const {classCoursesPageable, papers} = this.props
+    console.log(this.props)
     const {totalElements, content} = classCoursesPageable
     const {currentPage, isNewModalOpen, isEditModalOpen, classCourse, isBindPaperModalOpen} = this.state
 

@@ -26,18 +26,13 @@ public class ClassCourse {
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
   private Date endTime;
   @ManyToMany
-  @JoinTable(name = "classCoursePaper",joinColumns = @JoinColumn(name = "classCourseId"),
-    inverseJoinColumns = @JoinColumn(name = "paperId"))
-  private List<Paper> papers;
-  @ManyToMany
-  @JoinTable(name = "userClassCourse",joinColumns = @JoinColumn(name = "classCourseId"),
-    inverseJoinColumns = @JoinColumn(name = "userId"))
+  @JoinTable(name = "userClassCourse", joinColumns = @JoinColumn(name = "classCourseId"),
+      inverseJoinColumns = @JoinColumn(name = "userId"))
   private List<User> users;
 
   public void update(ClassCourse classCourse) {
     this.title = classCourse.title;
     this.code = classCourse.code;
     this.endTime = classCourse.endTime;
-    this.papers = classCourse.getPapers();
   }
 }
