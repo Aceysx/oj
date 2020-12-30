@@ -53,13 +53,9 @@ class AutoGeneratePaper extends Component {
 
   next = () => {
     const {paper} = this.state
-    const {title, endTime, timeBox,quizNumber} = paper
-    if (timeBox === '' || title === '' || endTime === '' || timeBox===undefined || title===undefined || endTime===undefined) {
+    const {title, quizNumber} = paper
+    if ( title === ''||title===undefined ) {
       message.warning('请完善信息')
-      return
-    }
-    if (timeBox < 1) {
-      message.warning('答卷时间不得少于1min')
       return
     }
     const current = this.state.current + 1;

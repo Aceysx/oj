@@ -27,7 +27,6 @@ import java.util.Map;
 public class PictureController {
     private final PictureService pictureService;
     private final PictureRepository pictureRepository;
-    private final ResourceLoader resourceLoader;
 
     @GetMapping("pageable")
     public ResponseEntity getPictures(
