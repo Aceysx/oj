@@ -73,7 +73,6 @@ class Paper extends React.Component {
 
   }
   getSingleQuiz = (quiz, answer, preview, onChange) => {
-
     return <RadioGroup
       onChange={e => onChange(quiz.id.toString(), e.target.value)}
       value={parseInt(answer)}

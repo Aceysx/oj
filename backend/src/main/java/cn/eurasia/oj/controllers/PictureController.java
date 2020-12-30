@@ -24,9 +24,8 @@ import java.util.Map;
 @RequestMapping(value = "/api/pictures")
 @RequiredArgsConstructor
 public class PictureController {
-  private final PictureService pictureService;
-  private final PictureRepository pictureRepository;
-  private final ResourceLoader resourceLoader;
+    private final PictureService pictureService;
+    private final PictureRepository pictureRepository;
 
   @GetMapping("pageable")
   public ResponseEntity getPictures(

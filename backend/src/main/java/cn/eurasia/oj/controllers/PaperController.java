@@ -23,54 +23,53 @@ import java.util.List;
 @RequestMapping(value = "/api/papers")
 @RequiredArgsConstructor
 public class PaperController {
-    private final PaperService paperService;
+  private final PaperService paperService;
 
-    @GetMapping("pageable")
-    public ResponseEntity getPapersByPage(
-        @PageableDefault(sort = {"id"},
-            direction = Sort.Direction.DESC) Pageable pageable,
-        @Auth User user) {
-        return ResponseEntity.ok(paperService.getQuizzesByPage(pageable));
-    }
+  @GetMapping("pageable")
+  public ResponseEntity getPapersByPage(
+      @PageableDefault(sort = {"id"},
+          direction = Sort.Direction.DESC) Pageable pageable) {
+    return ResponseEntity.ok(paperService.getQuizzesByPage(pageable));
+  }
 
-    @GetMapping("")
-    public ResponseEntity getPapers(@Auth User user) {
-        return ResponseEntity.ok(paperService.findAll(user.getId()));
-    }
+  @GetMapping("")
+  public ResponseEntity getPapers(@Auth User user) {
+    return ResponseEntity.ok(paperService.findAll(user.getId()));
+  }
 
-    @GetMapping("{paperId}")
-    public ResponseEntity getPaper(@PathVariable Long paperId) throws BusinessException {
-        return ResponseEntity.ok(paperService.findPaper(paperId));
-    }
+  @GetMapping("{paperId}")
+  public ResponseEntity getPaper(@PathVariable Long paperId) throws BusinessException {
+    return ResponseEntity.ok(paperService.findPaper(paperId));
+  }
 
-    @PostMapping("")
-    public ResponseEntity addPaper(@RequestBody CreatePaperParam createPaperParam,
-                                   @Auth User current) {
+  @PostMapping("")
+  public ResponseEntity addPaper(@RequestBody CreatePaperParam createPaperParam,
+                                 @Auth User current) {
 
-        Paper paper = paperService.addPaper(createPaperParam, current);
-        return ResponseEntity.created(URI.create("/api/papers/" + paper.getId())).build();
-    }
+    Paper paper = paperService.addPaper(createPaperParam, current);
+    return ResponseEntity.created(URI.create("/api/papers/" + paper.getId())).build();
+  }
 
-    @PostMapping("addAutoPaper")
-    public ResponseEntity addAutoPaper(@RequestBody CreatePaperAutoGenerateParam param,
-                                       @Auth User current) {
-        List<Quiz> randomQuizzes = paperService.findQuizzesByAttribute(param.getCurrentMajorId(), param.getCurrentChapter(), param.getCurrentLevel(), param.getCurrentQuizType(), param.getQuizNumber());//获取随机数目的题目
-        param.setQuizzes(randomQuizzes);//将其添加到quizzes参数中
-        Paper paper = paperService.addAutoPaper(param, current);//将其保存在数据库中
-        return ResponseEntity.created(URI.create("/api/papers/" + paper.getId())).build();
-    }
+  @PostMapping("addAutoPaper")
+  public ResponseEntity addAutoPaper(@RequestBody CreatePaperAutoGenerateParam param,
+                                     @Auth User current) {
+    List<Quiz> randomQuizzes = paperService.findQuizzesByAttribute(param.getCurrentMajorId(), param.getCurrentChapter(), param.getCurrentLevel(), param.getCurrentQuizType(), param.getQuizNumber());//获取随机数目的题目
+    param.setQuizzes(randomQuizzes);//将其添加到quizzes参数中
+    Paper paper = paperService.addAutoPaper(param, current);//将其保存在数据库中
+    return ResponseEntity.created(URI.create("/api/papers/" + paper.getId())).build();
+  }
 
-    @PutMapping("")
-    public ResponseEntity editPaper(@RequestBody Paper paper) throws BusinessException {
-        paperService.editPaper(paper);
-        return ResponseEntity.noContent().build();
-    }
+  @PutMapping("")
+  public ResponseEntity editPaper(@RequestBody Paper paper) throws BusinessException {
+    paperService.editPaper(paper);
+    return ResponseEntity.noContent().build();
+  }
 
 
-    @DeleteMapping("{id}")
-    public ResponseEntity deletePaper(@PathVariable Long id) throws BusinessException {
-        paperService.deletePaper(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
+  @DeleteMapping("{id}")
+  public ResponseEntity deletePaper(@PathVariable Long id) throws BusinessException {
+    paperService.deletePaper(id);
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
 
 }
