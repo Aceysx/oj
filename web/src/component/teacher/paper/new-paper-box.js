@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
 import {Button, Divider, Form, Input, message, Pagination, Select, Tag, Transfer} from 'antd'
 import Modal from "antd/es/modal/Modal";
-import {getChapters, getQuizzes} from "../../../action/quiz-action";
 import {addPaper, editPaper} from "../../../action/paper-action";
-import {getMajors} from "../../../action/major-action";
 import {connect} from "react-redux";
 import Paper from "../../common/paper";
 
@@ -16,6 +14,7 @@ class NewPaperBox extends Component {
         currentChapter: -1,
         currentLevel: -1,
         currentPage: 1,
+        displayAll: false,
         previewQuizzes: [],
         paper: {
             title: '',
@@ -25,31 +24,24 @@ class NewPaperBox extends Component {
         targetKeys: []
     }
 
-    componentDidMount = () => {
-        this.props.getMajors()
-        this.props.getQuizzes()
-        this.props.getChapters()
-    }
-
     componentWillReceiveProps = (nextProps) => {
-        const {paper = {title: '', quizzes: []}} = nextProps
+        const {paper = {title: '', quizzes: []}, quizzes} = nextProps
         let targetKeys = []
         if (!paper.id || paper.id === this.state.paper.id) {
             return false
         }
-        if (paper) {
-            targetKeys = paper.quizzes.map(quiz => quiz.id.toString())
-        }
-        this.setState({paper, targetKeys});
+        targetKeys = paper.quizzes.map(quiz => quiz.id.toString())
+        const previewQuizzes = quizzes.filter(quiz => targetKeys.includes(quiz.id.toString()))
+        paper.quizzes = targetKeys
+        this.setState({paper, targetKeys, previewQuizzes});
     }
-    createPaper = () => {
 
-    }
     reset = () => {
         this.setState({
             currentMajorId: -1,
             currentChapter: -1,
-            currentLevel: -1
+            currentLevel: -1,
+            displayAll: true
         })
     }
 
@@ -62,27 +54,50 @@ class NewPaperBox extends Component {
         this.setState({targetKeys, paper, previewQuizzes})
     }
 
+    validate = paper => {
+        const {title, quizzes} = paper
+        if (!title) {
+            message.warn('试卷名称不能为空')
+            return false
+        }
+        if (!(quizzes || []).length > 0) {
+            message.warn('请选择题目')
+            return false
+        }
+        return true
+    }
     operPaper = () => {
         const {paper} = this.state
+
+        if (!this.validate(paper)) {
+            return
+        }
+        paper.quizzes = paper.quizzes.map(id => {
+                return {id}
+            }
+        )
         if (paper.id) {
             this.props.editPaper(paper, () => {
                 message.success('编辑成功')
                 this.props.onCancel()
-            })
+            });
         } else {
             this.props.addPaper(paper, () => {
                 message.success('添加成功')
                 this.props.onCancel()
-            })
+            });
         }
 
     }
 
     filter = quizzes => {
         let result = quizzes
-        const {currentMajorId, currentChapter, currentLevel, currentPage, targetKeys} = this.state
+        const {currentMajorId, currentChapter, currentLevel, currentPage, displayAll} = this.state
+        if (displayAll) {
+            return {data: result, total: result.length}
+        }
         if (currentChapter === -1 && currentLevel === -1 && currentMajorId === -1) {
-            return {data: [], total: 0}
+            return {data: [], total: 0};
         }
         if (currentChapter !== -1) {
             result = result.filter(quiz => quiz.chapter === currentChapter);
@@ -142,13 +157,12 @@ class NewPaperBox extends Component {
         const {targetKeys, paper, currentMajorId, currentChapter, currentLevel, previewQuizzes} = this.state
         const {quizzes = [], visible} = this.props
         const dataSource = this.getQuizzesDataSource(quizzes)
-
         return <Modal
             maskClosable={false}
             title='创建试卷'
             width='100%%'
             visible={visible}
-            onOk={this.createPaper}
+            onOk={this.operPaper}
             onCancel={() => this.props.onCancel()}
         >
             <div>
@@ -163,7 +177,11 @@ class NewPaperBox extends Component {
                     <Tag color="#f50">课程名称</Tag>
                     <Select value={currentMajorId}
                             style={{width: 120}}
-                            onChange={currentMajorId => this.setState({currentMajorId, currentPage: 1})}>
+                            onChange={currentMajorId => this.setState({
+                                currentMajorId,
+                                currentPage: 1,
+                                displayAll: false
+                            })}>
                         <Option value={-1}>全部</Option>
                         {this.getMajorList()}
                     </Select>
@@ -172,7 +190,11 @@ class NewPaperBox extends Component {
                     <Tag color="#2db7f5">章节</Tag>
                     <Select value={currentChapter}
                             style={{width: 120}}
-                            onChange={currentChapter => this.setState({currentChapter, currentPage: 1})}>
+                            onChange={currentChapter => this.setState({
+                                currentChapter,
+                                currentPage: 1,
+                                displayAll: false
+                            })}>
                         <Option value={-1}>全部</Option>
                         {this.getChapterList(quizzes)}
                     </Select>
@@ -181,7 +203,7 @@ class NewPaperBox extends Component {
                     <Tag color="#87d068">难度</Tag>
                     <Select value={currentLevel}
                             style={{width: 120}}
-                            onChange={currentLevel => this.setState({currentLevel, currentPage: 1})}>
+                            onChange={currentLevel => this.setState({currentLevel, currentPage: 1, displayAll: false})}>
                         <Option value={-1}>全部</Option>
                         <Option value='一级'>一级</Option>
                         <Option value='二级'>二级</Option>
@@ -236,11 +258,9 @@ const mapStateToProps = ({user, quizzes, majors, chapters}) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    getChapters: () => dispatch(getChapters()),
     addPaper: (paper, callback) => dispatch(addPaper(paper, callback)),
     editPaper: (paper, callback) => dispatch(editPaper(paper, callback)),
-    getMajors: () => dispatch(getMajors()),
-    getQuizzes: () => dispatch(getQuizzes())
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewPaperBox)
