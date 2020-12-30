@@ -1,192 +1,266 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Button, Divider, message, Steps} from 'antd'
+import {Button, Divider, Form, Input, message, Pagination, Select, Tag, Transfer} from 'antd'
 import Modal from "antd/es/modal/Modal";
-import PaperBindQuizBox from "./paper-bind-quiz-Box";
-import PaperBasicInfoModal from './paper-basic-info-modal'
-import {getMajors} from '../../../action/major-action'
-import {getChapters, getQuizzes} from "../../../action/quiz-action";
-import Paper from '../../common/paper'
 import {addPaper, editPaper} from "../../../action/paper-action";
+import {connect} from "react-redux";
+import Paper from "../../common/paper";
 
-const Step = Steps.Step
+const {Option} = Select
+const PAGE_SIZE = 10
 
 class NewPaperBox extends Component {
-  state = {
-    current: 0,
-    currentMajorId: -1,
-    currentChapter: -1,
-    currentLevel: -1,
-    paper: {
-      title: '',
-      id: '',
-      endTime: '',
-      quizzes: [],
-      timeBox: ''
-    },
-    targetKeys: [],
-    chapters:[]
-  }
-
-  componentDidMount = () => {
-    this.props.getMajors()
-    this.props.getQuizzes()
-    this.props.getChapters()
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    const {paper = {title: '', quizzes: []}} = nextProps
-    let targetKeys = []
-    if (paper === this.state.paper) {
-      return false
-    }
-    if (paper) {
-      targetKeys = paper.quizzes.map(quiz => quiz.id.toString())
-    }
-    this.setState({paper, targetKeys});
-  }
-
-  next = () => {
-    const {paper} = this.state
-    const {title, endTime, timeBox} = paper
-    if (timeBox === '' || title === '' || endTime === '') {
-      message.warning('请完善信息')
-      return
-    }
-    if (timeBox < 1) {
-      message.warning('答卷时间不得少于1min')
-      return
-    }
-    const current = this.state.current + 1;
-    this.setState({current});
-  }
-
-  prev = () => {
-    const current = this.state.current - 1;
-    this.setState({current});
-  }
-
-  updatePaper = (key, value) => {
-    const {paper} = this.state;
-    paper[key] = value
-    this.setState({paper})
-  }
-
-  reset = () => {
-    this.setState({
-      currentMajorId: -1,
-      currentChapter: -1,
-      currentLevel: -1
-    })
-  }
-
-  updatePaperQuizzes = (targetKeys) => {
-    let {quizzes} = this.props
-    let {paper} = this.state
-    paper.quizzes = quizzes.filter(quiz => targetKeys.includes(quiz.id.toString()))
-
-    this.setState({targetKeys, paper})
-  }
-  operPaper = () => {
-    const {paper} = this.state
-    if (paper.id) {
-      this.props.editPaper(paper, () => {
-        message.success('编辑成功')
-        this.props.onCancel()
-      })
-    } else {
-      this.props.addPaper(paper, () => {
-        message.success('添加成功')
-        this.props.onCancel()
-      })
+    state = {
+        currentMajorId: -1,
+        currentChapter: -1,
+        currentLevel: -1,
+        currentPage: 1,
+        displayAll: false,
+        previewQuizzes: [],
+        paper: {
+            title: '',
+            id: '',
+            quizzes: []
+        },
+        targetKeys: []
     }
 
-  }
+    componentWillReceiveProps = (nextProps) => {
+        const {paper = {title: '', quizzes: []}, quizzes} = nextProps
+        let targetKeys = []
+        if (!paper.id || paper.id === this.state.paper.id) {
+            return false
+        }
+        targetKeys = paper.quizzes.map(quiz => quiz.id.toString())
+        const previewQuizzes = quizzes.filter(quiz => targetKeys.includes(quiz.id.toString()))
+        paper.quizzes = targetKeys
+        this.setState({paper, targetKeys, previewQuizzes});
+    }
 
-  render() {
-    const {current, targetKeys, paper, currentMajorId, currentChapter, currentLevel} = this.state
-    const {majors, quizzes,chapters} = this.props
-    const steps = [{
-      title: '创建试卷',
-      content: <PaperBasicInfoModal
-        paper={paper}
-        updatePaper={this.updatePaper}/>,
-    }, {
-      title: '绑定试题',
-      content: <PaperBindQuizBox
-        currentMajorId={currentMajorId}
-        currentChapter={currentChapter}
-        currentLevel={currentLevel}
-        majorChangeHandle={currentMajorId => this.setState({currentMajorId}, () => {
-          this.setState({
+    reset = () => {
+        this.setState({
+            currentMajorId: -1,
             currentChapter: -1,
-            chapters: chapters.filter(item => item.majorId === currentMajorId)
-          })
-        })}
-        levelChangeHandle={currentLevel => this.setState({currentLevel})}
-        chapterChangeHandle={currentChapter => this.setState({currentChapter})}
-        reset={this.reset}
-        quizzes={quizzes}
-        chapters={this.state.chapters}
-        majors={majors}
-        targetKeys={targetKeys}
-        updatePaperQuizzes={this.updatePaperQuizzes}
-      />,
-    }, {
-      title: '完成',
-      content: <Paper paper={{...paper}} preview/>,
-    }];
+            currentLevel: -1,
+            displayAll: true
+        })
+    }
 
+    updatePaperQuizzes = (targetKeys) => {
+        let {paper} = this.state
+        const {quizzes} = this.props
+        const previewQuizzes = quizzes.filter(quiz => targetKeys.includes(quiz.id.toString()))
+        paper.quizzes = targetKeys
 
-    return <Modal
-      maskClosable={false}
-      title={<Steps style={{width: '90%'}} current={current}>
-        {steps.map(item => <Step key={item.title} title={item.title}/>)}
-      </Steps>}
-      width='90%'
-      visible={this.props.visible}
-      footer={null}
-      onCancel={() => this.props.onCancel()}
-    >
-      <div className="steps-content">
-        {steps[current].content}
-      </div>
-      <Divider type='horizontal'/>
-      <div className="steps-action">
-        {
-          current < steps.length - 1
-          && <Button type="primary" onClick={() => this.next()}>下一步</Button>
+        this.setState({targetKeys, paper, previewQuizzes})
+    }
+
+    validate = paper => {
+        const {title, quizzes} = paper
+        if (!title) {
+            message.warn('试卷名称不能为空')
+            return false
         }
-        {
-          current === steps.length - 1
-          && <Button type="primary" onClick={this.operPaper}>完成</Button>
+        if (!(quizzes || []).length > 0) {
+            message.warn('请选择题目')
+            return false
         }
-        {
-          current > 0
-          && (
-            <Button style={{marginLeft: 8}} onClick={() => this.prev()}>
-              上一步
-            </Button>
-          )
+        return true
+    }
+    operPaper = () => {
+        const {paper} = this.state
+
+        if (!this.validate(paper)) {
+            return
         }
-      </div>
-    </Modal>
-  }
+        paper.quizzes = paper.quizzes.map(id => {
+                return {id}
+            }
+        )
+        if (paper.id) {
+            this.props.editPaper(paper, () => {
+                message.success('编辑成功')
+                this.props.onCancel()
+            });
+        } else {
+            this.props.addPaper(paper, () => {
+                message.success('添加成功')
+                this.props.onCancel()
+            });
+        }
+
+    }
+
+    filter = quizzes => {
+        let result = quizzes
+        const {currentMajorId, currentChapter, currentLevel, currentPage, displayAll} = this.state
+        if (displayAll) {
+            return {data: result, total: result.length}
+        }
+        if (currentChapter === -1 && currentLevel === -1 && currentMajorId === -1) {
+            return {data: [], total: 0};
+        }
+        if (currentChapter !== -1) {
+            result = result.filter(quiz => quiz.chapter === currentChapter);
+        }
+        if (currentMajorId !== -1) {
+            result = result.filter(quiz => {
+                if (!quiz.major) return false
+                return quiz.major.id === currentMajorId
+            })
+        }
+        if (currentLevel !== -1) {
+            result = result.filter(quiz => quiz.level === currentLevel)
+        }
+        return {
+            data: result.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+            total: result.length
+        }
+    }
+
+    getQuizzesDataSource = (quizzes) => {
+        const page = this.filter(quizzes)
+        page.data = page.data.map(quiz => {
+            return {
+                key: quiz.id.toString(),
+                title: quiz.description,
+                description: <span key={quiz.id}>
+          <Tag color="#2db7f5">章节</Tag>{quiz.chapter}<Divider type='vertical'/>
+          <Tag color="green">{quiz.type}</Tag>
+          </span>,
+            };
+        })
+        return page
+    }
+    getMajorList = () => {
+        const {majors} = this.props
+        return majors.map(major => <Option key={major.id} value={major.id}>{major.name}</Option>)
+    }
+
+    getChapterList = () => {
+        return this.props.chapters.map((item, index) =>
+            <Option key={index} value={item.chapter}>{item.chapter}</Option>)
+    }
+
+    renderItem = (item) => {
+        const customLabel = (
+            <span className="custom-item">
+        {item.title} - {item.description}
+      </span>
+        )
+        return {
+            label: customLabel,
+            value: item.title,
+        }
+    }
+
+    render() {
+        const {targetKeys, paper, currentMajorId, currentChapter, currentLevel, previewQuizzes} = this.state
+        const {quizzes = [], visible} = this.props
+        const dataSource = this.getQuizzesDataSource(quizzes)
+        return <Modal
+            maskClosable={false}
+            title='创建试卷'
+            width='100%%'
+            visible={visible}
+            onOk={this.operPaper}
+            onCancel={() => this.props.onCancel()}
+        >
+            <div>
+                <Form.Item
+                    label='试卷名称'>
+                    <Input value={paper.title} onChange={e => {
+                        paper.title = e.target.value
+                        this.setState({paper})
+                    }}/>
+                </Form.Item>
+                <p>
+                    <Tag color="#f50">课程名称</Tag>
+                    <Select value={currentMajorId}
+                            style={{width: 120}}
+                            onChange={currentMajorId => this.setState({
+                                currentMajorId,
+                                currentPage: 1,
+                                displayAll: false
+                            })}>
+                        <Option value={-1}>全部</Option>
+                        {this.getMajorList()}
+                    </Select>
+
+                    <Divider type='vertical'/>
+                    <Tag color="#2db7f5">章节</Tag>
+                    <Select value={currentChapter}
+                            style={{width: 120}}
+                            onChange={currentChapter => this.setState({
+                                currentChapter,
+                                currentPage: 1,
+                                displayAll: false
+                            })}>
+                        <Option value={-1}>全部</Option>
+                        {this.getChapterList(quizzes)}
+                    </Select>
+
+                    <Divider type='vertical'/>
+                    <Tag color="#87d068">难度</Tag>
+                    <Select value={currentLevel}
+                            style={{width: 120}}
+                            onChange={currentLevel => this.setState({currentLevel, currentPage: 1, displayAll: false})}>
+                        <Option value={-1}>全部</Option>
+                        <Option value='一级'>一级</Option>
+                        <Option value='二级'>二级</Option>
+                        <Option value='三级'>三级</Option>
+                        <Option value='四级'>四级</Option>
+                    </Select>
+                    <Divider type='vertical'/>
+                    <Button
+                        type="primary"
+                        icon="search"
+                        onClick={this.reset}>
+                        查看所有绑定题目
+                    </Button>
+                </p>
+                <Transfer
+                    dataSource={dataSource.data}
+                    showSearch
+                    listStyle={{
+                        width: '45%',
+                        height: '450px',
+                    }}
+                    operations={['添加', '移除']}
+                    targetKeys={[...targetKeys]}
+                    onChange={this.updatePaperQuizzes}
+                    render={this.renderItem}
+                />
+                {
+                    dataSource.total
+                        ? <div style={{margin: '10px 0'}}><Pagination
+                            defaultCurrent={1}
+                            onChange={currentPage => this.setState({currentPage})}
+                            total={dataSource.total}/>
+                        </div>
+                        : ''
+                }
+
+            </div>
+
+            <Divider orientation="left">预览</Divider>
+            <Paper paper={{...paper, quizzes: previewQuizzes}}
+                   preview onChange={() => {
+            }}/>
+        </Modal>
+    }
 }
 
-const mapStateToProps = ({user, quizzes, majors,chapters}) => ({
-  user,
-  chapters,
-  majors,
-  quizzes
+const mapStateToProps = ({user, quizzes, majors, chapters}) => ({
+    user,
+    chapters,
+    majors,
+    quizzes
 })
 
 const mapDispatchToProps = dispatch => ({
-  getChapters: () => dispatch(getChapters()),
-  addPaper: (paper, callback) => dispatch(addPaper(paper, callback)),
-  editPaper: (paper, callback) => dispatch(editPaper(paper, callback)),
-  getMajors: () => dispatch(getMajors()),
-  getQuizzes: () => dispatch(getQuizzes())
+    addPaper: (paper, callback) => dispatch(addPaper(paper, callback)),
+    editPaper: (paper, callback) => dispatch(editPaper(paper, callback)),
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewPaperBox)
