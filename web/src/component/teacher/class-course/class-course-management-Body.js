@@ -9,127 +9,127 @@ import {getPapers} from "../../../action/paper-action";
 import {Link} from "react-router-dom";
 
 class ClassCourseManagementBody extends Component {
-  state = {
-    currentPage: 1,
-    isNewModalOpen: false,
-    isEditModalOpen: false,
-    isBindPaperModalOpen: false,
-    classCourse: {papers: []}
-  }
+    state = {
+        currentPage: 1,
+        isNewModalOpen: false,
+        isEditModalOpen: false,
+        isBindPaperModalOpen: false,
+        classCourse: {papers: []}
+    }
 
-  componentDidMount = () => {
-    this.props.getClassCourses(this.state.currentPage)
-    this.props.getPapers()
-  }
+    componentDidMount = () => {
+        this.props.getClassCourses(this.state.currentPage)
+        this.props.getPapers()
+    }
 
-  getClassCourse = (pagination) => {
-    const {current} = pagination
-    this.setState({currentPage: current}, () => {
-      this.props.getClassCourses(current)
-    })
-  }
+    getClassCourse = (pagination) => {
+        const {current} = pagination
+        this.setState({currentPage: current}, () => {
+            this.props.getClassCourses(current)
+        })
+    }
 
-  updatePapers = (papers) => {
-    const {classCourse} = this.state
-    classCourse.papers = papers
-    this.setState({classCourse})
-  }
+    updatePapers = (papers) => {
+        const {classCourse} = this.state
+        classCourse.papers = papers
+        this.setState({classCourse})
+    }
 
-  render() {
-    const columns = [
-      {
-        title: '名称',
-        dataIndex: 'title',
-        key: 'title'
-      }, {
-        title: '口令',
-        dataIndex: 'code',
-        key: 'code'
-      }, {
-        title: '试卷数量',
-        dataIndex: 'classCoursePapers',
-        key: 'classCoursePapers',
-        render: (papers) => {
-          return <span>{papers.length}</span>
-        }
-      }, {
-        title: '截止时间',
-        dataIndex: 'endTime',
-        key: 'endTime'
-      }, {
-        title: '操作',
-        dataIndex: 'actions',
-        key: 'actions',
-        render: (text, classCourse) => {
-          return <div>
-            <a onClick={() => this.setState({isEditModalOpen: true, classCourse})}>编辑</a>
-            <Divider type='vertical'/>
-            <a onClick={() => this.setState({isBindPaperModalOpen: true, classCourse})}>绑定试卷</a>
-            <Divider type='vertical'/>
-            <a onClick={() => this.props.deleteClassCourse(classCourse.id)}>删除</a>
-            <Divider type='vertical'/>
-            <Link to={`/teachers/class-courses/${classCourse.id}/papers/review`}>阅卷</Link>
-          </div>
-        }
-      }
-    ]
-    const {classCoursesPageable, papers} = this.props
-    console.log(this.props)
-    const {totalElements, content} = classCoursesPageable
-    const {currentPage, isNewModalOpen, isEditModalOpen, classCourse, isBindPaperModalOpen} = this.state
+    render() {
+        const columns = [
+            {
+                title: '名称',
+                dataIndex: 'title',
+                key: 'title'
+            }, {
+                title: '口令',
+                dataIndex: 'code',
+                key: 'code'
+            }, {
+                title: '试卷数量',
+                dataIndex: 'classCoursePapers',
+                key: 'classCoursePapers',
+                render: (papers = []) => {
+                    return <span>{papers.length}</span>
+                }
+            }, {
+                title: '截止时间',
+                dataIndex: 'endTime',
+                key: 'endTime'
+            }, {
+                title: '操作',
+                dataIndex: 'actions',
+                key: 'actions',
+                render: (text, classCourse) => {
+                    return <div>
+                        <a onClick={() => this.setState({isEditModalOpen: true, classCourse})}>编辑</a>
+                        <Divider type='vertical'/>
+                        <a onClick={() => this.setState({isBindPaperModalOpen: true, classCourse})}>绑定试卷</a>
+                        <Divider type='vertical'/>
+                        <a onClick={() => this.props.deleteClassCourse(classCourse.id)}>删除</a>
+                        <Divider type='vertical'/>
+                        <Link to={`/teachers/class-courses/${classCourse.id}/papers/review`}>阅卷</Link>
+                    </div>
+                }
+            }
+        ]
+        const {classCoursesPageable, papers} = this.props
+        console.log(this.props)
+        const {totalElements, content} = classCoursesPageable
+        const {currentPage, isNewModalOpen, isEditModalOpen, classCourse, isBindPaperModalOpen} = this.state
 
-    return <div>
-      <p><Button
-        type="primary"
-        onClick={() => this.setState({isNewModalOpen: true})}>
-        添加班课
-      </Button></p>
+        return <div>
+            <p><Button
+                type="primary"
+                onClick={() => this.setState({isNewModalOpen: true})}>
+                添加班课
+            </Button></p>
 
-      <NewClassCourseModal
-        isNewModalOpen={isNewModalOpen}
-        closeModal={() => this.setState({isNewModalOpen: false})}
-        addClassCourse={this.props.addClassCourse}
-      />
-      <EditClassCourseModal
-        isNewModalOpen={isEditModalOpen}
-        closeModal={() => this.setState({isEditModalOpen: false})}
-        editClassCourse={this.props.editClassCourse}
-        classCourse={classCourse}
-      />
-      <ClassCourseBindPaperBox
-        visible={isBindPaperModalOpen}
-        classCourse={classCourse}
-        papers={papers}
-        updatePapers={this.updatePapers}
-        editClassCourse={this.props.editClassCourse}
-        closeModal={() => this.setState({isBindPaperModalOpen: false})}
-      />
-      <Table
-        bordered
-        columns={columns}
-        dataSource={content}
-        rowKey='id'
-        onChange={(pagination) => this.getClassCourse(pagination)}
-        pagination={{
-          defaultCurrent: currentPage,
-          total: totalElements
-        }}/>
-    </div>
-  }
+            <NewClassCourseModal
+                isNewModalOpen={isNewModalOpen}
+                closeModal={() => this.setState({isNewModalOpen: false})}
+                addClassCourse={this.props.addClassCourse}
+            />
+            <EditClassCourseModal
+                isNewModalOpen={isEditModalOpen}
+                closeModal={() => this.setState({isEditModalOpen: false})}
+                editClassCourse={this.props.editClassCourse}
+                classCourse={classCourse}
+            />
+            <ClassCourseBindPaperBox
+                visible={isBindPaperModalOpen}
+                classCourse={classCourse}
+                papers={papers}
+                updatePapers={this.updatePapers}
+                editClassCourse={this.props.editClassCourse}
+                closeModal={() => this.setState({isBindPaperModalOpen: false})}
+            />
+            <Table
+                bordered
+                columns={columns}
+                dataSource={content}
+                rowKey='id'
+                onChange={(pagination) => this.getClassCourse(pagination)}
+                pagination={{
+                    defaultCurrent: currentPage,
+                    total: totalElements
+                }}/>
+        </div>
+    }
 }
 
 const mapStateToProps = ({user, classCoursesPageable, papers}) => ({
-  user,
-  classCoursesPageable,
-  papers
+    user,
+    classCoursesPageable,
+    papers
 })
 
 const mapDispatchToProps = dispatch => ({
-  getClassCourses: (current) => dispatch(getClassCourses(current)),
-  addClassCourse: (classCourse, callback) => dispatch(addClassCourse(classCourse, callback)),
-  editClassCourse: (classCourse, callback) => dispatch(editClassCourse(classCourse, callback)),
-  getPapers: () => dispatch(getPapers()),
-  deleteClassCourse: id => dispatch(deleteClassCourse(id))
+    getClassCourses: (current) => dispatch(getClassCourses(current)),
+    addClassCourse: (classCourse, callback) => dispatch(addClassCourse(classCourse, callback)),
+    editClassCourse: (classCourse, callback) => dispatch(editClassCourse(classCourse, callback)),
+    getPapers: () => dispatch(getPapers()),
+    deleteClassCourse: id => dispatch(deleteClassCourse(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassCourseManagementBody)

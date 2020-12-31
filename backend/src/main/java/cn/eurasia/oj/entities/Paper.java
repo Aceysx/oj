@@ -31,6 +31,12 @@ public class Paper {
   @JoinColumn(name = "userId")
   private User user;
 
+
+  @Transient
+  private Date endTime;
+  @Transient
+  private Integer timeBox;
+
   public Paper(String title, List<Quiz> quizzes, User current, Long timeBox) {
     this.title = title;
     this.quizzes = quizzes;

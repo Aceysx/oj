@@ -93,8 +93,7 @@ public class ClassCourseController {
 
   @GetMapping("{classCourseId}/papers")
   public ResponseEntity getPapersByClassCourseId(@PathVariable Long classCourseId) throws BusinessException {
-    return null;
-//    return ResponseEntity.ok(classCourseService.getBy(classCourseId).getPapers());
+    return ResponseEntity.ok(classCourseService.getClassCoursePapersBy(classCourseId));
   }
 
   @DeleteMapping("{id}")

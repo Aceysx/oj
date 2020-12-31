@@ -9,11 +9,11 @@ class PaperReviewBody extends React.Component {
 
     componentDidMount = () => {
         const {classCourseId} = this.props.match.params
-        this.props.getPapersBy(classCourseId, papers => {
-            if (papers.length > 0) {
-                this.props.statistic(classCourseId, papers[0].id);
-            }
-        })
+        // this.props.getPapersBy(classCourseId, papers => {
+        //     if (papers.length > 0) {
+        //         this.props.statistic(classCourseId, papers[0].id);
+        //     }
+        // })
     }
 
     render() {
