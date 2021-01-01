@@ -7,7 +7,7 @@ services:
         - 8082:8080
       volumes:
         - ./backend/build/libs:/home/app/oj
-      command: sh -c "java -jar build/libs/backend.jar"
+      command: sh -c "java -jar backend.jar"
       networks:
         main:
           aliases:
