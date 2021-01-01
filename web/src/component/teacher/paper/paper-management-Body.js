@@ -76,14 +76,14 @@ class PaperManagementBody extends Component {
                 }
             }
         ]
-        const {paperPageable} = this.props
+        const {paperPageable, quizzes, chapters, majors} = this.props
         const {totalElements, content} = paperPageable || {}
         const {
             currentPage, isShowNewPaperBox,
             isPreviewModalOpen, paper,
             isEditModalOpen, isAutoGenerateTestPaper
         } = this.state
-
+        console.log(paper)
         return <div>
             <p><Button
                 type="primary"
@@ -101,6 +101,9 @@ class PaperManagementBody extends Component {
                 isShowNewPaperBox ?
                     <NewPaperBox
                         visible={isShowNewPaperBox}
+                        chapters={chapters}
+                        majors={majors}
+                        quizzes={quizzes}
                         onCancel={this.cancel}/>
                     : ''
             }
@@ -117,6 +120,9 @@ class PaperManagementBody extends Component {
                     <NewPaperBox
                         visible={isEditModalOpen}
                         paper={paper}
+                        chapters={chapters}
+                        majors={majors}
+                        quizzes={quizzes}
                         onCancel={this.cancel}/>
                     : ''
             }{
@@ -142,9 +148,11 @@ class PaperManagementBody extends Component {
     }
 }
 
-const mapStateToProps = ({user, paperPageable}) => ({
+const mapStateToProps = ({user, paperPageable, quizzes,chapters,majors}) => ({
     user,
-    paperPageable
+    paperPageable,
+    quizzes,
+    chapters,majors
 })
 
 const mapDispatchToProps = dispatch => ({
