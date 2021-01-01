@@ -6,7 +6,7 @@ services:
       ports:
         - 8082:8080
       volumes:
-        - ./backend:/home/app/oj/build/libs
+        - ./backend/build/libs:/home/app/oj
       command: sh -c "java -jar build/libs/backend.jar"
       networks:
         main:
