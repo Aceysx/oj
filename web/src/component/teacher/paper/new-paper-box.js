@@ -24,7 +24,20 @@ class NewPaperBox extends Component {
         targetKeys: []
     }
 
-    componentWillReceiveProps = (nextProps) => {
+    componentDidMount() {
+        const {paper = {title: '', quizzes: []}, quizzes} = this.props
+        let targetKeys = paper.quizzes
+        if (paper.id) {
+            targetKeys = paper.quizzes.map(quiz => quiz.id.toString());
+            paper.quizzes = targetKeys
+        }
+        const previewQuizzes = quizzes.filter(quiz => targetKeys.includes(quiz.id.toString()))
+        console.log(paper)
+        this.setState({paper, targetKeys, previewQuizzes});
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log('nextProps')
         const {paper = {title: '', quizzes: []}, quizzes} = nextProps
         let targetKeys = []
         if (!paper.id || paper.id === this.state.paper.id) {
@@ -33,6 +46,7 @@ class NewPaperBox extends Component {
         targetKeys = paper.quizzes.map(quiz => quiz.id.toString())
         const previewQuizzes = quizzes.filter(quiz => targetKeys.includes(quiz.id.toString()))
         paper.quizzes = targetKeys
+        console.log(paper)
         this.setState({paper, targetKeys, previewQuizzes});
     }
 
@@ -157,9 +171,10 @@ class NewPaperBox extends Component {
         const {targetKeys, paper, currentMajorId, currentChapter, currentLevel, previewQuizzes} = this.state
         const {quizzes = [], visible} = this.props
         const dataSource = this.getQuizzesDataSource(quizzes)
+        console.log(paper)
         return <Modal
             maskClosable={false}
-            title='创建试卷'
+            title={paper.id ? '编辑试卷' : '创建试卷'}
             width='100%%'
             visible={visible}
             onOk={this.operPaper}
@@ -250,17 +265,10 @@ class NewPaperBox extends Component {
     }
 }
 
-const mapStateToProps = ({user, quizzes, majors, chapters}) => ({
-    user,
-    chapters,
-    majors,
-    quizzes
-})
-
 const mapDispatchToProps = dispatch => ({
     addPaper: (paper, callback) => dispatch(addPaper(paper, callback)),
     editPaper: (paper, callback) => dispatch(editPaper(paper, callback)),
 
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewPaperBox)
+export default connect(null, mapDispatchToProps)(NewPaperBox)
