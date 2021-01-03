@@ -51,18 +51,13 @@ const CreateForm = (props) => {
           required: true,
           message: '请输入图片名称!'
         }]} label='图片名称' />
-        <ProFormTextArea
-          name='description'
-          width='m'
-          label='描述'
-        />
-        <ProFormSelect
-          name='chapter'
-          label='所属章节'
-          width='m'
-          valueEnum={rolesMenu}
-          rules={[{required: true, message: '请选择章节'}]}
-        />
+        {/*<ProFormSelect*/}
+        {/*  name='chapter'*/}
+        {/*  label='所属章节'*/}
+        {/*  width='m'*/}
+        {/*  valueEnum={rolesMenu}*/}
+        {/*  rules={[{required: true, message: '请选择章节'}]}*/}
+        {/*/>*/}
         <Upload
           name='picture'
           listType='picture-card'

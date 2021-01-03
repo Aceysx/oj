@@ -78,6 +78,12 @@ export default defineConfig({
               icon: 'user',
               path: '/picture/list',
               component: './picture/list'
+            }, {
+              name: '图片标注',
+              hideInMenu:true,
+              icon: 'user',
+              path: '/picture/:id/mark',
+              component: './picture/mark'
             },
             {
               name: '角色管理',

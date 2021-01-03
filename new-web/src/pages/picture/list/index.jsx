@@ -1,13 +1,13 @@
 import {PlusOutlined} from '@ant-design/icons'
-import {Button, message} from 'antd'
+import {Button, Divider, message} from 'antd'
 import React, {useEffect, useRef, useState} from 'react'
 import ProTable from '@ant-design/pro-table'
 import {addUser, queryPictures, updateRule, updateUser} from './service'
-import {DownOutlined} from '@ant-design/icons/lib/icons'
-import {connect} from 'umi'
-import Model from '@/pages/role/list/model'
-import CreateForm from '@/pages/role/list/components/CreateForm'
-import UpdateForm from '@/pages/role/list/components/UpdateForm'
+import {connect,history} from 'umi'
+
+import CreateForm from "@/pages/picture/list/components/CreateForm";
+import UpdateForm from "@/pages/picture/list/components/UpdateForm";
+import Model from "@/pages/picture/list/model";
 
 const NONE_FUNCTION = () => {
 }
@@ -32,8 +32,6 @@ const handleUpdate = async (fields) => {
 }
 
 const PictureList = (props) => {
-  const {roles = []} = props.roleCenter
-
   const [createModalVisible, handleModalVisible] = useState(false)
   const [updateModalVisible, handleUpdateModalVisible] = useState(false)
   const [current, setCurrent] = useState(undefined)
@@ -41,7 +39,7 @@ const PictureList = (props) => {
   const actionRef = useRef()
   useEffect(() => {
     props.dispatch({
-      type: Model.type.FETCH_ROLES
+      type: Model.type.FETCH_PICTURES
     })
   }, [])
 
@@ -113,15 +111,17 @@ const PictureList = (props) => {
             handleUpdateModalVisible(true)
             setCurrent(record)
           }}>编辑</a>
+          <Divider type='vertical'/>
+          <a onClick={() => history.push(`/picture/${record.id}/mark`)}>标注</a>
+          <Divider type='vertical'/>
+          <a onClick={() => {
+            handleUpdateModalVisible(true)
+            setCurrent(record)
+          }}>删除</a>
         </div>
       }
     }
   ]
-  let rolesMenu = {}
-  roles.forEach(role => {
-    rolesMenu[role.key] = role.name
-  })
-
   return (
     <div>
       <ProTable
@@ -131,27 +131,25 @@ const PictureList = (props) => {
         rowKey='key'
         toolBarRender={() => [
           <Button type='primary' onClick={() => handleModalVisible(true)}>
-            <PlusOutlined /> 添加图片
+            <PlusOutlined/> 添加图片
           </Button>
         ]}
         request={(params, sorter, filter) =>
-          queryPictures({...params, sorter, filter})}
+          queryPictures({...params, size: params.pageSize, sorter, filter})}
         columns={columns}
       />
 
       <CreateForm onCancel={() => handleModalVisible(false)}
-        modalVisible={createModalVisible}
-        handleAdd={handleAdd}
-        rolesMenu={rolesMenu} />
+                  modalVisible={createModalVisible}
+                  handleAdd={handleAdd}/>
 
       <UpdateForm onCancel={() => handleUpdateModalVisible(false)}
-        modalVisible={updateModalVisible}
-        updateUser={handleUpdate}
-        current={current}
-        rolesMenu={rolesMenu} />
+                  modalVisible={updateModalVisible}
+                  handleUpdate={handleUpdate}
+                  current={current}/>
     </div>
   )
 }
-export default connect(({roleCenter}) => ({
-  roleCenter
+export default connect(({pictureCenter}) => ({
+  pictureCenter
 }))(PictureList)
