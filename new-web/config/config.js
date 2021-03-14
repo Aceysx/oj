@@ -74,6 +74,12 @@ export default defineConfig({
               redirect: '/dashboard/analysis'
             },
             {
+              name: '课程名称管理',
+              icon: 'user',
+              path: '/major/list',
+              component: './major/list'
+            },
+            {
               name: '图片管理',
               icon: 'user',
               path: '/picture/list',

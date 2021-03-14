@@ -1,20 +1,16 @@
 import {PlusOutlined} from '@ant-design/icons'
-import {Button, message} from 'antd'
+import {Button, Divider, message, Modal} from 'antd'
 import React, {useEffect, useRef, useState} from 'react'
 import ProTable from '@ant-design/pro-table'
 import CreateForm from './components/CreateForm'
-import {addUser, queryUsers, updateRule, updateUser} from './service'
-import {DownOutlined} from '@ant-design/icons/lib/icons'
+import {addMajor, fetchMajors, updateMajor,deleteMajor} from './service'
 import {connect} from 'umi'
 import Model from '@/pages/role/list/model'
-import ProForm, {ProFormSelect, ProFormText} from '@ant-design/pro-form'
-import UpdateForm from '@/pages/role/list/components/UpdateForm'
+import UpdateForm from './components/UpdateForm'
 
 const NONE_FUNCTION = () => {
 }
-const RoleList = (props) => {
-  const {roles = []} = props.roleCenter
-
+const MajorList = (props) => {
   const [createModalVisible, handleModalVisible] = useState(false)
   const [updateModalVisible, handleUpdateModalVisible] = useState(false)
   const [current, setCurrent] = useState(undefined)
@@ -27,17 +23,13 @@ const RoleList = (props) => {
   }, [])
 
   const handleAdd = async (fields) => {
-    const hide = message.loading('正在添加')
-
     try {
-      await addUser({...fields, roles: fields.roles ? fields.roles.join(',') : ''})
-      hide()
+      await addMajor({...fields})
       message.success('添加成功')
       handleModalVisible(false)
       actionRef.current.reload()
       return true
     } catch (error) {
-      hide()
       message.error(error)
       return false
     }
@@ -45,7 +37,7 @@ const RoleList = (props) => {
 
   const handleUpdate = async (fields) => {
     try {
-      await updateUser({...current, ...fields, roles: fields.roles ? fields.roles.join(',') : ''})
+      await updateMajor({...current, ...fields})
       message.success('添加成功')
       handleUpdateModalVisible(false)
       actionRef.current.reload()
@@ -55,34 +47,28 @@ const RoleList = (props) => {
       return false
     }
   }
-
+  const handleDelete = async (id) => {
+    try {
+      await deleteMajor(id)
+      message.success('删除成功')
+      actionRef.current.reload()
+      return true
+    } catch (error) {
+      message.error(error)
+      return false
+    }
+  }
   const columns = [
     {
-      title: '用户名',
-      dataIndex: 'username',
-      key: 'username'
-    },
-    {
-      title: '添加时间',
-      dataIndex: 'createTime',
-      key: 'createTime'
-    },
-    {
-      title: '真实姓名',
+      title: '名称',
       dataIndex: 'name',
       key: 'name'
-    },
-    {
-      title: '手机号',
-      dataIndex: 'phone',
-      key: 'phone'
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
-      key: 'email'
-    },
-    {
+    }, {
+      title: '添加时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      renderFormItem: NONE_FUNCTION
+    }, {
       title: '操作',
       dataIndex: 'actions',
       key: 'actions',
@@ -93,51 +79,51 @@ const RoleList = (props) => {
             handleUpdateModalVisible(true)
             setCurrent(record)
           }}>编辑</a>
+          <Divider type={'vertical'}/>
+          <a onClick={() => {
+            Modal.confirm({
+              title: '提示',
+              content: '确定删除该？',
+              okText: '确认',
+              cancelText: '取消',
+              onOk: () => handleDelete(record.id),
+            });
+          }}>删除</a>
         </div>
       }
     }
   ]
-  let rolesMenu = {}
-  roles.forEach(role => {
-    rolesMenu[role.key] = role.name
-  })
 
   return (
     <div>
       <ProTable
-        headerTitle='用户列表'
+        headerTitle='课程名称列表'
         actionRef={actionRef}
         toolbar={{multipleLine: false}}
         rowKey='key'
         search={false}
         toolBarRender={() => [
-          <Button key='out'>
-            导入数据
-            <DownOutlined />
-          </Button>,
           <Button type='primary' onClick={() => handleModalVisible(true)}>
-            <PlusOutlined /> 新建
+            <PlusOutlined/> 新建
           </Button>
         ]}
         request={(params, sorter, filter) =>
-          queryUsers({...params, sorter, filter})}
+          fetchMajors({...params, sorter, filter})}
         columns={columns}
       />
 
       <CreateForm onCancel={() => handleModalVisible(false)}
-        modalVisible={createModalVisible}
-        handleAdd={handleAdd}
-        rolesMenu={rolesMenu} />
+                  modalVisible={createModalVisible}
+                  handleAdd={handleAdd}/>
 
       <UpdateForm onCancel={() => handleUpdateModalVisible(false)}
-        modalVisible={updateModalVisible}
-        updateUser={handleUpdate}
-        current={current}
-        rolesMenu={rolesMenu} />
+                  modalVisible={updateModalVisible}
+                  handleUpdate={handleUpdate}
+                  current={current}/>
 
     </div>
   )
 }
-export default connect(({roleCenter}) => ({
-  roleCenter
-}))(RoleList)
+export default connect(({majorCenter}) => ({
+  majorCenter
+}))(MajorList)

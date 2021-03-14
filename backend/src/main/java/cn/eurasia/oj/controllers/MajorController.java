@@ -28,7 +28,7 @@ public class MajorController {
     public ResponseEntity getMajorsByPage(
         @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
         @Auth User user) {
-        return ResponseEntity.ok(majorService.getMajorsByPage(pageable));
+        return ResponseEntity.ok(PageVo.build(majorService.getMajorsByPage(pageable)));
     }
 
     @GetMapping("")
