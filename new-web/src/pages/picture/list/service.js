@@ -15,3 +15,20 @@ export async function updatePictureLabels(id, labels) {
     data: labels
   })
 }
+
+export async function deletePicture(id) {
+  return request.delete('/api/pictures/' + id)
+}
+
+export async function addPicture(params) {
+  return request.post('/api/pictures', {
+    method: 'POST',
+    data: {...params}
+  })
+}
+
+export async function updatePicture(params) {
+  return request.put('/api/pictures/' + params.id, {
+    data: {...params}
+  })
+}

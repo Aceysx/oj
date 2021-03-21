@@ -43,7 +43,6 @@ public class PictureController {
   @PostMapping("")
   public ResponseEntity addPicture(@RequestBody Picture picture,
                                    @Auth User current) {
-
     picture = pictureService.addPicture(picture, current);
     return ResponseEntity.created(URI.create("/api/pictures/" + picture.getId())).build();
   }
@@ -58,7 +57,7 @@ public class PictureController {
   }
 
   @PutMapping("{pictureId}")
-  public ResponseEntity editPictureLabel(
+  public ResponseEntity editPicture(
       @RequestBody CreatePictureParam createPictureParam,
       @Auth User current) throws BusinessException {
 

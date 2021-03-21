@@ -3,7 +3,7 @@ import {Button, Divider, message, Modal} from 'antd'
 import React, {useEffect, useRef, useState} from 'react'
 import ProTable from '@ant-design/pro-table'
 import CreateForm from './components/CreateForm'
-import {addMajor, fetchMajors, updateMajor,deleteMajor} from './service'
+import {addMajor, deleteMajor, fetchMajors, updateMajor} from './service'
 import {connect} from 'umi'
 import Model from '@/pages/role/list/model'
 import UpdateForm from './components/UpdateForm'
@@ -83,7 +83,7 @@ const MajorList = (props) => {
           <a onClick={() => {
             Modal.confirm({
               title: '提示',
-              content: '确定删除该？',
+              content: '确定删除？',
               okText: '确认',
               cancelText: '取消',
               onOk: () => handleDelete(record.id),

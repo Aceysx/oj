@@ -1,34 +1,15 @@
 import {PlusOutlined} from '@ant-design/icons'
-import {Button, Divider, message} from 'antd'
+import {Button, Divider, message, Modal} from 'antd'
 import React, {useEffect, useRef, useState} from 'react'
 import ProTable from '@ant-design/pro-table'
-import {addUser, queryPictures, updateRule, updateUser} from './service'
-import {connect,history} from 'umi'
+import {addPicture, deletePicture, queryPictures, updatePicture} from './service'
+import {connect, history} from 'umi'
 
 import CreateForm from "@/pages/picture/list/components/CreateForm";
 import UpdateForm from "@/pages/picture/list/components/UpdateForm";
 import Model from "@/pages/picture/list/model";
 
 const NONE_FUNCTION = () => {
-}
-
-const handleUpdate = async (fields) => {
-  const hide = message.loading('正在配置')
-
-  try {
-    await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key
-    })
-    hide()
-    message.success('配置成功')
-    return true
-  } catch (error) {
-    hide()
-    message.error('配置失败请重试！')
-    return false
-  }
 }
 
 const PictureList = (props) => {
@@ -44,17 +25,13 @@ const PictureList = (props) => {
   }, [])
 
   const handleAdd = async (fields) => {
-    const hide = message.loading('正在添加')
-
     try {
-      await addUser({...fields, roles: fields.roles ? fields.roles.join(',') : ''})
-      hide()
+      await addPicture({...fields})
       message.success('添加成功')
       handleModalVisible(false)
       actionRef.current.reload()
       return true
     } catch (error) {
-      hide()
       message.error(error)
       return false
     }
@@ -62,8 +39,8 @@ const PictureList = (props) => {
 
   const handleUpdate = async (fields) => {
     try {
-      await updateUser({...current, ...fields, roles: fields.roles ? fields.roles.join(',') : ''})
-      message.success('添加成功')
+      await updatePicture({...current, ...fields})
+      message.success('更新成功')
       handleUpdateModalVisible(false)
       actionRef.current.reload()
       return true
@@ -72,7 +49,17 @@ const PictureList = (props) => {
       return false
     }
   }
-
+  const handleDelete = async (id) => {
+    try {
+      await deletePicture(id)
+      message.success('删除成功')
+      actionRef.current.reload()
+      return true
+    } catch (error) {
+      message.error(error)
+      return false
+    }
+  }
   const columns = [
     {
       title: '名称',
@@ -115,8 +102,13 @@ const PictureList = (props) => {
           <a onClick={() => history.push(`/picture/${record.id}/mark`)}>标注</a>
           <Divider type='vertical'/>
           <a onClick={() => {
-            handleUpdateModalVisible(true)
-            setCurrent(record)
+            Modal.confirm({
+              title: '提示',
+              content: '确定删除？',
+              okText: '确认',
+              cancelText: '取消',
+              onOk: () => handleDelete(record.id),
+            });
           }}>删除</a>
         </div>
       }

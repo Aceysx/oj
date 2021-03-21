@@ -1,25 +1,25 @@
 import React, {useState} from 'react'
 import {message, Modal, Upload} from 'antd'
-import ProForm, {ProFormSelect, ProFormText, ProFormTextArea} from '@ant-design/pro-form'
+import ProForm, {ProFormText} from '@ant-design/pro-form'
 import {LoadingOutlined, UploadOutlined} from '@ant-design/icons'
-const ROOT_PATH = 'http://39.98.165.4:8004/ronhe-file-system/'
-// const ROOT_PATH = 'http://localhost:3001/'
+
+const ROOT_PATH = 'http://localhost:8080/'
 
 const CreateForm = (props) => {
   const [imageUrl, handleImageUrl] = useState('')
   const [loading, handleLoading] = useState(false)
-  const {modalVisible, onCancel, handleAdd, rolesMenu} = props
+  const {modalVisible, onCancel, handleAdd} = props
 
   const beforeUpload = (file) => {
     const isJPG = file.type.includes('image')
     if (!isJPG) {
-      message.error('You can only upload JPG file!')
+      message.error('请上传图片')
     }
-    const isLt2M = file.size / 1024 / 1024 < 2
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!')
+    const isLt10M = file.size / 1024 / 1024 < 10
+    if (!isLt10M) {
+      message.error('图片必须小于10MB')
     }
-    return isJPG && isLt2M
+    return isJPG && isLt10M
   }
 
   const handleChange = (info) => {
@@ -28,14 +28,14 @@ const CreateForm = (props) => {
       return
     }
     if (info.file.status === 'done') {
-      handleImageUrl(ROOT_PATH + info.file.response.name)
+      handleImageUrl(ROOT_PATH + info.file.response)
       handleLoading(false)
     }
   }
   return (
     <Modal
       destroyOnClose
-      title='新建图片'
+      title='新建'
       visible={modalVisible}
       onCancel={() => onCancel()}
       footer={null}
@@ -45,31 +45,34 @@ const CreateForm = (props) => {
         onValuesChange={(_, values) => {
           console.log(values)
         }}
-        onFinish={async (value) => handleAdd(value)}
+        onFinish={async (values) => {
+          if (!imageUrl) {
+            message.warning('请上传图片')
+            return
+          }
+          handleAdd({...values, url: imageUrl});
+        }}
       >
-        <ProFormText width='m' name='username' rules={[{
+        <ProFormText width='m' name='title' rules={[{
           required: true,
           message: '请输入图片名称!'
-        }]} label='图片名称' />
-        {/*<ProFormSelect*/}
-        {/*  name='chapter'*/}
-        {/*  label='所属章节'*/}
-        {/*  width='m'*/}
-        {/*  valueEnum={rolesMenu}*/}
-        {/*  rules={[{required: true, message: '请选择章节'}]}*/}
-        {/*/>*/}
+        }]} label='图片名称'/>
+        <ProFormText width='m' name='chapter' rules={[{
+          required: true,
+          message: '请输入章节'
+        }]} label='章节'/>
         <Upload
-          name='picture'
+          name='file'
           listType='picture-card'
           className='avatar-uploader'
           showUploadList={false}
-          action='http://116.62.230.75:8000/file-server/file/upload'
+          action={'/api/uploader'}
           beforeUpload={beforeUpload}
           onChange={handleChange}
         >
-          {imageUrl ? <img width={200} src={imageUrl} alt='avatar' /> : <div>
+          {imageUrl ? <img width={'100%'} src={imageUrl} alt='avatar'/> : <div>
 
-            {loading ? <LoadingOutlined /> : <UploadOutlined />}
+            {loading ? <LoadingOutlined/> : <UploadOutlined/>}
             <div className='ant-upload-text'>上传图片</div>
           </div>}
         </Upload>
