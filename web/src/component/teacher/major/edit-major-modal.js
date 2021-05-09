@@ -58,11 +58,11 @@ class EditMajorModal extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Item
             {...formItemLayout}
-            label="课程名称名称"
+            label="课程名称"
           >
             {getFieldDecorator('name', {
               rules: [{
-                required: true, message: '请输入课程名称名称',
+                required: true, message: '请输入课程名称ª',
               }],
             })(
               <Input/>
