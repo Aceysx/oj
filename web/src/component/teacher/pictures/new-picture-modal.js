@@ -13,8 +13,7 @@ const formItemLayout = {
     sm: {span: 16},
   },
 }
-// const ROOT_PATH = 'http://39.98.165.4:8004/ronhe-file-system/'
-const ROOT_PATH = 'http://localhost:3001/'
+const ROOT_PATH = 'http://localhost:8080/'
 
 function beforeUpload(file) {
   const isJPG = file.type.includes('image')
@@ -59,7 +58,7 @@ class NewPictureModal extends React.Component {
     }
     if (info.file.status === 'done') {
       this.setState({
-        imageUrl: ROOT_PATH + info.file.response.name,
+        imageUrl: ROOT_PATH + info.file.response,
         loading: false
       })
     }
@@ -116,11 +115,11 @@ class NewPictureModal extends React.Component {
             )}
           </Form.Item>
           <Upload
-            name="picture"
+            name="file"
             listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
-            action="http://localhost:3001/upload"
+            action={'/api/uploader'}
             beforeUpload={beforeUpload}
             onChange={this.handleChange}
           >

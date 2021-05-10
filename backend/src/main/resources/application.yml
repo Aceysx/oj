@@ -1,3 +1,13 @@
+upload:
+  #图片上传
+  image:
+    path: /Users/xinsi/Documents/code/pictures/
+    max-size: 10  #单位MB
+    accept-type:
+      - image/png
+      - image/jpeg
+      - image/jpg
+      - image/gif
 database:
     url: jdbc:mysql://localhost:3306/oj?useUnicode=true&characterEncoding=utf-8
     username: root
@@ -15,3 +25,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${upload.image.path}
+  servlet:
+    multipart:
+      max-file-size: 10MB

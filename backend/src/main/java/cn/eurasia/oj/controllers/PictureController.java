@@ -59,7 +59,7 @@ public class PictureController {
     }
 
     @PutMapping("{pictureId}")
-    public ResponseEntity editPictureLabel(
+    public ResponseEntity editPicture(
         @RequestBody CreatePictureParam createPictureParam,
         @Auth User current) throws BusinessException {
 

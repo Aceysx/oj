@@ -17,42 +17,49 @@ import java.util.List;
 @Table(name = "paper")
 @NoArgsConstructor
 public class Paper {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private String title;
-  @ManyToMany
-  @JoinTable(name = "paperQuiz", joinColumns = @JoinColumn(name = "paperId"),
-      inverseJoinColumns = @JoinColumn(name = "quizId"))
-  private List<Quiz> quizzes;
-  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-  private Date createTime;
-  @ManyToOne
-  @JoinColumn(name = "userId")
-  private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    @ManyToMany
+    @JoinTable(name = "paperQuiz", joinColumns = @JoinColumn(name = "paperId"),
+        inverseJoinColumns = @JoinColumn(name = "quizId"))
+    private List<Quiz> quizzes;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private Date createTime;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @Transient
+    private Date endTime;
+    @Transient
+    private Integer timeBox;
+
+    public Paper(String title, List<Quiz> quizzes, User current, Long timeBox) {
+        this.title = title;
+        this.quizzes = quizzes;
+        this.user = current;
+    }
+
+    public static Paper convertParam(CreatePaperParam createPaperParam, User current) {
+        return new Paper(createPaperParam.getTitle(), createPaperParam.getQuizzes(), current, createPaperParam.getTimeBox());
+    }
+
+    public static Paper convertParam(CreatePaperAutoGenerateParam createPaperParam, User current) {
+        return new Paper(createPaperParam.getTitle(), createPaperParam.getQuizzes(), current, createPaperParam.getTimeBox());
+    }
+
+    public void update(Paper paper) {
+        this.title = paper.getTitle();
+        this.quizzes = paper.getQuizzes();
+    }
 
 
-  @Transient
-  private Date endTime;
-  @Transient
-  private Integer timeBox;
+    public void update(Date endTime, int timeBox) {
+        this.endTime = endTime;
+        this.timeBox = timeBox;
+    }
 
-  public Paper(String title, List<Quiz> quizzes, User current, Long timeBox) {
-    this.title = title;
-    this.quizzes = quizzes;
-    this.user = current;
-  }
 
-  public static Paper convertParam(CreatePaperParam createPaperParam, User current) {
-    return new Paper(createPaperParam.getTitle(), createPaperParam.getQuizzes(), current, createPaperParam.getTimeBox());
-  }
-
-  public static Paper convertParam(CreatePaperAutoGenerateParam createPaperParam, User current) {
-    return new Paper(createPaperParam.getTitle(), createPaperParam.getQuizzes(), current, createPaperParam.getTimeBox());
-  }
-
-  public void update(Paper paper) {
-    this.title = paper.getTitle();
-    this.quizzes = paper.getQuizzes();
-  }
 }

@@ -32,6 +32,7 @@ public class PaperService {
     private final QuizSubmissionRepository quizSubmissionRepository;
     private final ReviewQuizRepository reviewQuizRepository;
     private final EntityManager entityManager;
+    private final ClassCourseService classCourseService;
 
     public Paper addPaper(CreatePaperParam createPaperParam, User current) {
         Paper paper = Paper.convertParam(createPaperParam, current);
@@ -104,7 +105,7 @@ public class PaperService {
 
     public Paper findPaper(Long paperId) throws BusinessException {
         Paper paper = paperRepository.findById(paperId).orElseThrow(
-            () -> new BusinessException("未找到")
+            () -> new BusinessException("未找到该试卷")
         );
         return paper;
     }
