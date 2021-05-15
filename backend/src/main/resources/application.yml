@@ -1,22 +1,18 @@
 upload:
   #图片上传
   image:
-    path: /Users/xinsi/Documents/code/pictures/
+    path: ${UPLOAD_PATH:/Users/xinsi/Documents/code/pictures/}
     max-size: 10  #单位MB
     accept-type:
       - image/png
       - image/jpeg
       - image/jpg
       - image/gif
-database:
-    url: jdbc:mysql://localhost:3306/oj?useUnicode=true&characterEncoding=utf-8
-    username: root
-    password: pass
 spring:
   datasource:
-    url: ${database.url}
-    username: ${database.username}
-    password: ${database.password}
+    url: jdbc:mysql://${DATABASE_HOST:127.0.0.1}:3306/oj?useUnicode=true&characterEncoding=utf-8
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:pass}
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
